@@ -16,6 +16,11 @@ type Programme struct {
 	url       string
 }
 
+func NewProgramme(index, series, episode int, name,
+	pid, thumbnail, url string) *Programme {
+	return &Programme{index, name, pid, episode, series, thumbnail, url}
+}
+
 func main() {
 	doc, err := goquery.NewDocument("http://www.bbc.co.uk/iplayer/group/most-popular")
 	if err != nil {
