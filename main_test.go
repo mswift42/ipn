@@ -8,10 +8,17 @@ import (
 )
 
 func TestFindTitle(t *testing.T) {
+	assert := assert.New(t)
 	html := loadTestHtml("iplayermostpopular.html")
 	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		title := findTitle(s)
-		assert.NotEqual(t, title, "")
+		assert.NotEqual(title, "")
+	})
+	assert.Equal(len(html.Find(".list-item").Nodes), 40)
+	html.Find(".list-item").EachWithBreak(func(i int, s *goquery.Selection) bool {
+		title := findTitle(s)
+		assert.Equal(title, "Strictly Come Dancing")
+		return false
 	})
 }
 
