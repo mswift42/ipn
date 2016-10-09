@@ -48,10 +48,15 @@ func loadTestHtml(filename string) *goquery.Document {
 func findTitle(s *goquery.Selection) string {
 	return s.Find(".secondary > .title").Text()
 }
+
+func findSubtitle(s *goquery.Selection) string {
+	return s.Find(".secondary > .subtitle").Text()
+}
 func main() {
 	html := loadTestHtml("iplayermostpopular.html")
 	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		title := findTitle(s)
-		fmt.Println(title)
+		subtitle := findSubtitle(s)
+		fmt.Println(title, " ", subtitle)
 	})
 }
