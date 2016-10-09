@@ -1,24 +1,18 @@
 package main
 
 import (
-	"bytes"
-	"io/ioutil"
 	"testing"
 
 	"github.com/PuerkitoBio/goquery"
 	"github.com/stretchr/testify/assert"
 )
 
-func loadTestHtml(filename string) *goquery.Document {
-	file, err := ioutil.ReadFile(filename)
-	if err != nil {
-		panic(err)
-	}
-	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
-	if err != nil {
-		panic(err)
-	}
-	return doc
+func TestFindTitle(t *testing.T) {
+	html := loadTestHtml("iplayermostpopular.html")
+	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		title := findTitle(s)
+		assert.NotEqual(t, title, "")
+	})
 }
 
 func TestNewProgramme(t *testing.T) {
