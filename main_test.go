@@ -21,6 +21,16 @@ func TestFindTitle(t *testing.T) {
 		return false
 	})
 }
+func TestFindSubtitle(t *testing.T) {
+	assert := assert.New(t)
+	html := loadTestHtml("iplayermostpopular.html")
+	assert.Equal(len(html.Find(".list-item").Nodes), 40)
+	html.Find(".list-item").EachWithBreak(func(i int, s *goquery.Selection) bool {
+		subtitle := findSubtitle(s)
+		assert.Equal(subtitle, "Series 14: Week 3")
+		return false
+	})
+}
 
 func TestNewProgramme(t *testing.T) {
 	assert := assert.New(t)
