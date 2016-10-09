@@ -1,7 +1,9 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
+	"io/ioutil"
 	"log"
 
 	"github.com/PuerkitoBio/goquery"
@@ -31,13 +33,25 @@ func mostPopular() []*Programme {
 	doc.Find(".list-item")
 	return nil
 }
-func main() {
-	doc, err := goquery.NewDocument("http://www.bbc.co.uk/iplayer/group/most-popular")
+func loadTestHtml(filename string) *goquery.Document {
+	file, err := ioutil.ReadFile(filename)
 	if err != nil {
-		fmt.Println(err)
+		panic(err)
 	}
-	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-		title := s.Find(".secondary > .title ").Text()
-		fmt.Println(i, title)
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
+	if err != nil {
+		panic(err)
+	}
+	return doc
+}
+
+func findTitle(s *goquery.Selection) string {
+	return s.Find(".secondary > .title").Text()
+}
+func main() {
+	html := loadTestHtml("iplayermostpopular.html")
+	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		title := findTitle(s)
+		fmt.Println(title)
 	})
 }
