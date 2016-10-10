@@ -1,6 +1,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 
 	"github.com/PuerkitoBio/goquery"
@@ -40,10 +41,11 @@ func TestUrl(t *testing.T) {
 	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		url := findUrl(s)
 		assert.NotEqual(url, "")
+		assert.Equal(strings.HasPrefix(url, "www.bbc.co.uk"), true)
 	})
 	html.Find(".list-item").EachWithBreak(func(i int, s *goquery.Selection) bool {
 		url := findUrl(s)
-		assert.Equal(url, "www.bbbc.co.uk/iplayer/episode/b07zhnf6/strictly-come-dancing-series-14-week-3")
+		assert.Equal(url, "www.bbc.co.uk/iplayer/episode/b07zhnf6/strictly-come-dancing-series-14-week-3")
 		return false
 	})
 }
