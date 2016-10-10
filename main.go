@@ -54,7 +54,7 @@ func findSubtitle(s *goquery.Selection) string {
 }
 
 func findUrl(s *goquery.Selection) string {
-	return s.Find("a").AttrOr("href", "")
+	return "www.bbbc.co.uk" + s.Find("a").AttrOr("href", "")
 }
 func main() {
 	html := loadTestHtml("iplayermostpopular.html")
