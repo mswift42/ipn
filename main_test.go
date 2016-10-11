@@ -30,7 +30,8 @@ func TestFindThumbnail(t *testing.T) {
 	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		thumbnail := findThumbnail(s)
 		assert.NotEqual(thumbnail, "")
-		assert.True(strings.HasPrefix("http://ichef.bbci", thumbnail))
+		assert.Equal(strings.HasSuffix(thumbnail, "jpg"), true)
+		assert.Equal(strings.HasPrefix(thumbnail, "http://ichef.bbci"), true)
 	})
 
 }
