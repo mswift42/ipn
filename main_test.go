@@ -24,6 +24,16 @@ func TestFindTitle(t *testing.T) {
 		return false
 	})
 }
+func TestFindThumbnail(t *testing.T) {
+	assert := assert.New(t)
+	html := loadTestHtml(mostpopular)
+	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		thumbnail := findThumbnail(s)
+		assert.NotEqual(thumbnail, "")
+		assert.True(strings.HasPrefix("http://ichef.bbci", thumbnail))
+	})
+
+}
 func TestFindSubtitle(t *testing.T) {
 	assert := assert.New(t)
 	html := loadTestHtml(mostpopular)
