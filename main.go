@@ -56,13 +56,13 @@ func findSubtitle(s *goquery.Selection) string {
 func findUrl(s *goquery.Selection) string {
 	return "www.bbc.co.uk" + s.Find("a").AttrOr("href", "")
 }
+func findThumbnail(s *goquery.Selection) string {
+	return s.Find(".r-image").AttrOr("data-ip-src", "")
+}
 func main() {
 	html := loadTestHtml("iplayermostpopular.html")
 	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-		title := findTitle(s)
-		url := findUrl(s)
-		fmt.Println(url)
-		subtitle := findSubtitle(s)
-		fmt.Println(title, " ", subtitle)
+		thumbnail := findThumbnail(s)
+		fmt.Println(thumbnail)
 	})
 }
