@@ -35,6 +35,15 @@ func TestFindThumbnail(t *testing.T) {
 	})
 
 }
+
+func TestFindPid(t *testing.T) {
+	assert := assert.New(t)
+	html := loadTestHtml(mostpopular)
+	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		pid := findPid(s)
+		assert.NotEqual(pid, "")
+	})
+}
 func TestFindSubtitle(t *testing.T) {
 	assert := assert.New(t)
 	html := loadTestHtml(mostpopular)

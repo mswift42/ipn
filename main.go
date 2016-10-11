@@ -59,10 +59,13 @@ func findUrl(s *goquery.Selection) string {
 func findThumbnail(s *goquery.Selection) string {
 	return s.Find(".r-image").AttrOr("data-ip-src", "")
 }
+func findPid(s *goquery.Selection) string {
+	return s.Find(".list-item-inner > a").AttrOr("data-episode-id", "")
+}
 func main() {
 	html := loadTestHtml("iplayermostpopular.html")
 	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-		thumbnail := findThumbnail(s)
-		fmt.Println(thumbnail)
+		pid := findPid(s)
+		fmt.Println(pid)
 	})
 }
