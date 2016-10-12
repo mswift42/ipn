@@ -86,7 +86,7 @@ func TestNewProgramme(t *testing.T) {
 	assert.Equal(np.episode, 1)
 	assert.Equal(np.thumbnail, "http://thumbnail.url")
 	assert.Equal(np.url, "http://programme.url")
-	assert.Equal(np.name, "programme")
+	assert.Equal(np.title, "programme")
 	assert.Equal(np.series, 1)
 	assert.Equal(np.subtitle, "subtitle")
 	testhtml := loadTestHtml("iplayermostpopular.html")

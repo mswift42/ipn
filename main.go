@@ -11,7 +11,7 @@ import (
 
 type Programme struct {
 	index     int
-	name      string
+	title     string
 	subtitle  string
 	pid       string
 	episode   int
@@ -20,9 +20,9 @@ type Programme struct {
 	url       string
 }
 
-func NewProgramme(index, series, episode int, name, subtitle,
+func NewProgramme(index, series, episode int, title, subtitle,
 	pid, thumbnail, url string) *Programme {
-	return &Programme{index, name, subtitle, pid, episode, series, thumbnail, url}
+	return &Programme{index, title, subtitle, pid, episode, series, thumbnail, url}
 }
 func mostPopular() []*Programme {
 	popurl := "http://www.bbc.co.uk/iplayer/group/most-popular"
