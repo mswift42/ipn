@@ -79,9 +79,10 @@ func TestNewProgramme(t *testing.T) {
 	pid := "123"
 	episode := 1
 	series := 1
+	synopsis := "this is programme 1"
 	thumbnail := "http://thumbnail.url"
 	url := "http://programme.url"
-	np := NewProgramme(index, series, episode, name, subtitle, pid, thumbnail, url)
+	np := NewProgramme(index, series, episode, name, subtitle, synopsis, pid, thumbnail, url)
 	assert.Equal(np.index, 1)
 	assert.Equal(np.pid, "123")
 	assert.Equal(np.episode, 1)
@@ -90,6 +91,7 @@ func TestNewProgramme(t *testing.T) {
 	assert.Equal(np.title, "programme")
 	assert.Equal(np.series, 1)
 	assert.Equal(np.subtitle, "subtitle")
+	assert.Equal(np.synopsis, "this is programme 1")
 	testhtml := loadTestHtml("iplayermostpopular.html")
 	assert.NotNil(testhtml)
 }
