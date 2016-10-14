@@ -33,6 +33,7 @@ func mostPopular() []*Programme {
 	doc.Find(".list-item")
 	return nil
 }
+
 func loadTestHtml(filename string) *goquery.Document {
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
@@ -67,5 +68,7 @@ func main() {
 	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		pid := findPid(s)
 		fmt.Println(pid)
+		subtitle := findSubtitle(s)
+		fmt.Println(subtitle)
 	})
 }
