@@ -71,6 +71,20 @@ func TestUrl(t *testing.T) {
 	})
 }
 
+func TestFindSynopsis(t *testing.T) {
+	assert := assert.New(t)
+	html := loadTestHtml(mostpopular)
+	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		synopsis := findSynopsis(s)
+		assert.NotEqual(synopsis, "")
+	})
+	html.Find(".list-item").EachWithBreak(func(i int, s *goquery.Selection) bool {
+		synopsis := findSynopsis(s)
+		assert.Equal(synopsis, "The couples must deliver an amazing routine to a classic movie track.")
+		return false
+	})
+}
+
 func TestNewProgramme(t *testing.T) {
 	assert := assert.New(t)
 	index := 1
