@@ -15,16 +15,14 @@ type Programme struct {
 	subtitle  string
 	synopsis  string
 	pid       string
-	episode   int
-	series    int
 	thumbnail string
 	url       string
 }
 
-func NewProgramme(index, series, episode int, title, subtitle, synopsis,
+func NewProgramme(index int, title, subtitle, synopsis,
 	pid, thumbnail, url string) *Programme {
 	return &Programme{index, title, subtitle, synopsis,
-		pid, episode, series, thumbnail, url}
+		pid, thumbnail, url}
 }
 func mostPopular() []*Programme {
 	popurl := "http://www.bbc.co.uk/iplayer/group/most-popular"
@@ -73,9 +71,9 @@ func main() {
 	html.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		pid := findPid(s)
 		fmt.Println(pid)
+		title := findTitle(s)
 		subtitle := findSubtitle(s)
-		synopsis := findSynopsis(s)
+		fmt.Println(title)
 		fmt.Println(subtitle)
-		fmt.Println(synopsis)
 	})
 }
