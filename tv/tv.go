@@ -1,4 +1,4 @@
-package programme
+package tv
 
 type Programme struct {
 	title     string
