@@ -1,13 +1,13 @@
 package tv
 
 type Programme struct {
-	title     string
-	subtitle  string
-	synopsis  string
-	pid       string
-	thumbnail string
-	url       string
-	index     int
+	Title     string
+	Subtitle  string
+	Synopsis  string
+	Pid       string
+	Thumbnail string
+	Url       string
+	Index     int
 }
 
 func NewProgramme(title, subtitle, synopsis, pid,
