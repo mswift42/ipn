@@ -4,13 +4,12 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"log"
 
 	"github.com/PuerkitoBio/goquery"
 )
 
+// Programme TODO: NEEDS COMMENT INFO
 type Programme struct {
-	index     int
 	title     string
 	subtitle  string
 	synopsis  string
@@ -19,19 +18,31 @@ type Programme struct {
 	url       string
 }
 
-func NewProgramme(index int, title, subtitle, synopsis,
+// NewProgramme TODO: NEEDS COMMENT INFO
+func NewProgramme(title, subtitle, synopsis,
 	pid, thumbnail, url string) *Programme {
-	return &Programme{index, title, subtitle, synopsis,
+	return &Programme{title, subtitle, synopsis,
 		pid, thumbnail, url}
 }
-func mostPopular() []*Programme {
+func Programmes() ([]*Programme, error) {
 	popurl := "http://www.bbc.co.uk/iplayer/group/most-popular"
 	doc, err := goquery.NewDocument(popurl)
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
-	doc.Find(".list-item")
-	return nil
+	var programmes []*Programme
+	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		title := findTitle(s)
+		subtitle := findSubtitle(s)
+		synopsis := findSynopsis(s)
+		pid := findPid(s)
+		thumbnail := findThumbnail(s)
+		url := findUrl(s)
+		programmes = append(programmes, NewProgramme(title, subtitle, synopsis, pid,
+			thumbnail, url))
+
+	})
+	return programmes, nil
 }
 
 func loadTestHtml(filename string) *goquery.Document {
