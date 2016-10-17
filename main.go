@@ -5,32 +5,18 @@ import (
 	"fmt"
 	"io/ioutil"
 
+	"github.com/mswift42/ipn/tv"
+
 	"github.com/PuerkitoBio/goquery"
 )
 
-// Programme TODO: NEEDS COMMENT INFO
-type Programme struct {
-	title     string
-	subtitle  string
-	synopsis  string
-	pid       string
-	thumbnail string
-	url       string
-}
-
-// NewProgramme TODO: NEEDS COMMENT INFO
-func NewProgramme(title, subtitle, synopsis,
-	pid, thumbnail, url string) *Programme {
-	return &Programme{title, subtitle, synopsis,
-		pid, thumbnail, url}
-}
-func Programmes() ([]*Programme, error) {
+func Programmes() ([]*tv.Programme, error) {
 	popurl := "http://www.bbc.co.uk/iplayer/group/most-popular"
 	doc, err := goquery.NewDocument(popurl)
 	if err != nil {
 		return nil, err
 	}
-	var programmes []*Programme
+	var programmes []*tv.Programme
 	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		title := findTitle(s)
 		subtitle := findSubtitle(s)
@@ -38,7 +24,7 @@ func Programmes() ([]*Programme, error) {
 		pid := findPid(s)
 		thumbnail := findThumbnail(s)
 		url := findUrl(s)
-		programmes = append(programmes, NewProgramme(title, subtitle, synopsis, pid,
+		programmes = append(programmes, tv.NewProgramme(title, subtitle, synopsis, pid,
 			thumbnail, url))
 
 	})
