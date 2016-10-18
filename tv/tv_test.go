@@ -20,9 +20,9 @@ func TestNewProgramme(t *testing.T) {
 		want *Programme
 	}{
 		{
-			name: "prog1",
-			args: args{"prog1", "series 1: episode 1", "an equisite programme", "p00", "http://thumbnail.url", "http://programme.url"},
-			want: &Programme{"prog1", "series 1: episode 1", "an equisite programme", "p00", "http://thumbnail.url", "http://programme.url", 0},
+			"prog1",
+			args{"prog1", "series 1: episode 1", "an equisite programme", "p00", "http://thumbnail.url", "http://programme.url"},
+			&Programme{"prog1", "series 1: episode 1", "an equisite programme", "p00", "http://thumbnail.url", "http://programme.url", 0},
 		},
 	}
 	for _, tt := range tests {
