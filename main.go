@@ -73,4 +73,8 @@ func main() {
 		fmt.Println(title)
 		fmt.Println(subtitle)
 	})
+	prg, _ := Programmes()
+	for _, i := range prg {
+		fmt.Println(i.Thumbnail)
+	}
 }
