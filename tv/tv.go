@@ -30,7 +30,7 @@ func Programmes(url string) ([]*Programme, error) {
 		pid := findPid(s)
 		thumbnail := findThumbnail(s)
 		url := findUrl(s)
-		programmes = append(programmes, NewProgramme(title, subtitle,
+		programmes = append(programmes, newProgramme(title, subtitle,
 			synopsis, pid, thumbnail, url))
 	})
 	return programmes, nil
