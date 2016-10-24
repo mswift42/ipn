@@ -30,16 +30,30 @@ func TestProgrammes(t *testing.T) {
 }
 
 func TestFindTitle(t *testing.T) {
+	assert := assert.New(t)
 	doc := testutils.LoadTestHtml(mostpopular)
 	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		assert.NotEqual(t, findTitle(s), "")
 	})
 	programmes := Programmes(doc)
-	assert.Equal(t, programmes[0].Title, "Strictly Come Dancing")
+	assert.Equal(programmes[0].Title, "Strictly Come Dancing")
 	filmdoc := testutils.LoadTestHtml(films)
 	filmprogrammes := Programmes(filmdoc)
-	assert.Equal(t, filmprogrammes[0].Title, "Adam Curtis")
+	assert.Equal(filmprogrammes[0].Title, "Adam Curtis")
 	crimedoc := testutils.LoadTestHtml(crime)
 	crimeprogrammes := Programmes(crimedoc)
-	assert.Equal(t, crimeprogrammes[0].Title, "Beck")
+	assert.Equal(crimeprogrammes[0].Title, "Beck")
+}
+
+func TestFindSubtitle(t *testing.T) {
+	assert := assert.New(t)
+	popdoc := testutils.LoadTestHtml(mostpopular)
+	popprogrammes := Programmes(popdoc)
+	assert.Equal(popprogrammes[0].Subtitle, "Series 14: Week 3")
+	filmdoc := testutils.LoadTestHtml(films)
+	filmprogrammes := Programmes(filmdoc)
+	assert.Equal(filmprogrammes[0].Subtitle, "HyperNormalisation")
+	crimedoc := testutils.LoadTestHtml(crime)
+	crimeprogrammes := Programmes(crimedoc)
+	assert.Equal(crimeprogrammes[0].Subtitle, "Series 6: 4. The Last Day")
 }
