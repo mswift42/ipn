@@ -18,3 +18,13 @@ func TestNewProgramme(t *testing.T) {
 	assert.Equal(programme.Url, "http://programme.url")
 
 }
+
+func TestProgrammes(t *testing.T) {
+	assert := assert.New(t)
+	programmes, err := Programmes("http://www.bbc.co.uk/iplayer/group/most-popular")
+	assert.Nil(err)
+	assert.Equal(len(programmes), 40)
+	noprogrammes, err := Programmes("")
+	assert.NotNil(err)
+	assert.Nil(noprogrammes)
+}
