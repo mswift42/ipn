@@ -17,11 +17,7 @@ func newProgramme(title, subtitle, synopsis, pid,
 	return &Programme{title, subtitle, synopsis, pid,
 		thumbnail, url, 0}
 }
-func Programmes(url string) ([]*Programme, error) {
-	doc, err := goquery.NewDocument(url)
-	if err != nil {
-		return nil, err
-	}
+func Programmes(doc *goquery.Document) []*Programme {
 	var programmes []*Programme
 	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		title := findTitle(s)
@@ -33,7 +29,7 @@ func Programmes(url string) ([]*Programme, error) {
 		programmes = append(programmes, newProgramme(title, subtitle,
 			synopsis, pid, thumbnail, url))
 	})
-	return programmes, nil
+	return programmes
 }
 func findTitle(s *goquery.Selection) string {
 	return s.Find(".secondary > .title").Text()
