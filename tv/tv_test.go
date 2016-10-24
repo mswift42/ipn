@@ -1,33 +1,20 @@
 package tv
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
+const mostpopular = "../mostpopular/iplayermostpopular.html"
+const films = "../films/films.go"
+
 func TestNewProgramme(t *testing.T) {
-	type args struct {
-		title     string
-		subtitle  string
-		synopsis  string
-		pid       string
-		thumbnail string
-		url       string
-	}
-	tests := []struct {
-		name string
-		args args
-		want *Programme
-	}{
-		{
-			"prog1",
-			args{"prog1", "series 1: episode 1", "an equisite programme", "p00", "http://thumbnail.url", "http://programme.url"},
-			&Programme{"prog1", "series 1: episode 1", "an equisite programme", "p00", "http://thumbnail.url", "http://programme.url", 0},
-		},
-	}
-	for _, tt := range tests {
-		if got := NewProgramme(tt.args.title, tt.args.subtitle, tt.args.synopsis, tt.args.pid, tt.args.thumbnail, tt.args.url); !reflect.DeepEqual(got, tt.want) {
-			t.Errorf("%q. NewProgramme() = %v, want %v", tt.name, got, tt.want)
-		}
-	}
+	programme := newProgramme("title1", "subtitle1", "synopsys1",
+		"a00", "http://thumbnail.url", "http://programme.url")
+	assert := assert.New(t)
+	assert.Equal(programme.Title, "title1")
+	assert.Equal(programme.Index, 0)
+	assert.Equal(programme.Url, "http://programme.url")
+
 }
