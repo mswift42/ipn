@@ -30,7 +30,10 @@ func TestProgrammes(t *testing.T) {
 	assert.Equal(programmes[0].Url, "www.bbc.co.uk/iplayer/episode/b07zhnf6/strictly-come-dancing-series-14-week-3")
 	assert.Equal(programmes[0].Pid, "b07zhnf6")
 	assert.Equal(programmes[39].Title, "Cleverman")
+	assert.Equal(programmes[39].Synopsis, "Koen must send Kora back to her own dimension and save the Hairypeople from eviction.")
 	assert.Equal(programmes[39].Thumbnail, "http://ichef.bbci.co.uk/images/ic/336x189/p049dz62.jpg")
+	assert.Equal(programmes[1].Subtitle, "Series 12: 1. Collectables")
+	assert.Equal(programmes[1].Title, "The Apprentice")
 }
 
 func TestFindTitle(t *testing.T) {
