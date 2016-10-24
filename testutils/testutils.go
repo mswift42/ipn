@@ -1,4 +1,4 @@
-package iplayerhtml
+package testutils
 
 import (
 	"bytes"
@@ -7,7 +7,7 @@ import (
 	"github.com/PuerkitoBio/goquery"
 )
 
-func Load(filename string) *goquery.Document {
+func LoadTestHtml(filename string) *goquery.Document {
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {
 		panic(err)
