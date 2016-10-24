@@ -1,12 +1,16 @@
 package mostpopular
 
-import "github.com/mswift42/ipn/tv"
+import (
+	"github.com/PuerkitoBio/goquery"
+	"github.com/mswift42/ipn/tv"
+)
 
 func Programmes() ([]*tv.Programme, error) {
 	popurl := "http://www.bbc.co.uk/iplayer/group/most-popular"
-	programmes, err := tv.Programmes(popurl)
+	doc, err := goquery.NewDocument(popurl)
 	if err != nil {
 		return nil, err
 	}
+	programmes := tv.Programmes(doc)
 	return programmes, err
 }
