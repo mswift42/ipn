@@ -27,6 +27,10 @@ func TestProgrammes(t *testing.T) {
 	doc := testutils.LoadTestHtml(mostpopular)
 	programmes := Programmes(doc)
 	assert.Equal(len(programmes), 40)
+	assert.Equal(programmes[0].Url, "www.bbc.co.uk/iplayer/episode/b07zhnf6/strictly-come-dancing-series-14-week-3")
+	assert.Equal(programmes[0].Pid, "b07zhnf6")
+	assert.Equal(programmes[39].Title, "Cleverman")
+	assert.Equal(programmes[39].Thumbnail, "http://ichef.bbci.co.uk/images/ic/336x189/p049dz62.jpg")
 }
 
 func TestFindTitle(t *testing.T) {
