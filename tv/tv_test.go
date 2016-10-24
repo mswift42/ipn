@@ -3,6 +3,8 @@ package tv
 import (
 	"testing"
 
+	"github.com/PuerkitoBio/goquery"
+	"github.com/mswift42/ipn/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -21,10 +23,14 @@ func TestNewProgramme(t *testing.T) {
 
 func TestProgrammes(t *testing.T) {
 	assert := assert.New(t)
-	programmes, err := Programmes("http://www.bbc.co.uk/iplayer/group/most-popular")
-	assert.Nil(err)
+	doc := testutils.LoadTestHtml(mostpopular)
+	programmes := Programmes(doc)
 	assert.Equal(len(programmes), 40)
-	noprogrammes, err := Programmes("")
-	assert.NotNil(err)
-	assert.Nil(noprogrammes)
+}
+
+func TestFindTitle(t *testing.T) {
+	doc := testutils.LoadTestHtml(films)
+	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		assert.NotEqual(t, findTitle(s), "")
+	})
 }
