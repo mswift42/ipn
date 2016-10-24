@@ -9,7 +9,8 @@ import (
 )
 
 const mostpopular = "../mostpopular/iplayermostpopular.html"
-const films = "../films/films.go"
+const films = "../films/films.html"
+const crime = "../drama-crime/crime.html"
 
 func TestNewProgramme(t *testing.T) {
 	programme := newProgramme("title1", "subtitle1", "synopsys1",
@@ -29,8 +30,16 @@ func TestProgrammes(t *testing.T) {
 }
 
 func TestFindTitle(t *testing.T) {
-	doc := testutils.LoadTestHtml(films)
+	doc := testutils.LoadTestHtml(mostpopular)
 	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		assert.NotEqual(t, findTitle(s), "")
 	})
+	programmes := Programmes(doc)
+	assert.Equal(t, programmes[0].Title, "Strictly Come Dancing")
+	filmdoc := testutils.LoadTestHtml(films)
+	filmprogrammes := Programmes(filmdoc)
+	assert.Equal(t, filmprogrammes[0].Title, "Adam Curtis")
+	crimedoc := testutils.LoadTestHtml(crime)
+	crimeprogrammes := Programmes(crimedoc)
+	assert.Equal(t, crimeprogrammes[0].Title, "Beck")
 }
