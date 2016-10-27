@@ -2,6 +2,10 @@ package tv
 
 import "github.com/PuerkitoBio/goquery"
 
+type Searcher interface {
+	UrlDoc() *goquery.Document
+}
+
 type Programme struct {
 	Title     string
 	Subtitle  string
