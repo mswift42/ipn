@@ -3,7 +3,7 @@ package tv
 import "github.com/PuerkitoBio/goquery"
 
 type Searcher interface {
-	UrlDoc() *goquery.Document
+	UrlDoc() (*goquery.Document, error)
 }
 
 type Programme struct {
@@ -21,6 +21,16 @@ func newProgramme(title, subtitle, synopsis, pid,
 	return &Programme{title, subtitle, synopsis, pid,
 		thumbnail, url, 0}
 }
+
+type Queryurl string
+
+func (q Queryurl) DocUrl() (*goquery.Document, error) {
+	doc, err := goquery.NewDocument(string(q))
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
+}
 func Programmes(doc *goquery.Document) []*Programme {
 	var programmes []*Programme
 	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
@@ -35,6 +45,7 @@ func Programmes(doc *goquery.Document) []*Programme {
 	})
 	return programmes
 }
+
 func findTitle(s *goquery.Selection) string {
 	return s.Find(".secondary > .title").Text()
 }
