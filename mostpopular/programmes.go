@@ -5,12 +5,7 @@ import (
 	"github.com/mswift42/ipn/tv"
 )
 
-func Programmes() ([]*tv.Programme, error) {
-	popurl := "http://www.bbc.co.uk/iplayer/group/most-popular"
-	doc, err := goquery.NewDocument(popurl)
-	if err != nil {
-		return nil, err
-	}
+func Programmes(doc *goquery.Document) []*tv.Programme {
 	programmes := tv.Programmes(doc)
-	return programmes, err
+	return programmes
 }
