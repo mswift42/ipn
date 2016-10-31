@@ -5,7 +5,7 @@ import (
 	"github.com/mswift42/ipn/tv"
 )
 
-func Programmes() ([]*tv.Programme, error) {
+func Programmes(doc *goquery.Document) ([]*tv.Programme, error) {
 	crimeurl := "http://www.bbc.co.uk/iplayer/categories/drama-crime/all?sort=atoz"
 	doc, err := goquery.NewDocument(crimeurl)
 	if err != nil {
