@@ -24,7 +24,13 @@ func loadTestHtml(filename string) *goquery.Document {
 }
 
 func TestProgrammes(t *testing.T) {
+	assert := assert.New(t)
 	doc := loadTestHtml(mostpopular)
 	prog := Programmes(doc)
-	assert.Equal(t, len(prog), 40)
+	assert.Equal(len(prog), 40)
+	assert.Equal(prog[0].Title, "Strictly Come Dancing")
+	assert.Equal(prog[0].Synopsis, "The couples must deliver an amazing routine to a classic movie track.")
+	assert.Equal(prog[0].Subtitle, "Series 14: Week 3")
+	assert.Equal(prog[10].Title, "Our Girl")
+	assert.Equal(prog[10].Subtitle, "Series 2: Episode 5")
 }
