@@ -2,6 +2,8 @@ package tv
 
 import "github.com/PuerkitoBio/goquery"
 
+const bbcprefix = "http://www.bbc.co.uk"
+
 type Searcher interface {
 	UrlDoc() (*goquery.Document, error)
 }
@@ -44,6 +46,12 @@ func Programmes(doc *goquery.Document) []*Programme {
 			synopsis, pid, thumbnail, url))
 	})
 	return programmes
+}
+func hasSubPage(doc *goquery.Document) string {
+	return doc.Find(".view-more-container").AttrOr("href", "")
+}
+func SubPage(doc *goquery.Document) *goquery.Document {
+	return doc
 }
 
 func findTitle(s *goquery.Selection) string {
