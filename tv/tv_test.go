@@ -64,3 +64,10 @@ func TestFindSubtitle(t *testing.T) {
 	crimeprogrammes := Programmes(crimedoc)
 	assert.Equal(crimeprogrammes[0].Subtitle, "Series 6: 4. The Last Day")
 }
+func TestHasSubPage(t *testing.T) {
+	assert := assert.New(t)
+	filmsdoc := testutils.LoadTestHtml(films)
+	filmprogrammes := Programmes(filmsdoc)
+	assert.Equal(filmprogrammes[0].Title, "Adam Curtis")
+	assert.Equal(hasSubPage(filmsdoc), "")
+}
