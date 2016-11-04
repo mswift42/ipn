@@ -7,23 +7,23 @@ import (
 
 const (
 	mostpop = "http://www.bbc.co.uk/iplayer/group/most-popular"
-	films   = "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz"
+	flms    = "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz"
 	crdrama = "http://www.bbc.co.uk/iplayer/categories/drama-crime/all?sort=atoz"
-	comedy  = "http://www.bbc.co.uk/iplayer/categories/comedy/all?sort=atoz"
+	cmdy    = "http://www.bbc.co.uk/iplayer/categories/comedy/all?sort=atoz"
 )
 
-func MostPopular(doc *goquery.Document) ([]*tv.Programme, error) {
-	doc, err := goquery.NewDocument(mostpop)
-	if err != nil {
-		return nil, err
-	}
-	return tv.Programmes(doc), nil
+func mostPopular(doc *goquery.Document) []*tv.Programme {
+	return tv.Programmes(doc)
 }
 
-func Films(doc *goquery.Document) ([]*tv.Programme, error) {
-	doc, err := goquery.NewDocument(films)
-	if err != nil {
-		return nil, err
-	}
-	return tv.Programmes(doc), nil
+func films(doc *goquery.Document) []*tv.Programme {
+	return tv.Programmes(doc)
+}
+
+func cdrdama(doc *goquery.Document) []*tv.Programme {
+	return tv.Programmes(doc)
+}
+
+func comedy(doc *goquery.Document) []*tv.Programme {
+	return tv.Programmes(doc)
 }
