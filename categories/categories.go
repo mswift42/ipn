@@ -6,14 +6,22 @@ import (
 )
 
 const (
-	mp      = "http://www.bbc.co.uk/iplayer/group/most-popular"
-	flms    = "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz"
+	mostpop = "http://www.bbc.co.uk/iplayer/group/most-popular"
+	films   = "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz"
 	crdrama = "http://www.bbc.co.uk/iplayer/categories/drama-crime/all?sort=atoz"
-	cmdy    = "http://www.bbc.co.uk/iplayer/categories/comedy/all?sort=atoz"
+	comedy  = "http://www.bbc.co.uk/iplayer/categories/comedy/all?sort=atoz"
 )
 
 func MostPopular(doc *goquery.Document) ([]*tv.Programme, error) {
-	doc, err := goquery.NewDocument(mp)
+	doc, err := goquery.NewDocument(mostpop)
+	if err != nil {
+		return nil, err
+	}
+	return tv.Programmes(doc), nil
+}
+
+func Films(doc *goquery.Document) ([]*tv.Programme, error) {
+	doc, err := goquery.NewDocument(films)
 	if err != nil {
 		return nil, err
 	}
