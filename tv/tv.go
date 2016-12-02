@@ -5,7 +5,7 @@ import "github.com/PuerkitoBio/goquery"
 const bbcprefix = "http://www.bbc.co.uk"
 
 type Searcher interface {
-	UrlDoc() (*goquery.Document, error)
+	DocUrl(doc *goquery.Document) ([]*Programme, error)
 }
 
 type Programme struct {
