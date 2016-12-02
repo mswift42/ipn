@@ -5,7 +5,13 @@ import "github.com/PuerkitoBio/goquery"
 const bbcprefix = "http://www.bbc.co.uk"
 
 type Searcher interface {
-	DocUrl(doc *goquery.Document) ([]*Programme, error)
+	programmesForURL(url string) ([]*Programme, error)
+}
+
+type beebURL string
+
+func (b beebURL) programmesForURL(url string) ([]*Programme, error) {
+	
 }
 
 type Programme struct {
@@ -24,9 +30,8 @@ func newProgramme(title, subtitle, synopsis, pid,
 		thumbnail, url, 0}
 }
 
-type Queryurl string
 
-func (q Queryurl) DocUrl() (*goquery.Document, error) {
+func (q Queryurl) DocURL() (*goquery.Document, error) {
 	doc, err := goquery.NewDocument(string(q))
 	if err != nil {
 		return nil, err
