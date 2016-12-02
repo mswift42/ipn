@@ -11,7 +11,11 @@ type Searcher interface {
 type beebURL string
 
 func (b beebURL) programmesForURL(url string) ([]*Programme, error) {
-	
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		return nil, err
+	}
+	return Programmes(doc)
 }
 
 type Programme struct {
