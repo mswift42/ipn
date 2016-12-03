@@ -35,13 +35,6 @@ func newProgramme(title, subtitle, synopsis, pid,
 }
 
 
-func (q Queryurl) DocURL() (*goquery.Document, error) {
-	doc, err := goquery.NewDocument(string(q))
-	if err != nil {
-		return nil, err
-	}
-	return doc, nil
-}
 func programmes(doc *goquery.Document) []*Programme {
 	var programmes []*Programme
 	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
