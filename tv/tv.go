@@ -24,7 +24,7 @@ type Programme struct {
 	Synopsis  string
 	Pid       string
 	Thumbnail string
-	Url       string
+	URL       string
 	Index     int
 }
 
@@ -64,7 +64,7 @@ func findSubtitle(s *goquery.Selection) string {
 	return s.Find(".secondary > .subtitle").Text()
 }
 
-func findUrl(s *goquery.Selection) string {
+func findURL(s *goquery.Selection) string {
 	return "www.bbc.co.uk" + s.Find("a").AttrOr("href", "")
 }
 func findThumbnail(s *goquery.Selection) string {
