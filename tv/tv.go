@@ -15,7 +15,7 @@ func (b beebURL) ProgrammesForURL(url string) ([]*Programme, error) {
 	if err != nil {
 		return nil, err
 	}
-	return programmes(doc)
+	return programmes(doc), nil
 }
 
 type Programme struct {
@@ -43,7 +43,7 @@ func programmes(doc *goquery.Document) []*Programme {
 		synopsis := findSynopsis(s)
 		pid := findPid(s)
 		thumbnail := findThumbnail(s)
-		url := findUrl(s)
+		url := findURL(s)
 		programmes = append(programmes, newProgramme(title, subtitle,
 			synopsis, pid, thumbnail, url))
 	})
