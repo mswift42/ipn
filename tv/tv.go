@@ -10,12 +10,12 @@ type Searcher interface {
 
 type beebURL string
 
-func (b beebURL) programmesForURL(url string) ([]*Programme, error) {
+func (b beebURL) ProgrammesForURL(url string) ([]*Programme, error) {
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
 		return nil, err
 	}
-	return Programmes(doc)
+	return programmes(doc)
 }
 
 type Programme struct {
@@ -42,7 +42,7 @@ func (q Queryurl) DocURL() (*goquery.Document, error) {
 	}
 	return doc, nil
 }
-func Programmes(doc *goquery.Document) []*Programme {
+func programmes(doc *goquery.Document) []*Programme {
 	var programmes []*Programme
 	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		title := findTitle(s)
