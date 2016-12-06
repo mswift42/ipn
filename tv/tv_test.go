@@ -3,8 +3,6 @@ package tv
 import (
 	"testing"
 
-	"github.com/PuerkitoBio/goquery"
-	"github.com/mswift42/ipn/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -18,16 +16,16 @@ func TestNewProgramme(t *testing.T) {
 	assert := assert.New(t)
 	assert.Equal(programme.Title, "title1")
 	assert.Equal(programme.Index, 0)
-	assert.Equal(programme.Url, "http://programme.url")
+	assert.Equal(programme.URL, "http://programme.url")
 
 }
 
 func TestProgrammes(t *testing.T) {
 	assert := assert.New(t)
-	doc := testutils.LoadTestHtml(mostpopular)
-	programmes := Programmes(doc)
+	th := TestHtmlURL(mostpopular)
+	programmes, _ := Programmes(th)
 	assert.Equal(len(programmes), 40)
-	assert.Equal(programmes[0].Url, "www.bbc.co.uk/iplayer/episode/b07zhnf6/strictly-come-dancing-series-14-week-3")
+	assert.Equal(programmes[0].URL, "www.bbc.co.uk/iplayer/episode/b07zhnf6/strictly-come-dancing-series-14-week-3")
 	assert.Equal(programmes[0].Pid, "b07zhnf6")
 	assert.Equal(programmes[39].Title, "Cleverman")
 	assert.Equal(programmes[39].Synopsis, "Koen must send Kora back to her own dimension and save the Hairypeople from eviction.")
@@ -38,36 +36,33 @@ func TestProgrammes(t *testing.T) {
 
 func TestFindTitle(t *testing.T) {
 	assert := assert.New(t)
-	doc := testutils.LoadTestHtml(mostpopular)
-	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-		assert.NotEqual(t, findTitle(s), "")
-	})
-	programmes := Programmes(doc)
+	th := TestHtmlURL(mostpopular)
+	programmes, _ := Programmes(th)
 	assert.Equal(programmes[0].Title, "Strictly Come Dancing")
-	filmdoc := testutils.LoadTestHtml(films)
-	filmprogrammes := Programmes(filmdoc)
+	thfilm := TestHtmlURL(films)
+	filmprogrammes, _ := Programmes(thfilm)
 	assert.Equal(filmprogrammes[0].Title, "Adam Curtis")
-	crimedoc := testutils.LoadTestHtml(crime)
-	crimeprogrammes := Programmes(crimedoc)
+	crimeth := TestHtmlURL(crime)
+	crimeprogrammes, _ := Programmes(crimeth)
 	assert.Equal(crimeprogrammes[0].Title, "Beck")
 }
 
 func TestFindSubtitle(t *testing.T) {
 	assert := assert.New(t)
-	popdoc := testutils.LoadTestHtml(mostpopular)
-	popprogrammes := Programmes(popdoc)
+	popth := TestHtmlURL(mostpopular)
+	popprogrammes, _ := Programmes(popth)
 	assert.Equal(popprogrammes[0].Subtitle, "Series 14: Week 3")
-	filmdoc := testutils.LoadTestHtml(films)
-	filmprogrammes := Programmes(filmdoc)
+	filmth := TestHtmlURL(films)
+	filmprogrammes, _ := Programmes(filmth)
 	assert.Equal(filmprogrammes[0].Subtitle, "HyperNormalisation")
-	crimedoc := testutils.LoadTestHtml(crime)
-	crimeprogrammes := Programmes(crimedoc)
+	crimeth := TestHtmlURL(crime)
+	crimeprogrammes, _ := Programmes(crimeth)
 	assert.Equal(crimeprogrammes[0].Subtitle, "Series 6: 4. The Last Day")
 }
 func TestHasSubPage(t *testing.T) {
 	assert := assert.New(t)
-	filmsdoc := testutils.LoadTestHtml(films)
-	filmprogrammes := Programmes(filmsdoc)
+	filmsth := TestHtmlURL(films)
+	filmprogrammes, _ := Programmes(filmsth)
 	assert.Equal(filmprogrammes[0].Title, "Adam Curtis")
-	assert.Equal(hasSubPage(filmsdoc), "")
+	assert.Equal(hasSubPage(filmsth), "")
 }
