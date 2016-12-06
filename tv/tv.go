@@ -8,9 +8,9 @@ type Searcher interface {
 	urlDoc() (*goquery.Document, error)
 }
 
-type beebURL string
+type BeebURL string
 
-func (b beebURL) urlDoc() (*goquery.Document, error) {
+func (b BeebURL) urlDoc() (*goquery.Document, error) {
 	doc, err := goquery.NewDocument(string(b))
 	if err != nil {
 		return nil, err
@@ -34,9 +34,12 @@ func newProgramme(title, subtitle, synopsis, pid,
 		thumbnail, url, 0}
 }
 
-func Programmes(s Searcher) []*Programme {
+func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
-	doc, _ := s.urlDoc()
+	doc, err := s.urlDoc()
+	if err != nil {
+		return nil, err
+	}
 	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		title := findTitle(s)
 		subtitle := findSubtitle(s)
@@ -47,7 +50,7 @@ func Programmes(s Searcher) []*Programme {
 		programmes = append(programmes, newProgramme(title, subtitle,
 			synopsis, pid, thumbnail, url))
 	})
-	return programmes
+	return programmes, nil
 }
 func hasSubPage(doc *goquery.Document) string {
 	return doc.Find(".view-more-container").AttrOr("href", "")
