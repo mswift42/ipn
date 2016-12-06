@@ -1,6 +1,11 @@
 package tv
 
-import "github.com/PuerkitoBio/goquery"
+import (
+	"bytes"
+	"io/ioutil"
+
+	"github.com/PuerkitoBio/goquery"
+)
 
 const bbcprefix = "http://www.bbc.co.uk"
 
@@ -9,9 +14,23 @@ type Searcher interface {
 }
 
 type BeebURL string
+type TestHtmlURL string
 
 func (b BeebURL) urlDoc() (*goquery.Document, error) {
 	doc, err := goquery.NewDocument(string(b))
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
+}
+
+func (th TestHtmlURL) urlDoc() (*goquery.Document, error) {
+	file, err := ioutil.ReadFile(string(th))
+
+	if err != nil {
+		return nil, err
+	}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
 	if err != nil {
 		return nil, err
 	}
