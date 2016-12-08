@@ -18,6 +18,24 @@ func newCategory(name, url tv.BeebURL) *Category {
 	return &Category{name, url}
 }
 
-func allCategories() (*[]tv.Programme, error) {
+func AllCategories() (*[]tv.Programme, error) {
+	categories := []*Category{
+		{"mostpoular", mostpopular},
+		{"films", films},
+		{"crimedrama", crimedrama},
+		{"comedy", comedy},
+	}
+	var beeburl tv.Beeburl
+	programmes := make([]*Programme, len(categories))
+	for _, i := range categories {
+		beeburl = tv.BeebURL(i.url)
+		programme, err := tv.Programmes(beeburl)
+		if err != nil {
+			return nil, err
+		}
+		programmes = append(programmes, programme)
+
+	}
+	return programmes, nil
 
 }
