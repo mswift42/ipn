@@ -9,6 +9,11 @@ const (
 	comedy      = "http://www.bbc.co.uk/iplayer/categories/comedy/all?sort=atoz"
 )
 
+func category(url string, c chan []*tv.Programme) {
+	beeburl := tv.Beeburl(url)
+	c <- tv.Programmes(beeburl)
+}
+
 func AllCategories() ([]*tv.Programme, error) {
 	categories := []string{
 		mostpopular, films, crimedrama, comedy,
