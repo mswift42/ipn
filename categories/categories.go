@@ -11,6 +11,7 @@ const (
 	films       = "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz"
 	crimedrama  = "http://www.bbc.co.uk/iplayer/categories/drama-crime/all?sort=atoz"
 	comedy      = "http://www.bbc.co.uk/iplayer/categories/comedy/all?sort=atoz"
+	food        = "http://www.bbc.co.uk/iplayer/categories/food/all?sort=atoz"
 )
 
 func category(url string, c chan []*tv.Programme) {
@@ -24,7 +25,7 @@ func category(url string, c chan []*tv.Programme) {
 
 func AllCategories() ([]*tv.Programme, error) {
 	categories := []string{
-		mostpopular, films, crimedrama, comedy,
+		mostpopular, films, crimedrama, comedy, food,
 	}
 	programmes := make([]*tv.Programme, len(categories))
 	ch := make(chan []*tv.Programme)
