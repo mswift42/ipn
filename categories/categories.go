@@ -27,23 +27,6 @@ func AllCategories() ([]*tv.Programme, error) {
 		mostpopular, films, crimedrama, comedy,
 	}
 	programmes := make([]*tv.Programme, len(categories))
-	c := make(chan []*tv.Programme)
-	for _, i := range categories {
-		go func(i string) {
-			category(i, c)
-
-			programmes = append(programmes, <-c...)
-
-		}(i)
-	}
-	return programmes, nil
-
-}
-func Ac() ([]*tv.Programme, error) {
-	categories := []string{
-		mostpopular, films, crimedrama, comedy,
-	}
-	programmes := make([]*tv.Programme, len(categories))
 	ch := make(chan []*tv.Programme)
 	for _, i := range categories {
 		go func(i string) {
@@ -56,13 +39,12 @@ func Ac() ([]*tv.Programme, error) {
 			fmt.Println("Programmes: ", prog[0].Title)
 			ch <- prog
 		}(i)
+
 	}
-	for {
-		select {
-		case r := <-ch:
-			fmt.Println("Category was fetched: ", r[0].Title)
-			programmes = append(programmes, r...)
-		}
+
+	for i := 0; i < len(categories); i++ {
+		prog := <-ch
+		programmes = append(programmes, prog...)
 	}
 	return programmes, nil
 
