@@ -14,6 +14,11 @@ const (
 	food        = "http://www.bbc.co.uk/iplayer/categories/food/all?sort=atoz"
 )
 
+type Category struct {
+	name       string
+	programmes []*tv.Programme
+}
+
 func category(url string, c chan []*tv.Programme) {
 	beeburl := tv.BeebURL(url)
 	prog, err := tv.Programmes(beeburl)
