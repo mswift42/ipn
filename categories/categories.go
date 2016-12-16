@@ -14,9 +14,12 @@ const (
 	food        = "http://www.bbc.co.uk/iplayer/categories/food/all?sort=atoz"
 )
 
+// Category struct represents an Iplayer programme category.
+// It has a name of the category, like "films" or "comedy" and
+// a list of the tv programmes of said category.
 type Category struct {
-	name       string
-	programmes []*tv.Programme
+	Name       string
+	Programmes []*tv.Programme
 }
 
 func category(url string, c chan []*tv.Programme) {
