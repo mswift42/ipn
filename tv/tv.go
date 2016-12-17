@@ -53,6 +53,14 @@ func newProgramme(title, subtitle, synopsis, pid,
 		thumbnail, url, 0}
 }
 
+// Category struct represents an Iplayer programme category.
+// It has a name of the category, like "films" or "comedy" and
+// a list of the tv programmes of said category.
+type Category struct {
+	Name       string
+	Programmes []*Programme
+}
+
 func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
 	doc, err := s.urlDoc()
