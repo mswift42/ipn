@@ -61,6 +61,10 @@ type Category struct {
 	Programmes []*Programme
 }
 
+func NewCategory(name string, programmes []*Programmes) {
+	return &Category{name, programmes}
+}
+
 func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
 	doc, err := s.urlDoc()
