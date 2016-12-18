@@ -14,20 +14,21 @@ const (
 	food        = "http://www.bbc.co.uk/iplayer/categories/food/all?sort=atoz"
 )
 
-func category(url string, c chan []*tv.Programme) {
+func category(url, name string, c chan []*tv.Category) {
 	beeburl := tv.BeebURL(url)
 	prog, err := tv.Programmes(beeburl)
 	if err != nil {
 		panic(err)
 	}
-	c <- prog
+	cat := tv.NewCategory(name, prog)
+	c <- cat
 }
 
-func AllCategories() ([]*tv.Programme, error) {
-	categories := []string{
+func AllCategories() ([]*tv.Category, error) {
+	categories := []Category{
 		mostpopular, films, crimedrama, comedy, food,
 	}
-	programmes := make([]*tv.Programme, len(categories))
+	programmes := make([]*tv.Category, len(categories))
 	ch := make(chan []*tv.Programme)
 	for _, i := range categories {
 		go func(i string) {
