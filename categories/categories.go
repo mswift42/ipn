@@ -14,7 +14,7 @@ const (
 	food        = "http://www.bbc.co.uk/iplayer/categories/food/all?sort=atoz"
 )
 
-func category(url, name string, c chan []*tv.Category) {
+func category(url, name string, c chan *tv.Category) {
 	beeburl := tv.BeebURL(url)
 	prog, err := tv.Programmes(beeburl)
 	if err != nil {
@@ -25,29 +25,33 @@ func category(url, name string, c chan []*tv.Category) {
 }
 
 func AllCategories() ([]*tv.Category, error) {
-	categories := []Category{
-		mostpopular, films, crimedrama, comedy, food,
+	categories := map[string]string{
+		"mostpopular": mostpopular,
+		"films":       films,
+		"crime/drama": crimedrama,
+		"comedy":      comedy,
+		"food":        food,
 	}
-	programmes := make([]*tv.Category, len(categories))
-	ch := make(chan []*tv.Programme)
-	for _, i := range categories {
-		go func(i string) {
-			fmt.Println("Fetching Cat: ", i)
-			beeburl := tv.BeebURL(i)
+	cats := make([]*tv.Category, len(categories))
+	ch := make(chan *tv.Category)
+	for name, url := range categories {
+		go func(name, url string) {
+			fmt.Println("Fetching Cat: ", name)
+			beeburl := tv.BeebURL(url)
 			prog, err := tv.Programmes(beeburl)
 			if err != nil {
 				panic(err)
 			}
 			fmt.Println("Programmes: ", prog[0].Title)
-			ch <- prog
-		}(i)
+			ch <- tv.NewCategory(name, prog)
+		}(name, url)
 
 	}
 
 	for i := 0; i < len(categories); i++ {
-		prog := <-ch
-		programmes = append(programmes, prog...)
+		cat := <-ch
+		cats = append(cats, cat)
 	}
-	return programmes, nil
+	return cats, nil
 
 }
