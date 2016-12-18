@@ -54,14 +54,14 @@ func newProgramme(title, subtitle, synopsis, pid,
 }
 
 // Category struct represents an Iplayer programme category.
-// It has a name of the category, like "films" or "comedy" and
+// It has the name of the category, like "films" or "comedy" and
 // a list of the tv programmes of said category.
 type Category struct {
 	Name       string
 	Programmes []*Programme
 }
 
-func NewCategory(name string, programmes []*Programmes) {
+func NewCategory(name string, programmes []*Programme) {
 	return &Category{name, programmes}
 }
 
