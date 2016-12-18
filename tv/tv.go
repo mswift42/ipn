@@ -61,7 +61,7 @@ type Category struct {
 	Programmes []*Programme
 }
 
-func NewCategory(name string, programmes []*Programme) {
+func NewCategory(name string, programmes []*Programme) *Category {
 	return &Category{name, programmes}
 }
 
