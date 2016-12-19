@@ -56,8 +56,8 @@ func newProgramme(title, subtitle, synopsis, pid,
 // It has the name of the category, like "films" or "comedy" and
 // a list of the tv programmes of said category.
 type Category struct {
-	Name       string
-	Programmes []*Programme
+	Name       string       `json:"category"`
+	Programmes []*Programme `json:"programmes"`
 }
 
 func NewCategory(name string, programmes []*Programme) *Category {
