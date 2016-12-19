@@ -60,6 +60,8 @@ type Category struct {
 	Programmes []*Programme `json:"programmes"`
 }
 
+// NewCategory returns a new Category struct for a given
+// category name and list of programmes.
 func NewCategory(name string, programmes []*Programme) *Category {
 	return &Category{name, programmes}
 }
