@@ -42,8 +42,8 @@ type Programme struct {
 	Subtitle  string `json:"subtitle"`
 	Synopsis  string `json:"synopsis"`
 	Pid       string `json:"pid"`
-	Thumbnail string `json:"`
-	URL       string
+	Thumbnail string `json:"thumbnail"`
+	URL       string `json:"url"`
 }
 
 func newProgramme(title, subtitle, synopsis, pid,
