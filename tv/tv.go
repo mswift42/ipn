@@ -49,7 +49,7 @@ type Programme struct {
 func newProgramme(title, subtitle, synopsis, pid,
 	thumbnail, url string) *Programme {
 	return &Programme{title, subtitle, synopsis, pid,
-		thumbnail, url, 0}
+		thumbnail, url}
 }
 
 // Category struct represents an Iplayer programme category.
