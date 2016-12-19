@@ -38,13 +38,12 @@ func (th TestHtmlURL) urlDoc() (*goquery.Document, error) {
 }
 
 type Programme struct {
-	Title     string
-	Subtitle  string
-	Synopsis  string
-	Pid       string
-	Thumbnail string
+	Title     string `json:"title"`
+	Subtitle  string `json:"subtitle"`
+	Synopsis  string `json:"synopsis"`
+	Pid       string `json:"pid"`
+	Thumbnail string `json:"`
 	URL       string
-	Index     int
 }
 
 func newProgramme(title, subtitle, synopsis, pid,
