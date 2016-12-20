@@ -66,6 +66,11 @@ func NewCategory(name string, programmes []*Programme) *Category {
 	return &Category{name, programmes}
 }
 
+// ProgrammeDB stores all queried categories.
+type ProgrammeDB struct {
+	Catogories []*Category `json:"categories"`
+}
+
 func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
 	doc, err := s.urlDoc()
