@@ -25,17 +25,17 @@ func category(url, name string, c chan *tv.Category) {
 }
 
 func AllCategories() ([]*tv.Category, error) {
-	categories := map[string]string{
-		"mostpopular": mostpopular,
-		"films":       films,
-		"crime/drama": crimedrama,
-		"comedy":      comedy,
-		"food":        food,
+	categories := map[string]tv.BeebURL{
+		"most-popular": mostpopular,
+		"films":        films,
+		"crime/drama":  crimedrama,
+		"comedy":       comedy,
+		"food":         food,
 	}
 	cats := make([]*tv.Category, len(categories))
 	ch := make(chan *tv.Category)
 	for name, url := range categories {
-		go func(name, url string) {
+		go func(name string, url tv.BeebURL) {
 			fmt.Println("Fetching Cat: ", name)
 			beeburl := tv.BeebURL(url)
 			prog, err := tv.Programmes(beeburl)
