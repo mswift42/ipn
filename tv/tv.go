@@ -72,7 +72,10 @@ type programmeDB struct {
 }
 
 func newProgrammeDB(cats []*Category) *programmeDB {
-	return *programmeDB{cats}
+	return &programmeDB{cats}
+}
+
+func (pdb programmeDB) save() {
 }
 
 func Programmes(s Searcher) ([]*Programme, error) {
