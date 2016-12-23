@@ -85,8 +85,8 @@ func (pdb *programmeDB) toJson() ([]byte, error) {
 	return marshalled, nil
 }
 
-func (pdb *programmeDB) save(jsonfile []byte) {
-
+func (pdb *programmeDB) save(jsonfile []byte, filename string) error {
+	return ioutil.WriteFile(filename, jsonfile, 0644)
 }
 
 func Programmes(s Searcher) ([]*Programme, error) {
