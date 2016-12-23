@@ -15,7 +15,6 @@ func TestNewProgramme(t *testing.T) {
 		"a00", "http://thumbnail.url", "http://programme.url")
 	assert := assert.New(t)
 	assert.Equal(programme.Title, "title1")
-	assert.Equal(programme.Index, 0)
 	assert.Equal(programme.URL, "http://programme.url")
 
 }
