@@ -4,8 +4,9 @@ import (
 	"bytes"
 	"io/ioutil"
 
-	"github.com/PuerkitoBio/goquery"
 	"encoding/json"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -84,7 +85,7 @@ func (pdb *programmeDB) toJson() ([]byte, error) {
 	return marshalled, nil
 }
 
-func (pdb *programmeDB) save(jsonfile string) {
+func (pdb *programmeDB) save(jsonfile []byte) {
 
 }
 
