@@ -5,6 +5,7 @@ import (
 	"io/ioutil"
 
 	"github.com/PuerkitoBio/goquery"
+	"encoding/json"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -75,7 +76,16 @@ func newProgrammeDB(cats []*Category) *programmeDB {
 	return &programmeDB{cats}
 }
 
-func (pdb programmeDB) save() {
+func (pdb *programmeDB) toJson() ([]byte, error) {
+	marshalled, err := json.Marshal(pdb)
+	if err != nil {
+		return nil, err
+	}
+	return marshalled, nil
+}
+
+func (pdb *programmeDB) save(jsonfile string) {
+
 }
 
 func Programmes(s Searcher) ([]*Programme, error) {
