@@ -84,7 +84,7 @@ func newProgrammeDB(cats []*Category) *programmeDB {
 }
 
 func (pdb *programmeDB) toJson() ([]byte, error) {
-	marshalled, err := json.Marshal(pdb)
+	marshalled, err := json.MarshalIndent(pdb)
 	if err != nil {
 		return nil, err
 	}
