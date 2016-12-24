@@ -53,7 +53,7 @@ func newProgramme(title, subtitle, synopsis, pid,
 	return &Programme{
 		Title:     title,
 		Subtitle:  subtitle,
-		Synopsi:   synopsis,
+		Synopsis:  synopsis,
 		Pid:       pid,
 		Thumbnail: thumbnail,
 		URL:       url,
