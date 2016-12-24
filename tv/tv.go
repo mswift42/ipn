@@ -50,8 +50,14 @@ type Programme struct {
 
 func newProgramme(title, subtitle, synopsis, pid,
 	thumbnail, url string) *Programme {
-	return &Programme{title, subtitle, synopsis, pid,
-		thumbnail, url}
+	return &Programme{
+		Title:     title,
+		Subtitle:  subtitle,
+		Synopsi:   synopsis,
+		Pid:       pid,
+		Thumbnail: thumbnail,
+		URL:       url,
+	}
 }
 
 // Category struct represents an Iplayer programme category.
