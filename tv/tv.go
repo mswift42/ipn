@@ -39,6 +39,10 @@ func (th TestHtmlURL) urlDoc() (*goquery.Document, error) {
 	return doc, nil
 }
 
+// Programme represents an Iplayer TV programme. It consists of
+// the programme's title, subtitle, a short programme description,
+// The Iplayer Programme ID, the url to its thumbnail, and the url
+// to the programme's website.
 type Programme struct {
 	Title     string `json:"title"`
 	Subtitle  string `json:"subtitle"`
