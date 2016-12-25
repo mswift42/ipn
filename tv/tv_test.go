@@ -6,8 +6,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const mostpopular = "../categories/mostpopular.html"
-const films = "../films/films.html"
+const mostpopular = "mostpopular.html"
+const filmspage1 = "filmspage1.html"
+const filmspage2 = "filmspage2.html"
 const crime = "../drama-crime/crime.html"
 
 func TestNewProgramme(t *testing.T) {
@@ -26,26 +27,30 @@ func TestProgrammes(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(programmes[0].URL, "www.bbc.co.uk/iplayer/episode/b07zhnf6/strictly-come-dancing-series-14-week-3")
-	assert.Equal(programmes[0].Pid, "b07zhnf6")
-	assert.Equal(programmes[39].Title, "Cleverman")
-	assert.Equal(programmes[39].Synopsis, "Koen must send Kora back to her own dimension and save the Hairypeople from eviction.")
+	assert.Equal(len(programmes), 40)
+	assert.Equal(programmes[0].URL, "www.bbc.co.uk/iplayer/episode/b086yqrc/eastenders-24122016")
+	assert.Equal(programmes[0].Pid, "b086yqrc")
+	assert.Equal(programmes[39].Title, "Mr Stink")
+	assert.Equal(programmes[39].Synopsis, "An unhappy, daydreaming schoolgirl befriends a homeless man and his dog in the local park.")
 	assert.Equal(programmes[39].Thumbnail, "http://ichef.bbci.co.uk/images/ic/336x189/p049dz62.jpg")
-	assert.Equal(programmes[1].Subtitle, "Series 12: 1. Collectables")
-	assert.Equal(programmes[1].Title, "The Apprentice")
+	assert.Equal(programmes[1].Subtitle, "23/12/2016")
+	assert.Equal(programmes[1].Title, "EastEnders")
 }
 
 func TestFindTitle(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL(mostpopular)
-	programmes, _ := Programmes(th)
-	assert.Equal(programmes[0].Title, "Strictly Come Dancing")
-	thfilm := TestHtmlURL(films)
-	filmprogrammes, _ := Programmes(thfilm)
-	assert.Equal(filmprogrammes[0].Title, "Adam Curtis")
-	crimeth := TestHtmlURL(crime)
-	crimeprogrammes, _ := Programmes(crimeth)
-	assert.Equal(crimeprogrammes[0].Title, "Beck")
+	programmes, err := Programmes(th)
+	if err != nil {
+		panic(err)
+	}
+	th2 := TestHtmlURL(filmspage1)
+	filmsprog1, err := Programmes(th2)
+	if err != nil {
+		panic(err)
+	}
+	assert.Equal(programmes[0].Title, "EastEnders")
+	assert.Equal(filmsprog1[1].Title, "Alan Partridge: Alpha Papa")
 }
 
 func TestFindSubtitle(t *testing.T) {
@@ -53,7 +58,7 @@ func TestFindSubtitle(t *testing.T) {
 	popth := TestHtmlURL(mostpopular)
 	popprogrammes, _ := Programmes(popth)
 	assert.Equal(popprogrammes[0].Subtitle, "Series 14: Week 3")
-	filmth := TestHtmlURL(films)
+	filmth := TestHtmlURL(filmspage1)
 	filmprogrammes, _ := Programmes(filmth)
 	assert.Equal(filmprogrammes[0].Subtitle, "HyperNormalisation")
 	crimeth := TestHtmlURL(crime)
