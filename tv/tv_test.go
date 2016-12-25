@@ -32,7 +32,7 @@ func TestProgrammes(t *testing.T) {
 	assert.Equal(programmes[0].Pid, "b086yqrc")
 	assert.Equal(programmes[39].Title, "Mr Stink")
 	assert.Equal(programmes[39].Synopsis, "An unhappy, daydreaming schoolgirl befriends a homeless man and his dog in the local park.")
-	assert.Equal(programmes[39].Thumbnail, "http://ichef.bbci.co.uk/images/ic/336x189/p049dz62.jpg")
+	assert.Equal(programmes[39].Thumbnail, "https://ichef.bbci.co.uk/images/ic/336x189/p01j0d94.jpg")
 	assert.Equal(programmes[1].Subtitle, "23/12/2016")
 	assert.Equal(programmes[1].Title, "EastEnders")
 }
@@ -57,7 +57,7 @@ func TestFindSubtitle(t *testing.T) {
 	assert := assert.New(t)
 	popth := TestHtmlURL(mostpopular)
 	popprogrammes, _ := Programmes(popth)
-	assert.Equal(popprogrammes[0].Subtitle, "Series 14: Week 3")
+	assert.Equal(popprogrammes[0].Subtitle, "24/12/2016")
 	filmth := TestHtmlURL(filmspage1)
 	filmprogrammes, _ := Programmes(filmth)
 	assert.Equal(filmprogrammes[0].Subtitle, "HyperNormalisation")
@@ -74,4 +74,16 @@ func TestFindThumbnail(t *testing.T) {
 		panic(err)
 	}
 	assert.Equal(popprogrammes[0].Thumbnail, "https://ichef.bbci.co.uk/images/ic/336x189/p04l711h.jpg")
+}
+
+func TestNewCategory(t *testing.T) {
+	assert := assert.New(t)
+	popth := TestHtmlURL(mostpopular)
+	popprogrammes, err := Programmes(popth)
+	if err != nil {
+		panic(err)
+	}
+	cat := NewCategory("mostpopular", popprogrammes)
+	assert.Equal(cat.Name, "mostpopular")
+	assert.Equal(cat.Programmes[0].Title, "EastEnders")
 }
