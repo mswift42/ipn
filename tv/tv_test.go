@@ -6,7 +6,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const mostpopular = "../mostpopular/iplayermostpopular.html"
+const mostpopular = "../categories/mostpopular.html"
 const films = "../films/films.html"
 const crime = "../drama-crime/crime.html"
 
@@ -22,8 +22,10 @@ func TestNewProgramme(t *testing.T) {
 func TestProgrammes(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL(mostpopular)
-	programmes, _ := Programmes(th)
-	assert.Equal(len(programmes), 40)
+	programmes, err := Programmes(th)
+	if err != nil {
+		panic(err)
+	}
 	assert.Equal(programmes[0].URL, "www.bbc.co.uk/iplayer/episode/b07zhnf6/strictly-come-dancing-series-14-week-3")
 	assert.Equal(programmes[0].Pid, "b07zhnf6")
 	assert.Equal(programmes[39].Title, "Cleverman")
@@ -57,11 +59,4 @@ func TestFindSubtitle(t *testing.T) {
 	crimeth := TestHtmlURL(crime)
 	crimeprogrammes, _ := Programmes(crimeth)
 	assert.Equal(crimeprogrammes[0].Subtitle, "Series 6: 4. The Last Day")
-}
-func TestHasSubPage(t *testing.T) {
-	assert := assert.New(t)
-	filmsth := TestHtmlURL(films)
-	filmprogrammes, _ := Programmes(filmsth)
-	assert.Equal(filmprogrammes[0].Title, "Adam Curtis")
-	assert.Equal(hasSubPage(filmsth), "")
 }

@@ -3,9 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/PuerkitoBio/goquery"
-	"github.com/mswift42/ipn/films"
-	"github.com/mswift42/ipn/mostpopular"
+	"github.com/mswift42/ipn/categories"
 )
 
 const (
@@ -13,16 +11,18 @@ const (
 )
 
 func main() {
-	pop, _ := goquery.NewDocument(mp)
-	programmes := mostpopular.Programmes(pop)
-
-	for _, i := range programmes {
-		fmt.Println(i.Title)
-		fmt.Println(i.Synopsis)
+	prog, err := categories.AllCategories()
+	if err != nil {
+		fmt.Println("Oops, error in fetching all categories: ", err)
 	}
-	films, _ := films.Programmes()
-	for _, i := range films {
-		fmt.Println(i.Title)
-		fmt.Println(i.Synopsis)
+	for _, i := range prog {
+		if i != nil {
+			fmt.Println("\n\n", i.Name, "\n\n")
+			for _, j := range i.Programmes {
+				if j != nil {
+					fmt.Println(j.Title)
+				}
+			}
+		}
 	}
 }

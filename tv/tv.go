@@ -112,8 +112,11 @@ func Programmes(s Searcher) ([]*Programme, error) {
 		pid := findPid(s)
 		thumbnail := findThumbnail(s)
 		url := findURL(s)
-		programmes = append(programmes, newProgramme(title, subtitle,
-			synopsis, pid, thumbnail, url))
+		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
+		if np != nil {
+			programmes = append(programmes, np)
+		}
+
 	})
 	return programmes, nil
 }
