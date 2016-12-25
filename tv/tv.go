@@ -139,7 +139,7 @@ func findURL(s *goquery.Selection) string {
 	return "www.bbc.co.uk" + s.Find("a").AttrOr("href", "")
 }
 func findThumbnail(s *goquery.Selection) string {
-	return s.Find(".r-image").AttrOr("data-ip-src", "")
+	return s.Find(".rs-image > picture > source").AttrOr("srcset", "")
 }
 func findPid(s *goquery.Selection) string {
 	return s.Find(".list-item-inner > a").AttrOr("data-episode-id", "")
