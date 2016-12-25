@@ -65,3 +65,13 @@ func TestFindSubtitle(t *testing.T) {
 	crimeprogrammes, _ := Programmes(crimeth)
 	assert.Equal(crimeprogrammes[0].Subtitle, "Series 6: 4. The Last Day")
 }
+
+func TestFindThumbnail(t *testing.T) {
+	assert := assert.New(t)
+	popth := TestHtmlURL(mostpopular)
+	popprogrammes, err := Programmes(popth)
+	if err != nil {
+		panic(err)
+	}
+	assert.Equal(popprogrammes[0].Thumbnail, "https://ichef.bbci.co.uk/images/ic/336x189/p04l711h.jpg")
+}
