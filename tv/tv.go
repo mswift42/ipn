@@ -15,7 +15,9 @@ type Searcher interface {
 	urlDoc() (*goquery.Document, error)
 }
 
+// BeebURL represents an Iplayer URL.
 type BeebURL string
+
 type TestHtmlURL string
 
 func (b BeebURL) urlDoc() (*goquery.Document, error) {
