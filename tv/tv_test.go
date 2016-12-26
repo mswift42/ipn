@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"io/ioutil"
 )
 
 const mostpopular = "mostpopular.html"
@@ -124,4 +125,23 @@ func TestNewProgrammeDB(t *testing.T) {
 	cats := []*Category{cat, cat2}
 	pdb := newProgrammeDB(cats)
 	assert.Equal(len(pdb.Catogories), 2)
+}
+
+func TestProgrammeDB_Save(t *testing.T) {
+	assert := assert.New(t)
+	popth := TestHtmlURL(mostpopular)
+	film1 := TestHtmlURL(filmspage1)
+	popprog, _ := Programmes(popth)
+	filmprog, _ := Programmes(film1)
+	cat1 := NewCategory("mostpopular", popprog)
+	cat2 := NewCategory("films", filmprog)
+	pdb := newProgrammeDB([]*Category{cat1, cat2})
+	json, err := pdb.toJson()
+	assert.Nil(err)
+	assert.NotNil(json)
+	pdb.Save("testjson.json")
+	file, err := ioutil.ReadFile("testjson.json")
+	assert.NotNil(file)
+	assert.Nil(err)
+
 }
