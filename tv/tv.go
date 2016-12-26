@@ -103,6 +103,10 @@ func (pdb *programmeDB) Save(filename string) error {
 	return ioutil.WriteFile(filename, json, 0644)
 }
 
+// TODO add Restore from db -> programmeDb method.
+
+// Programmes iterates over an goquery.Document,
+// finding every Programme and finally returning them.
 func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
 	doc, err := s.urlDoc()
