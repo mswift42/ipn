@@ -23,6 +23,19 @@ func TestBeebURLUrlDoc(t *testing.T) {
 	assert.Nil(ex1)
 }
 
+func TestTestHtmlURLDoc(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL(mostpopular)
+	succ, err := th.urlDoc()
+	assert.Nil(err)
+	assert.NotNil(succ)
+	th2 := TestHtmlURL("")
+	fail, err := th2.urlDoc()
+	assert.Nil(fail)
+	assert.NotNil(err)
+
+}
+
 func TestNewProgramme(t *testing.T) {
 	programme := newProgramme("title1", "subtitle1", "synopsys1",
 		"a00", "http://thumbnail.url", "http://programme.url")
