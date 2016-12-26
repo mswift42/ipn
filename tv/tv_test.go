@@ -11,6 +11,18 @@ const filmspage1 = "filmspage1.html"
 const filmspage2 = "filmspage2.html"
 const crime = "../drama-crime/crime.html"
 
+func TestBeebURLUrlDoc(t *testing.T) {
+	assert := assert.New(t)
+	b := BeebURL("http://www.example.com/")
+	ex, err := b.urlDoc()
+	assert.Nil(err)
+	assert.NotNil(ex)
+	b1 := BeebURL("")
+	ex1, err := b1.urlDoc()
+	assert.NotNil(err)
+	assert.Nil(ex1)
+}
+
 func TestNewProgramme(t *testing.T) {
 	programme := newProgramme("title1", "subtitle1", "synopsys1",
 		"a00", "http://thumbnail.url", "http://programme.url")
@@ -86,4 +98,17 @@ func TestNewCategory(t *testing.T) {
 	cat := NewCategory("mostpopular", popprogrammes)
 	assert.Equal(cat.Name, "mostpopular")
 	assert.Equal(cat.Programmes[0].Title, "EastEnders")
+}
+
+func TestNewProgrammeDB(t *testing.T) {
+	assert := assert.New(t)
+	popth := TestHtmlURL(mostpopular)
+	popprogrammes, _ := Programmes(popth)
+	cat := NewCategory("mostpopular", popprogrammes)
+	filmdoc := TestHtmlURL(filmspage1)
+	filmprog, _ := Programmes(filmdoc)
+	cat2 := NewCategory("films", filmprog)
+	cats := []*Category{cat, cat2}
+	pdb := newProgrammeDB(cats)
+	assert.Equal(len(pdb.Catogories), 2)
 }
