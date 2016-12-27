@@ -6,8 +6,9 @@ import (
 
 	"encoding/json"
 
-	"github.com/PuerkitoBio/goquery"
 	"time"
+
+	"github.com/PuerkitoBio/goquery"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -53,6 +54,7 @@ type Programme struct {
 	Pid       string `json:"pid"`
 	Thumbnail string `json:"thumbnail"`
 	URL       string `json:"url"`
+	index     int
 }
 
 func newProgramme(title, subtitle, synopsis, pid,
@@ -80,10 +82,11 @@ type Category struct {
 func NewCategory(name string, programmes []*Programme) *Category {
 	return &Category{name, programmes}
 }
+
 // ProgrammeDB stores all queried categories.
 type programmeDB struct {
 	Categories []*Category `json:"categories"`
-	saved	time.Time
+	saved      time.Time
 }
 
 func newProgrammeDB(cats []*Category, saved time.Time) *programmeDB {
@@ -99,6 +102,7 @@ func (pdb *programmeDB) toJson() ([]byte, error) {
 }
 
 func (pdb *programmeDB) Save(filename string) error {
+	pdb.saved = time.Now()
 	json, err := pdb.toJson()
 	if err != nil {
 		return err
