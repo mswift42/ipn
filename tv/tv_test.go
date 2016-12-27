@@ -1,11 +1,13 @@
 package tv
 
 import (
+	"strings"
 	"testing"
 
-	"github.com/stretchr/testify/assert"
 	"io/ioutil"
 	"time"
+
+	"github.com/stretchr/testify/assert"
 )
 
 const mostpopular = "mostpopular.html"
@@ -83,14 +85,14 @@ func TestFindTitle(t *testing.T) {
 func TestFindSubtitle(t *testing.T) {
 	assert := assert.New(t)
 	popth := TestHtmlURL(mostpopular)
-	popprogrammes, _ := Programmes(popth)
+	popprogrammes, err := Programmes(popth)
+	if err != nil {
+		panic(err)
+	}
 	assert.Equal(popprogrammes[0].Subtitle, "24/12/2016")
-	filmth := TestHtmlURL(filmspage1)
-	filmprogrammes, _ := Programmes(filmth)
-	assert.Equal(filmprogrammes[0].Subtitle, "HyperNormalisation")
-	crimeth := TestHtmlURL(crime)
-	crimeprogrammes, _ := Programmes(crimeth)
-	assert.Equal(crimeprogrammes[0].Subtitle, "Series 6: 4. The Last Day")
+	film1th := TestHtmlURL(filmspage1)
+	film1prog, _ := Programmes(film1th)
+	assert.Equal(film1prog[0].Subtitle, "HyperNormalisation")
 }
 
 func TestFindThumbnail(t *testing.T) {
@@ -127,7 +129,7 @@ func TestNewProgrammeDB(t *testing.T) {
 	now := time.Now()
 	pdb := newProgrammeDB(cats, now)
 	assert.Equal(len(pdb.Categories), 2)
-	assert.Equal(pdb.saved, now)
+	assert.Equal(pdb.Saved, now)
 	assert.Equal(now.Day(), time.Now().Day())
 }
 
@@ -147,5 +149,7 @@ func TestProgrammeDB_Save(t *testing.T) {
 	file, err := ioutil.ReadFile("testjson.json")
 	assert.NotNil(file)
 	assert.Nil(err)
+	assert.True(strings.Contains(string(file), "categories"))
+	assert.True(strings.Contains(string(file), "saved"))
 
 }
