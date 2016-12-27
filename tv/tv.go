@@ -8,7 +8,6 @@ import (
 
 	"github.com/PuerkitoBio/goquery"
 	"time"
-	"go/doc"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
