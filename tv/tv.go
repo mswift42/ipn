@@ -86,11 +86,11 @@ func NewCategory(name string, programmes []*Programme) *Category {
 // ProgrammeDB stores all queried categories.
 type programmeDB struct {
 	Categories []*Category `json:"categories"`
-	saved      time.Time
+	Saved      time.Time   `json:"saved"`
 }
 
 func newProgrammeDB(cats []*Category, saved time.Time) *programmeDB {
-	return &programmeDB{Categories: cats, saved: saved}
+	return &programmeDB{Categories: cats, Saved: saved}
 }
 
 func (pdb *programmeDB) toJson() ([]byte, error) {
@@ -102,7 +102,7 @@ func (pdb *programmeDB) toJson() ([]byte, error) {
 }
 
 func (pdb *programmeDB) Save(filename string) error {
-	pdb.saved = time.Now()
+	pdb.Saved = time.Now()
 	json, err := pdb.toJson()
 	if err != nil {
 		return err
