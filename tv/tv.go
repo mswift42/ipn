@@ -54,7 +54,7 @@ type Programme struct {
 	Pid       string `json:"pid"`
 	Thumbnail string `json:"thumbnail"`
 	URL       string `json:"url"`
-	index     int
+	Index     int `json:"index"`
 }
 
 func newProgramme(title, subtitle, synopsis, pid,
@@ -108,6 +108,16 @@ func (pdb *programmeDB) Save(filename string) error {
 		return err
 	}
 	return ioutil.WriteFile(filename, json, 0644)
+}
+
+Func (pdb *programmeDB) index() {
+	index := 0
+	for  _, i := range pdb.Categories {
+		for _, j := range i.Programmes {
+			j.Index = index
+			j++
+		}
+	}
 }
 
 // TODO add Restore from db -> programmeDb method.
