@@ -124,8 +124,11 @@ func TestNewProgrammeDB(t *testing.T) {
 	filmprog, _ := Programmes(filmdoc)
 	cat2 := NewCategory("films", filmprog)
 	cats := []*Category{cat, cat2}
-	pdb := newProgrammeDB(cats, time.Now())
+	now := time.Now()
+	pdb := newProgrammeDB(cats, now)
 	assert.Equal(len(pdb.Categories), 2)
+	assert.Equal(pdb.saved, now)
+	assert.Equal(now.Day(), time.Now().Day())
 }
 
 func TestProgrammeDB_Save(t *testing.T) {
