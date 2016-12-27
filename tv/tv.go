@@ -115,7 +115,7 @@ func (pdb *programmeDB) index() {
 	for _, i := range pdb.Categories {
 		for _, j := range i.Programmes {
 			j.Index = index
-			j++
+			index++
 		}
 	}
 }
