@@ -153,3 +153,18 @@ func TestProgrammeDB_Save(t *testing.T) {
 	assert.True(strings.Contains(string(file), "saved"))
 
 }
+
+func TestProgrammeDB_Index(t *testing.T) {
+	assert := assert.New(t)
+	popth := TestHtmlURL(mostpopular)
+	film1 := TestHtmlURL(filmspage1)
+	popprog, _ := Programmes(popth)
+	filmprog, _ := Programmes(film1)
+	cat1 := NewCategory("mostpopular", popprog)
+	cat2 := NewCategory("films", filmprog)
+	pdb := newProgrammeDB([]*Category{cat1, cat2}, time.Now())
+	pdb.index()
+	assert.Equal(pdb.Categories[0].Programmes[0].Index, 0)
+	assert.Equal(pdb.Categories[0].Programmes[1].Index, 1)
+	assert.Equal(pdb.Categories[0].Programmes[39].Index, 39)
+}
