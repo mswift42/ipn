@@ -151,6 +151,7 @@ func TestProgrammeDB_Save(t *testing.T) {
 	assert.Nil(err)
 	assert.True(strings.Contains(string(file), "categories"))
 	assert.True(strings.Contains(string(file), "saved"))
+	assert.True(strings.Contains(string(file), "synopsis"))
 
 }
 
@@ -167,4 +168,7 @@ func TestProgrammeDB_Index(t *testing.T) {
 	assert.Equal(pdb.Categories[0].Programmes[0].Index, 0)
 	assert.Equal(pdb.Categories[0].Programmes[1].Index, 1)
 	assert.Equal(pdb.Categories[0].Programmes[39].Index, 39)
+	pdb.Save("testjson.json")
+	file, _ := ioutil.ReadFile("testjson.json")
+	assert.True(strings.Contains(string(file), "39"))
 }
