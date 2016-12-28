@@ -93,6 +93,16 @@ func newProgrammeDB(cats []*Category, saved time.Time) *programmeDB {
 	return &programmeDB{Categories: cats, Saved: saved}
 }
 
+func newProgrammeDbFromJSON(jsonfilename string) (*programmeDB, error) {
+	file, err := ioutil.ReadFile(jsonfilename)
+	if err != nil {
+		return nil, err
+	}
+	var pdb programmeDB
+	json.Unmarshal(file, &pdb)
+	return &pdb, nil
+}
+
 func (pdb *programmeDB) toJSON() ([]byte, error) {
 	marshalled, err := json.MarshalIndent(pdb, "", "\t")
 	if err != nil {
