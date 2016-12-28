@@ -146,6 +146,10 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	})
 	return programmes, nil
 }
+
+func (p *Programme) hasSubpage(s *goquery.Selection) bool {
+	return doc.Find(".view-more-container").AttrOr("href", "")
+}
 func hasSubPage(doc *goquery.Document) string {
 	return doc.Find(".view-more-container").AttrOr("href", "")
 }
