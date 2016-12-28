@@ -168,3 +168,12 @@ func TestProgrammeDB_Index(t *testing.T) {
 	file, _ := ioutil.ReadFile("testjson.json")
 	assert.True(strings.Contains(string(file), "39"))
 }
+
+func TestNewProgrammeDBFromJSON(t *testing.T) {
+	assert := assert.New(t)
+	db, err := newProgrammeDbFromJSON("testjson.json")
+	assert.Nil(err)
+	assert.Equal(len(db.Categories), 2)
+	assert.Equal(db.Categories[0].Name, "mostpopular")
+	assert.Equal(db.Categories[1].Name, "films")
+}
