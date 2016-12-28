@@ -93,7 +93,7 @@ func newProgrammeDB(cats []*Category, saved time.Time) *programmeDB {
 	return &programmeDB{Categories: cats, Saved: saved}
 }
 
-func (pdb *programmeDB) toJson() ([]byte, error) {
+func (pdb *programmeDB) toJSON() ([]byte, error) {
 	marshalled, err := json.MarshalIndent(pdb, "", "\t")
 	if err != nil {
 		return nil, err
@@ -104,7 +104,7 @@ func (pdb *programmeDB) toJson() ([]byte, error) {
 func (pdb *programmeDB) Save(filename string) error {
 	pdb.Saved = time.Now()
 	pdb.index()
-	json, err := pdb.toJson()
+	json, err := pdb.toJSON()
 	if err != nil {
 		return err
 	}

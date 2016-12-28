@@ -142,7 +142,7 @@ func TestProgrammeDB_Save(t *testing.T) {
 	cat1 := NewCategory("mostpopular", popprog)
 	cat2 := NewCategory("films", filmprog)
 	pdb := newProgrammeDB([]*Category{cat1, cat2}, time.Now())
-	json, err := pdb.toJson()
+	json, err := pdb.toJSON()
 	assert.Nil(err)
 	assert.NotNil(json)
 	pdb.Save("testjson.json")
