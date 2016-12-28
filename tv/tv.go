@@ -8,7 +8,7 @@ import (
 
 	"time"
 
-	"github.com/PuerkitoBio/goquery"
+	"github.com/mswift42/goquery"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -147,8 +147,8 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	return programmes, nil
 }
 
-func (p *Programme) hasSubpage(s *goquery.Selection) bool {
-	return s.Find(".view-more-container").AttrOr("href", "") != ""
+func (p *Programme) SubPage(s *goquery.Selection) string {
+	return bbcprefix + s.Find(".view-more-container").AttrOr("href", "")
 }
 func SubPage(doc *goquery.Document) *goquery.Document {
 	return doc
