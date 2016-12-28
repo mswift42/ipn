@@ -103,6 +103,7 @@ func (pdb *programmeDB) toJson() ([]byte, error) {
 
 func (pdb *programmeDB) Save(filename string) error {
 	pdb.Saved = time.Now()
+	pdb.index()
 	json, err := pdb.toJson()
 	if err != nil {
 		return err
