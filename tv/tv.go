@@ -2,6 +2,7 @@ package tv
 
 import (
 	"bytes"
+	"fmt"
 	"io/ioutil"
 	"log"
 
@@ -70,8 +71,10 @@ func newProgramme(title, subtitle, synopsis, pid,
 	}
 }
 
+// String returns a string for type Programme,
+// starting with Index, followed by Programme Title and Programme Subtitle.
 func (p *Programme) String() string {
-	return p.Index + ":\t\t" + p.Title + " \t" + p.Subtitle
+	return fmt.Sprintf("%d:  %s  %s", p.Index, p.Title, p.Subtitle)
 }
 
 // Category struct represents an Iplayer programme category.
