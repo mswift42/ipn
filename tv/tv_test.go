@@ -79,7 +79,7 @@ func TestFindTitle(t *testing.T) {
 		panic(err)
 	}
 	assert.Equal(programmes[0].Title, "EastEnders")
-	assert.Equal(filmsprog1[1].Title, "Alan Partridge: Alpha Papa")
+	assert.Equal(filmsprog1[1].Title, "Adam Curtis")
 }
 
 func TestFindSubtitle(t *testing.T) {
@@ -93,6 +93,8 @@ func TestFindSubtitle(t *testing.T) {
 	film1th := TestHtmlURL(filmspage1)
 	film1prog, _ := Programmes(film1th)
 	assert.Equal(film1prog[0].Subtitle, "HyperNormalisation")
+	assert.Equal(film1prog[1].Subtitle, "Bitter Lake")
+	assert.Equal(film1prog[2].Subtitle, "")
 }
 
 func TestFindThumbnail(t *testing.T) {
