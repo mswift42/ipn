@@ -3,6 +3,7 @@ package tv
 import (
 	"bytes"
 	"io/ioutil"
+	"log"
 
 	"encoding/json"
 
@@ -149,6 +150,14 @@ func Programmes(s Searcher) ([]*Programme, error) {
 		thumbnail := findThumbnail(s)
 		url := findURL(s)
 		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
+		subpage := np.SubPage(s)
+		if subpage != bbcprefix {
+			subpageprogrammes, err := Programmes(BeebURL(subpage))
+			if err != nil {
+				log.Println(err)
+			}
+			programmes = append(programmes, subpageprogrammes...)
+		}
 		if np != nil {
 			programmes = append(programmes, np)
 		}
@@ -159,9 +168,6 @@ func Programmes(s Searcher) ([]*Programme, error) {
 
 func (p *Programme) SubPage(s *goquery.Selection) string {
 	return bbcprefix + s.Find(".view-more-container").AttrOr("href", "")
-}
-func SubPage(doc *goquery.Document) *goquery.Document {
-	return doc
 }
 
 func findTitle(s *goquery.Selection) string {
