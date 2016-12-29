@@ -179,3 +179,14 @@ func TestNewProgrammeDBFromJSON(t *testing.T) {
 	assert.Equal(db.Categories[0].Name, "mostpopular")
 	assert.Equal(db.Categories[1].Name, "films")
 }
+
+func TestProgrammeString(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL(mostpopular)
+	programmes, err := Programmes(th)
+	if err != nil {
+		panic(err)
+	}
+	p0 := programmes[0]
+	assert.Equal(p0.String(), "0:  EastEnders  24/12/2016")
+}
