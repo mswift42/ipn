@@ -157,9 +157,10 @@ func Programmes(s Searcher) ([]*Programme, error) {
 				log.Println(err)
 			}
 			programmes = append(programmes, subpageprogrammes...)
-		}
-		if np != nil {
-			programmes = append(programmes, np)
+		} else {
+			if np != nil {
+				programmes = append(programmes, np)
+			}
 		}
 
 	})
