@@ -171,7 +171,7 @@ func TestProgrammeDB_Index(t *testing.T) {
 
 func TestNewProgrammeDBFromJSON(t *testing.T) {
 	assert := assert.New(t)
-	db, err := newProgrammeDbFromJSON("testjson.json")
+	db, err := LoadProgrammeDbFromJSON("testjson.json")
 	assert.Nil(err)
 	assert.Equal(len(db.Categories), 2)
 	assert.Equal(db.Categories[0].Name, "mostpopular")

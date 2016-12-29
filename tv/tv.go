@@ -93,7 +93,7 @@ func newProgrammeDB(cats []*Category, saved time.Time) *programmeDB {
 	return &programmeDB{Categories: cats, Saved: saved}
 }
 
-func newProgrammeDbFromJSON(jsonfilename string) (*programmeDB, error) {
+func LoadProgrammeDbFromJSON(jsonfilename string) (*programmeDB, error) {
 	file, err := ioutil.ReadFile(jsonfilename)
 	if err != nil {
 		return nil, err
