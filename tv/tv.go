@@ -70,6 +70,10 @@ func newProgramme(title, subtitle, synopsis, pid,
 	}
 }
 
+func (p *Programme) String() string {
+	return p.Index + ":\t\t" + p.Title + " \t" + p.Subtitle
+}
+
 // Category struct represents an Iplayer programme category.
 // It has the name of the category, like "films" or "comedy" and
 // a list of the tv programmes of said category.
@@ -131,8 +135,6 @@ func (pdb *programmeDB) index() {
 		}
 	}
 }
-
-// TODO add Restore from db -> programmeDb method.
 
 // Programmes iterates over an goquery.Document,
 // finding every Programme and finally returning them.
