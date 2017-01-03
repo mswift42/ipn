@@ -3,12 +3,18 @@ package categories
 import (
 	"testing"
 
+	"github.com/mswift42/ipn/tv"
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewCategory(t *testing.T) {
+const filmspage1 = "../tv/filmspage1.html"
+
+func TestHasNextPage(t *testing.T) {
 	assert := assert.New(t)
-	nc1 := newCategory("mostpopular", "mostpop")
-	assert.Equal(nc1.name, "mostpopular")
-	assert.Equal(nc1.url, "http://www.bbc.co.uk/iplayer/group/most-popular")
+	th := tv.TestHtmlURL(filmspage1)
+	doc, err := th.UrlDoc()
+	assert.Nil(err)
+	assert.NotNil(doc)
+	s := doc.Find(".page > a").AttrOr("href", "")
+	assert.Equal(s, "hallo")
 }

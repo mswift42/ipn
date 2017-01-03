@@ -25,8 +25,8 @@ func category(url, name string, c chan *tv.Category) {
 	c <- cat
 }
 
-func (s *goquery.Selection, c chan bool) hasNextPage() {
-	c <- s.Find(".page").AttrOr("href", "") != ""
+func hasNextPage(doc *goquery.Document, c chan bool) {
+	c <- doc.Find(".page > a").AttrOr("href", "") != ""
 }
 
 func AllCategories() ([]*tv.Category, error) {
