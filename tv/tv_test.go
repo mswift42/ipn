@@ -18,11 +18,11 @@ const crime = "../drama-crime/crime.html"
 func TestBeebURLUrlDoc(t *testing.T) {
 	assert := assert.New(t)
 	b := BeebURL("http://www.example.com/")
-	ex, err := b.urlDoc()
+	ex, err := b.UrlDoc()
 	assert.Nil(err)
 	assert.NotNil(ex)
 	b1 := BeebURL("")
-	ex1, err := b1.urlDoc()
+	ex1, err := b1.UrlDoc()
 	assert.NotNil(err)
 	assert.Nil(ex1)
 }
@@ -30,11 +30,11 @@ func TestBeebURLUrlDoc(t *testing.T) {
 func TestTestHtmlURLDoc(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL(mostpopular)
-	succ, err := th.urlDoc()
+	succ, err := th.UrlDoc()
 	assert.Nil(err)
 	assert.NotNil(succ)
 	th2 := TestHtmlURL("")
-	fail, err := th2.urlDoc()
+	fail, err := th2.UrlDoc()
 	assert.Nil(fail)
 	assert.NotNil(err)
 
