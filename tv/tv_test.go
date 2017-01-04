@@ -190,3 +190,15 @@ func TestProgrammeString(t *testing.T) {
 	p0 := programmes[0]
 	assert.Equal(p0.String(), "0:  EastEnders  24/12/2016")
 }
+
+func TestTVSelection(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL(filmspage1)
+	doc, err := th.UrlDoc()
+	assert.Nil(err)
+	id := NewIplayerDocument(doc)
+	assert.NotNil(id)
+	tvsel := id.TVSelection(".page > a")
+	assert.Equal(tvsel.AttrOr("href", ""),
+		"/iplayer/categories/films/all?sort=atoz&page=2")
+}
