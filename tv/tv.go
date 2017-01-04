@@ -24,6 +24,8 @@ type BeebURL string
 
 type TestHtmlURL string
 
+type IplayerPage goquery.Document
+
 func (b BeebURL) UrlDoc() (*goquery.Document, error) {
 	doc, err := goquery.NewDocument(string(b))
 	if err != nil {
@@ -89,6 +91,10 @@ type Category struct {
 // category name and list of programmes.
 func NewCategory(name string, programmes []*Programme) *Category {
 	return &Category{name, programmes}
+}
+
+func (cat *Category) nextPages() ([]BeebURL, error) {
+	return nil, nil
 }
 
 // ProgrammeDB stores all queried categories.
