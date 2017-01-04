@@ -24,7 +24,13 @@ type BeebURL string
 
 type TestHtmlURL string
 
-type IplayerPage goquery.Document
+type IplayerDocument struct {
+	idoc *goquery.Document
+}
+
+func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
+	return &IplayerDocument{doc}
+}
 
 func (b BeebURL) UrlDoc() (*goquery.Document, error) {
 	doc, err := goquery.NewDocument(string(b))
@@ -34,8 +40,8 @@ func (b BeebURL) UrlDoc() (*goquery.Document, error) {
 	return doc, nil
 }
 
-func (ip *IplayerPage) TVSelection(selector string) *goquery.Selection {
-	return ip.Find(selector)
+func (ip *IplayerDocument) TVSelection(selector string) *goquery.Selection {
+	return ip.idoc.Find(selector)
 }
 
 func (th TestHtmlURL) UrlDoc() (*goquery.Document, error) {
