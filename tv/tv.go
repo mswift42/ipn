@@ -34,6 +34,10 @@ func (b BeebURL) UrlDoc() (*goquery.Document, error) {
 	return doc, nil
 }
 
+func (ip *IplayerPage) TVSelection(selector string) *goquery.Selection {
+	return ip.Find(selector)
+}
+
 func (th TestHtmlURL) UrlDoc() (*goquery.Document, error) {
 	file, err := ioutil.ReadFile(string(th))
 
