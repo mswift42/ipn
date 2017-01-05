@@ -40,8 +40,17 @@ func (b BeebURL) UrlDoc() (*goquery.Document, error) {
 	return doc, nil
 }
 
-func (ip *IplayerDocument) TVSelection(selector string) *goquery.Selection {
+func (ip *IplayerDocument) tvSelection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
+}
+
+func (ip *IplayerDocument) NextPages() []BeebURL {
+	var bu []BeebURL
+	sel := ip.tvSelection(".page")
+	sel.Each(func(i int, s *goquery.Selection) {
+		bu = append(bu, BeebURL(s.Find("a").AttrOr("href", "")))
+	})
+	return bu
 }
 
 func (th TestHtmlURL) UrlDoc() (*goquery.Document, error) {
