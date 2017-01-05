@@ -46,9 +46,9 @@ func (ip *IplayerDocument) tvSelection(selector string) *goquery.Selection {
 
 func (ip *IplayerDocument) NextPages() []BeebURL {
 	var bu []BeebURL
-	sel := ip.tvSelection(".page")
+	sel := ip.tvSelection(".page > a")
 	sel.Each(func(i int, s *goquery.Selection) {
-		bu = append(bu, BeebURL(s.Find("a").AttrOr("href", "")))
+		bu = append(bu, BeebURL(bbcprefix+s.AttrOr("href", "")))
 	})
 	return bu
 }
