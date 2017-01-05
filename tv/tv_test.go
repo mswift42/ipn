@@ -198,7 +198,18 @@ func TestTVSelection(t *testing.T) {
 	assert.Nil(err)
 	id := NewIplayerDocument(doc)
 	assert.NotNil(id)
-	tvsel := id.TVSelection(".page > a")
+	tvsel := id.tvSelection(".page > a")
 	assert.Equal(tvsel.AttrOr("href", ""),
 		"/iplayer/categories/films/all?sort=atoz&page=2")
+}
+
+func TestNextPages(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL(filmspage1)
+	doc, _ := th.UrlDoc()
+	id := NewIplayerDocument(doc)
+	np := id.NextPages()
+	assert.Equal(len(np), 2)
+	assert.Equal(string(np[0]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
+	assert.Equal(string(np[1]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=3")
 }
