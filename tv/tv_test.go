@@ -14,6 +14,7 @@ const mostpopular = "mostpopular.html"
 const filmspage1 = "filmspage1.html"
 const filmspage2 = "filmspage2.html"
 const crime = "../drama-crime/crime.html"
+const comedy = "comedy.html"
 
 func TestBeebURLUrlDoc(t *testing.T) {
 	assert := assert.New(t)
@@ -212,4 +213,5 @@ func TestNextPages(t *testing.T) {
 	assert.Equal(len(np), 2)
 	assert.Equal(string(np[0]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
 	assert.Equal(string(np[1]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=3")
+	th = TestHtmlURL(come)
 }
