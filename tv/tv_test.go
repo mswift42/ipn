@@ -219,8 +219,12 @@ func TestNextPages(t *testing.T) {
 	id = NewIplayerDocument(doc)
 	np = id.NextPages()
 	assert.Equal(len(np), 4)
-	assert.Equal(string(np[0]), bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")
-	assert.Equal(string(np[1]), bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=3")
-	assert.Equal(string(np[2]), bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=4")
-	assert.Equal(string(np[3]), bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=5")
+	assert.Equal(string(np[0]),
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")
+	assert.Equal(string(np[1]),
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=3")
+	assert.Equal(string(np[2]),
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=4")
+	assert.Equal(string(np[3]),
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=5")
 }
