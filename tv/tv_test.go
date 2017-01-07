@@ -239,4 +239,17 @@ func TestSubPages(t *testing.T) {
 	assert.Equal(len(sp), 1)
 	assert.Equal(string(sp[0]),
 		bbcprefix+"/iplayer/episodes/p04bkttz")
+	th = TestHtmlURL(comedy)
+	doc, _ = th.UrlDoc()
+	id = NewIplayerDocument(doc)
+	sp = id.SubPages()
+	assert.Equal(len(sp), 10)
+	assert.Equal(string(sp[0]),
+		bbcprefix+"/iplayer/episodes/b07zyh6k")
+	assert.Equal(string(sp[1]),
+		bbcprefix+"/iplayer/episodes/p01djw5m")
+	assert.Equal(string(sp[2]),
+		bbcprefix+"/iplayer/episodes/b00hqlc4")
+	assert.Equal(string(sp[3]),
+		bbcprefix+"/iplayer/episodes/b006p76t")
 }
