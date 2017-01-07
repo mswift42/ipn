@@ -228,3 +228,15 @@ func TestNextPages(t *testing.T) {
 	assert.Equal(string(np[3]),
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=5")
 }
+
+func TestSubPages(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL(filmspage1)
+	doc, err := th.UrlDoc()
+	assert.Nil(err)
+	id := NewIplayerDocument(doc)
+	sp := id.SubPages()
+	assert.Equal(len(sp), 1)
+	assert.Equal(string(sp[0]),
+		bbcprefix+"/iplayer/episodes/p04bkttz")
+}
