@@ -53,6 +53,41 @@ func (ip *IplayerDocument) NextPages() []BeebURL {
 	return bu
 }
 
+func (ip *IplayerDocument) SubPages() []BeebURL {
+	var bu []BeebURL
+	sel := ip.tvSelection(".view-more-container")
+	sel.Each(func(i int, s *goquery.Selection) {
+		bu = append(bu, BeebURL(bbcprefix+s.AttrOr("href", "")))
+	})
+	return bu
+}
+
+func (ip *IplayerDocument) programmes(c chan []*Programme) {
+	var programmes []*Programme
+	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		title := findTitle(s)
+		subtitle := findSubtitle(s)
+		synopsis := findSynopsis(s)
+		pid := findPid(s)
+		thumbnail := findThumbnail(s)
+		url := findURL(s)
+		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
+		subpage := np.SubPage(s)
+		if subpage != bbcprefix {
+			subpageprogrammes, err := Programmes(BeebURL(subpage))
+			if err != nil {
+				log.Println(err)
+			}
+			programmes = append(programmes, subpageprogrammes...)
+		} else {
+			if np != nil {
+				programmes = append(programmes, np)
+			}
+		}
+	})
+	c <- programmes
+}
+
 func (th TestHtmlURL) UrlDoc() (*goquery.Document, error) {
 	file, err := ioutil.ReadFile(string(th))
 
