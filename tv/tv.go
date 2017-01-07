@@ -72,18 +72,7 @@ func (ip *IplayerDocument) programmes(c chan []*Programme) {
 		thumbnail := findThumbnail(s)
 		url := findURL(s)
 		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-		subpage := np.SubPage(s)
-		if subpage != bbcprefix {
-			subpageprogrammes, err := Programmes(BeebURL(subpage))
-			if err != nil {
-				log.Println(err)
-			}
-			programmes = append(programmes, subpageprogrammes...)
-		} else {
-			if np != nil {
-				programmes = append(programmes, np)
-			}
-		}
+		programmes = append(programmes, np)
 	})
 	c <- programmes
 }
