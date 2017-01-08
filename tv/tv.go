@@ -45,21 +45,11 @@ func (ip *IplayerDocument) tvSelection(selector string) *goquery.Selection {
 }
 
 func (ip *IplayerDocument) NextPages() []BeebURL {
-	var bu []BeebURL
-	sel := ip.tvSelection(".page > a")
-	sel.Each(func(i int, s *goquery.Selection) {
-		bu = append(bu, BeebURL(bbcprefix+s.AttrOr("href", "")))
-	})
-	return bu
+	return ip.morePages(".page > a")
 }
 
 func (ip *IplayerDocument) SubPages() []BeebURL {
-	var bu []BeebURL
-	sel := ip.tvSelection(".view-more-container")
-	sel.Each(func(i int, s *goquery.Selection) {
-		bu = append(bu, BeebURL(bbcprefix+s.AttrOr("href", "")))
-	})
-	return bu
+	return ip.morePages(".view-more-container")
 }
 
 func (ip *IplayerDocument) morePages(selection string) []BeebURL {
@@ -70,6 +60,7 @@ func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 	})
 	return bu
 }
+
 func (ip *IplayerDocument) programmes(c chan []*Programme) {
 	var programmes []*Programme
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
