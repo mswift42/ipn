@@ -62,6 +62,14 @@ func (ip *IplayerDocument) SubPages() []BeebURL {
 	return bu
 }
 
+func (ip *IplayerDocument) morePages(selection string) []BeebURL {
+	var bu []BeebURL
+	sel := ip.tvSelection(selection)
+	sel.Each(func(i int, s *goquery.Selection) {
+		bu = append(bu, BeebURL(bbcprefix+s.AttrOr("href", "")))
+	})
+	return bu
+}
 func (ip *IplayerDocument) programmes(c chan []*Programme) {
 	var programmes []*Programme
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
