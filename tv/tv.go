@@ -44,10 +44,18 @@ func (ip *IplayerDocument) tvSelection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
 }
 
+// NextPages checks for a pagination div at the bottom of the
+// Programme listing page. If found, it returns a slice of urls
+// for the same category.
 func (ip *IplayerDocument) NextPages() []BeebURL {
 	return ip.morePages(".page > a")
 }
 
+// SubPages collects for every Programme pontentially available
+// canonical programme urls.
+// (For example, the category comedy site, will only list the most recent
+// episode of a Programme, and then link to The Programme's site for more available
+// episodes.)
 func (ip *IplayerDocument) SubPages() []BeebURL {
 	return ip.morePages(".view-more-container")
 }
@@ -133,10 +141,6 @@ type Category struct {
 // category name and list of programmes.
 func NewCategory(name string, programmes []*Programme) *Category {
 	return &Category{name, programmes}
-}
-
-func (cat *Category) nextPages() ([]BeebURL, error) {
-	return nil, nil
 }
 
 // ProgrammeDB stores all queried categories.
