@@ -3,7 +3,6 @@ package categories
 import (
 	"fmt"
 
-	"github.com/mswift42/goquery"
 	"github.com/mswift42/ipn/tv"
 )
 
@@ -15,18 +14,13 @@ const (
 	food        = "http://www.bbc.co.uk/iplayer/categories/food/all?sort=atoz"
 )
 
-func category(url, name string, c chan *tv.Category) {
-	beeburl := tv.BeebURL(url)
-	prog, err := tv.Programmes(beeburl)
+func category(url tv.BeebURL, name string) *tv.Category {
+	prog, err := tv.Programmes(url)
 	if err != nil {
 		panic(err)
 	}
 	cat := tv.NewCategory(name, prog)
-	c <- cat
-}
-
-func hasNextPage(doc *goquery.Document, c chan bool) {
-	c <- doc.Find(".page > a").AttrOr("href", "") != ""
+	return cat
 }
 
 func AllCategories() ([]*tv.Category, error) {
@@ -42,13 +36,7 @@ func AllCategories() ([]*tv.Category, error) {
 	for name, url := range categories {
 		go func(name string, url tv.BeebURL) {
 			fmt.Println("Fetching Cat: ", name)
-			beeburl := tv.BeebURL(url)
-			prog, err := tv.Programmes(beeburl)
-			if err != nil {
-				panic(err)
-			}
-			fmt.Println("Programmes: ", prog[0].Title)
-			ch <- tv.NewCategory(name, prog)
+			ch <- category(url, name)
 		}(name, url)
 
 	}
