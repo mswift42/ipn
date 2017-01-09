@@ -26,3 +26,4 @@ _testmain.go
 /Test Results - tv_test_go.html
 /tv/coverage.out
 /tv/testjson.json
+*.json
