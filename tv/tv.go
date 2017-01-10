@@ -4,7 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"io/ioutil"
-	"log"
 
 	"encoding/json"
 
@@ -16,7 +15,7 @@ import (
 const bbcprefix = "http://www.bbc.co.uk"
 
 type Searcher interface {
-	UrlDoc() (*goquery.Document, error)
+	UrlDoc() (*IplayerDocument, error)
 }
 
 // BeebURL represents an Iplayer URL.
@@ -32,12 +31,12 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
 
-func (b BeebURL) UrlDoc() (*goquery.Document, error) {
+func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
 	doc, err := goquery.NewDocument(string(b))
 	if err != nil {
 		return nil, err
 	}
-	return doc, nil
+	return NewIplayerDocument(doc), nil
 }
 
 func (ip *IplayerDocument) tvSelection(selector string) *goquery.Selection {
@@ -69,7 +68,7 @@ func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 	return bu
 }
 
-func (ip *IplayerDocument) programmes(c chan []*Programme) {
+func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	var programmes []*Programme
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		title := findTitle(s)
@@ -194,34 +193,38 @@ func (pdb *programmeDB) index() {
 // Programmes iterates over an goquery.Document,
 // finding every Programme and finally returning them.
 func Programmes(s Searcher) ([]*Programme, error) {
-	var programmes []*Programme
+	// var programmes []*Programme
 	doc, err := s.UrlDoc()
 	if err != nil {
 		return nil, err
 	}
-	doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-		title := findTitle(s)
-		subtitle := findSubtitle(s)
-		synopsis := findSynopsis(s)
-		pid := findPid(s)
-		thumbnail := findThumbnail(s)
-		url := findURL(s)
-		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-		subpage := np.SubPage(s)
-		if subpage != bbcprefix {
-			subpageprogrammes, err := Programmes(BeebURL(subpage))
-			if err != nil {
-				log.Println(err)
-			}
-			programmes = append(programmes, subpageprogrammes...)
-		} else {
-			if np != nil {
-				programmes = append(programmes, np)
-			}
-		}
+	// doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+	// 	title := findTitle(s)
+	// 	subtitle := findSubtitle(s)
+	// 	synopsis := findSynopsis(s)
+	// 	pid := findPid(s)
+	// 	thumbnail := findThumbnail(s)
+	// 	url := findURL(s)
+	// 	np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
+	// 	subpage := np.SubPage(s)
+	// 	if subpage != bbcprefix {
+	// 		subpageprogrammes, err := Programmes(BeebURL(subpage))
+	// 		if err != nil {
+	// 			log.Println(err)
+	// 		}
+	// 		programmes = append(programmes, subpageprogrammes...)
+	// 	} else {
+	// 		if np != nil {
+	// 			programmes = append(programmes, np)
+	// 		}
+	// 	}
 
-	})
-	return programmes, nil
+	// })
+	// return programmes, nil
+	progs := make(chan []*Programme)
+	ndoc := NewIplayerDocument(doc)
+	go ndoc.programmes(progs)
+	return <-progs, nil
 }
 
 func (p *Programme) SubPage(s *goquery.Selection) string {
@@ -239,12 +242,15 @@ func findSubtitle(s *goquery.Selection) string {
 func findURL(s *goquery.Selection) string {
 	return "www.bbc.co.uk" + s.Find("a").AttrOr("href", "")
 }
+
 func findThumbnail(s *goquery.Selection) string {
 	return s.Find(".rs-image > picture > source").AttrOr("srcset", "")
 }
+
 func findPid(s *goquery.Selection) string {
 	return s.Find(".list-item-inner > a").AttrOr("data-episode-id", "")
 }
+
 func findSynopsis(s *goquery.Selection) string {
 	return s.Find(".synopsis").Text()
 }
