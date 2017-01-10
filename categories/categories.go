@@ -42,8 +42,7 @@ func AllCategories() ([]*tv.Category, error) {
 	}
 
 	for i := 0; i < len(categories); i++ {
-		cat := <-ch
-		cats = append(cats, cat)
+		cats = append(cats, <-ch)
 	}
 	return cats, nil
 
