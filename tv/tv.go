@@ -83,7 +83,7 @@ func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	c <- programmes
 }
 
-func (th TestHtmlURL) UrlDoc() (*goquery.Document, error) {
+func (th TestHtmlURL) UrlDoc() (*IplayerDocument, error) {
 	file, err := ioutil.ReadFile(string(th))
 
 	if err != nil {
@@ -93,7 +93,7 @@ func (th TestHtmlURL) UrlDoc() (*goquery.Document, error) {
 	if err != nil {
 		return nil, err
 	}
-	return doc, nil
+	return NewIplayerDocument(doc), nil
 }
 
 // Programme represents an Iplayer TV programme. It consists of
