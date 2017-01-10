@@ -78,7 +78,12 @@ func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 		thumbnail := findThumbnail(s)
 		url := findURL(s)
 		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-		programmes = append(programmes, np)
+		if len(ip.SubPages()) == 0 {
+			if np != nil {
+				programmes = append(programmes, np)
+			}
+
+		}
 	})
 	c <- programmes
 }
@@ -193,7 +198,7 @@ func (pdb *programmeDB) index() {
 // Programmes iterates over an goquery.Document,
 // finding every Programme and finally returning them.
 func Programmes(s Searcher) ([]*Programme, error) {
-	// var programmes []*Programme
+	var programmes []*Programme
 	doc, err := s.UrlDoc()
 	if err != nil {
 		return nil, err
@@ -222,9 +227,20 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	// })
 	// return programmes, nil
 	progs := make(chan []*Programme)
-	ndoc := NewIplayerDocument(doc)
-	go ndoc.programmes(progs)
-	return <-progs, nil
+	subpages := doc.SubPages()
+	if len(subpages) > 0 {
+		for _, i := range subpages {
+			doc, err := i.UrlDoc()
+			if err != nil {
+				return nil, err
+			}
+			go doc.programmes(progs)
+			programmes = append(programmes, <-progs...)
+		}
+	}
+	go doc.programmes(progs)
+	programmes = append(programmes, <-progs...)
+	return programmes, nil
 }
 
 func (p *Programme) SubPage(s *goquery.Selection) string {
