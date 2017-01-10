@@ -95,7 +95,6 @@ func TestFindSubtitle(t *testing.T) {
 	film1prog, _ := Programmes(film1th)
 	assert.Equal(film1prog[0].Subtitle, "HyperNormalisation")
 	assert.Equal(film1prog[1].Subtitle, "Bitter Lake")
-	assert.Equal(film1prog[2].Subtitle, "")
 }
 
 func TestFindThumbnail(t *testing.T) {
@@ -197,9 +196,8 @@ func TestTVSelection(t *testing.T) {
 	th := TestHtmlURL(filmspage1)
 	doc, err := th.UrlDoc()
 	assert.Nil(err)
-	id := NewIplayerDocument(doc)
-	assert.NotNil(id)
-	tvsel := id.tvSelection(".page > a")
+	assert.NotNil(doc)
+	tvsel := doc.tvSelection(".page > a")
 	assert.Equal(tvsel.AttrOr("href", ""),
 		"/iplayer/categories/films/all?sort=atoz&page=2")
 }
@@ -208,16 +206,14 @@ func TestNextPages(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL(filmspage1)
 	doc, _ := th.UrlDoc()
-	id := NewIplayerDocument(doc)
-	np := id.NextPages()
+	np := doc.NextPages()
 	assert.Equal(len(np), 2)
 	assert.Equal(string(np[0]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
 	assert.Equal(string(np[1]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=3")
 	th = TestHtmlURL(comedy)
 	doc, err := th.UrlDoc()
 	assert.Nil(err)
-	id = NewIplayerDocument(doc)
-	np = id.NextPages()
+	np = doc.NextPages()
 	assert.Equal(len(np), 4)
 	assert.Equal(string(np[0]),
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")
@@ -234,15 +230,13 @@ func TestSubPages(t *testing.T) {
 	th := TestHtmlURL(filmspage1)
 	doc, err := th.UrlDoc()
 	assert.Nil(err)
-	id := NewIplayerDocument(doc)
-	sp := id.SubPages()
+	sp := doc.SubPages()
 	assert.Equal(len(sp), 1)
 	assert.Equal(string(sp[0]),
 		bbcprefix+"/iplayer/episodes/p04bkttz")
 	th = TestHtmlURL(comedy)
 	doc, _ = th.UrlDoc()
-	id = NewIplayerDocument(doc)
-	sp = id.SubPages()
+	sp = doc.SubPages()
 	assert.Equal(len(sp), 10)
 	assert.Equal(string(sp[0]),
 		bbcprefix+"/iplayer/episodes/b07zyh6k")
