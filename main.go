@@ -20,7 +20,7 @@ func main() {
 			fmt.Println("\n\n", i.Name, "\n\n")
 			for _, j := range i.Programmes {
 				if j != nil {
-					fmt.Println(j.Title)
+					fmt.Println(j)
 				}
 			}
 		}

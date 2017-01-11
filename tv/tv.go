@@ -243,10 +243,6 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	return programmes, nil
 }
 
-func (p *Programme) SubPage(s *goquery.Selection) string {
-	return bbcprefix + s.Find(".view-more-container").AttrOr("href", "")
-}
-
 func findTitle(s *goquery.Selection) string {
 	return s.Find(".secondary > .title").Text()
 }
