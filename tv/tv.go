@@ -203,29 +203,6 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	if err != nil {
 		return nil, err
 	}
-	// doc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-	// 	title := findTitle(s)
-	// 	subtitle := findSubtitle(s)
-	// 	synopsis := findSynopsis(s)
-	// 	pid := findPid(s)
-	// 	thumbnail := findThumbnail(s)
-	// 	url := findURL(s)
-	// 	np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-	// 	subpage := np.SubPage(s)
-	// 	if subpage != bbcprefix {
-	// 		subpageprogrammes, err := Programmes(BeebURL(subpage))
-	// 		if err != nil {
-	// 			log.Println(err)
-	// 		}
-	// 		programmes = append(programmes, subpageprogrammes...)
-	// 	} else {
-	// 		if np != nil {
-	// 			programmes = append(programmes, np)
-	// 		}
-	// 	}
-
-	// })
-	// return programmes, nil
 	progs := make(chan []*Programme)
 	subpages := doc.SubPages()
 	if len(subpages) > 0 {
