@@ -33,16 +33,26 @@ func AllCategories() ([]*tv.Category, error) {
 	}
 	cats := make([]*tv.Category, len(categories))
 	ch := make(chan *tv.Category)
-	for name, url := range categories {
-		go func(name string, url tv.BeebURL) {
+	go func() {
+		for name, url := range categories {
+			doc, err := url.UrlDoc()
+			if err != nil {
+				panic(err)
+			}
+			nextpages := doc.NextPages()
+			if len(nextpages) > 0 {
+				for _, i := range nextpages {
+					ch <- category(i, name)
+				}
+			}
 			fmt.Println("Fetching Cat: ", name)
 			ch <- category(url, name)
-		}(name, url)
 
-	}
-
-	for i := 0; i < len(categories); i++ {
-		cats = append(cats, <-ch)
+		}
+		close(ch)
+	}()
+	for c := range ch {
+		cats = append(cats, c)
 	}
 	return cats, nil
 
