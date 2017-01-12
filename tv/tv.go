@@ -5,10 +5,6 @@ import (
 	"fmt"
 	"io/ioutil"
 
-	"encoding/json"
-
-	"time"
-
 	"github.com/mswift42/goquery"
 )
 
@@ -145,54 +141,6 @@ type Category struct {
 // category name and list of programmes.
 func NewCategory(name string, programmes []*Programme) *Category {
 	return &Category{name, programmes}
-}
-
-// ProgrammeDB stores all queried categories.
-type programmeDB struct {
-	Categories []*Category `json:"categories"`
-	Saved      time.Time   `json:"saved"`
-}
-
-func newProgrammeDB(cats []*Category, saved time.Time) *programmeDB {
-	return &programmeDB{Categories: cats, Saved: saved}
-}
-
-func LoadProgrammeDbFromJSON(jsonfilename string) (*programmeDB, error) {
-	file, err := ioutil.ReadFile(jsonfilename)
-	if err != nil {
-		return nil, err
-	}
-	var pdb programmeDB
-	json.Unmarshal(file, &pdb)
-	return &pdb, nil
-}
-
-func (pdb *programmeDB) toJSON() ([]byte, error) {
-	marshalled, err := json.MarshalIndent(pdb, "", "\t")
-	if err != nil {
-		return nil, err
-	}
-	return marshalled, nil
-}
-
-func (pdb *programmeDB) Save(filename string) error {
-	pdb.Saved = time.Now()
-	pdb.index()
-	json, err := pdb.toJSON()
-	if err != nil {
-		return err
-	}
-	return ioutil.WriteFile(filename, json, 0644)
-}
-
-func (pdb *programmeDB) index() {
-	index := 0
-	for _, i := range pdb.Categories {
-		for _, j := range i.Programmes {
-			j.Index = index
-			index++
-		}
-	}
 }
 
 // Programmes iterates over an goquery.Document,
