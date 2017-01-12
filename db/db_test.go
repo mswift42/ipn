@@ -74,3 +74,14 @@ func TestNewProgrammeDBFromJSON(t *testing.T) {
 	assert.Equal(db.Categories[0].Name, "mostpopular")
 	assert.Equal(db.Categories[1].Name, "films")
 }
+
+func TestListCategory(t *testing.T) {
+	assert := assert.New(t)
+	db, err := LoadProgrammeDbFromJSON("testjson.json")
+	assert.Nil(err)
+	assert.NotNil(db)
+	assert.Equal(len(db.Categories), 2)
+	catstring := db.ListCategory("mostpopular")
+	assert.NotNil(catstring)
+	assert.Equal(len(strings.Split(catstring, "\n")), 41)
+}

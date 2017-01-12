@@ -3,6 +3,8 @@ package db
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"fmt"
 	"io/ioutil"
 	"time"
 
@@ -56,16 +58,24 @@ func (pdb *programmeDB) index() {
 		}
 	}
 }
+func (pdb *programmeDB) findCategory(cat string) (*tv.Category, error) {
+	for _, i := range pdb.Categories {
+		if i.Name == cat {
+			return i, nil
+		}
+	}
+	return nil, errors.New("Can not find Category with Name: " + cat)
+}
 
 func (pdb *programmeDB) ListCategory(cat string) string {
 	var buffer bytes.Buffer
-	for _, i := range pdb.Categories {
-		if i.Name == cat {
-			for _, i := range i.Programmes {
-				buffer.WriteString(i.String())
-				buffer.WriteString("\n")
-			}
-		}
+	category, err := pdb.findCategory(cat)
+	if err != nil {
+		return fmt.Sprintln(err)
+	}
+	for _, i := range category.Programmes {
+		buffer.WriteString(i.String())
+		buffer.WriteString("\n")
 	}
 	return buffer.String()
 }
