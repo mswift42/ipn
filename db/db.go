@@ -1,6 +1,7 @@
 package db
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"time"
@@ -54,4 +55,17 @@ func (pdb *programmeDB) index() {
 			index++
 		}
 	}
+}
+
+func (pdb *programmeDB) ListCategory(cat string) string {
+	var buffer bytes.Buffer
+	for _, i := range pdb.Categories {
+		if i.Name == cat {
+			for _, i := range i.Programmes {
+				buffer.WriteString(i.String())
+				buffer.WriteString("\n")
+			}
+		}
+	}
+	return buffer.String()
 }
