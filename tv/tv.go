@@ -204,16 +204,18 @@ func Programmes(s Searcher) ([]*Programme, error) {
 		return nil, err
 	}
 	progs := make(chan []*Programme)
+	sp := make(chan []*Programme)
 	subpages := doc.SubPages()
 	if len(subpages) > 0 {
 		for _, i := range subpages {
 			doc, err := i.UrlDoc()
 			if err != nil {
-				return nil, err
+				panic(err)
 			}
-			go doc.programmes(progs)
-			programmes = append(programmes, <-progs...)
+			go doc.programmes(sp)
+			programmes = append(programmes, <-sp...)
 		}
+		close(sp)
 	}
 	go doc.programmes(progs)
 	programmes = append(programmes, <-progs...)
