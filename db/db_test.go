@@ -6,20 +6,25 @@ import (
 	"testing"
 	"time"
 
+	"github.com/mswift42/ipn/tv"
 	"github.com/stretchr/testify/assert"
 )
+
+const comedy = "../tv/comedy.html"
+const mostpopular = "../tv/mostpopular.html"
+const filmspage1 = "../tv/filmspage1.html"
 
 func TestNewProgrammeDB(t *testing.T) {
 	assert := assert.New(t)
 	popth := tv.TestHtmlURL(mostpopular)
-	popprogrammes, _ := Programmes(popth)
-	cat := NewCategory("mostpopular", popprogrammes)
-	filmdoc := TestHtmlURL(filmspage1)
-	filmprog, _ := Programmes(filmdoc)
-	cat2 := NewCategory("films", filmprog)
-	cats := []*Category{cat, cat2}
+	popprogrammes, _ := tv.Programmes(popth)
+	cat := tv.NewCategory("mostpopular", popprogrammes)
+	filmdoc := tv.TestHtmlURL(filmspage1)
+	filmprog, _ := tv.Programmes(filmdoc)
+	cat2 := tv.NewCategory("films", filmprog)
+	cats := []*tv.Category{cat, cat2}
 	now := time.Now()
-	pdb := db.newProgrammeDB(cats, now)
+	pdb := newProgrammeDB(cats, now)
 	assert.Equal(len(pdb.Categories), 2)
 	assert.Equal(pdb.Saved, now)
 	assert.Equal(now.Day(), time.Now().Day())
@@ -27,13 +32,13 @@ func TestNewProgrammeDB(t *testing.T) {
 
 func TestProgrammeDB_Save(t *testing.T) {
 	assert := assert.New(t)
-	popth := TestHtmlURL(mostpopular)
-	film1 := TestHtmlURL(filmspage1)
-	popprog, _ := Programmes(popth)
-	filmprog, _ := Programmes(film1)
-	cat1 := NewCategory("mostpopular", popprog)
-	cat2 := NewCategory("films", filmprog)
-	pdb := tv.newProgrammeDB([]*Category{cat1, cat2}, time.Now())
+	popth := tv.TestHtmlURL(mostpopular)
+	film1 := tv.TestHtmlURL(filmspage1)
+	popprog, _ := tv.Programmes(popth)
+	filmprog, _ := tv.Programmes(film1)
+	cat1 := tv.NewCategory("mostpopular", popprog)
+	cat2 := tv.NewCategory("films", filmprog)
+	pdb := newProgrammeDB([]*tv.Category{cat1, cat2}, time.Now())
 	json, err := pdb.toJSON()
 	assert.Nil(err)
 	assert.NotNil(json)
@@ -49,13 +54,13 @@ func TestProgrammeDB_Save(t *testing.T) {
 
 func TestProgrammeDB_Index(t *testing.T) {
 	assert := assert.New(t)
-	popth := TestHtmlURL(mostpopular)
-	film1 := TestHtmlURL(filmspage1)
-	popprog, _ := Programmes(popth)
-	filmprog, _ := Programmes(film1)
-	cat1 := NewCategory("mostpopular", popprog)
-	cat2 := NewCategory("films", filmprog)
-	pdb := newProgrammeDB([]*Category{cat1, cat2}, time.Now())
+	popth := tv.TestHtmlURL(mostpopular)
+	film1 := tv.TestHtmlURL(filmspage1)
+	popprog, _ := tv.Programmes(popth)
+	filmprog, _ := tv.Programmes(film1)
+	cat1 := tv.NewCategory("mostpopular", popprog)
+	cat2 := tv.NewCategory("films", filmprog)
+	pdb := newProgrammeDB([]*tv.Category{cat1, cat2}, time.Now())
 	pdb.Save("testjson.json")
 	file, _ := ioutil.ReadFile("testjson.json")
 	assert.True(strings.Contains(string(file), "39"))
