@@ -83,6 +83,7 @@ func (pdb *programmeDB) ListCategory(cat string) string {
 	return buffer.String()
 }
 
+// TODO handle case mismatch.
 func (pdb *programmeDB) FindTitle(cat string) string {
 	var buffer bytes.Buffer
 	for _, i := range pdb.Categories {

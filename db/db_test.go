@@ -85,3 +85,13 @@ func TestListCategory(t *testing.T) {
 	assert.NotNil(catstring)
 	assert.Equal(len(strings.Split(catstring, "\n")), 41)
 }
+
+func TestFindTitle(t *testing.T) {
+	assert := assert.New(t)
+	db, _ := LoadProgrammeDbFromJSON("testjson.json")
+	assert.Equal(len(db.Categories), 2)
+	findString := db.FindTitle("Adam")
+	assert.Equal(findString, "40:  Adam Curtis  HyperNormalisation\n41:  Adam Curtis  Bitter Lake\n")
+	findString = db.FindTitle("EastEnders")
+	assert.Equal(findString, "0:  EastEnders  24/12/2016\n1:  EastEnders  23/12/2016\n7:  EastEnders  22/12/2016\n22:  EastEnders  20/12/2016\n")
+}
