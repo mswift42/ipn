@@ -67,6 +67,8 @@ func (pdb *programmeDB) findCategory(cat string) (*tv.Category, error) {
 	return nil, errors.New("Can not find Category with Name: " + cat)
 }
 
+// ListCategory returns a String of all Programmes in an Iplayer
+// Category, with a line seperator appended after every Programme.
 func (pdb *programmeDB) ListCategory(cat string) string {
 	var buffer bytes.Buffer
 	category, err := pdb.findCategory(cat)
