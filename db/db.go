@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"io/ioutil"
+	"strings"
 	"time"
 
 	"github.com/mswift42/ipn/tv"
@@ -78,6 +79,21 @@ func (pdb *programmeDB) ListCategory(cat string) string {
 	for _, i := range category.Programmes {
 		buffer.WriteString(i.String())
 		buffer.WriteString("\n")
+	}
+	return buffer.String()
+}
+
+func (pdb *programmeDB) FindTitle(cat string) string {
+	var buffer bytes.Buffer
+	for _, i := range pdb.Categories {
+		for _, j := range i.Programmes {
+			if strings.Contains(j.String(), cat) {
+				buffer.WriteString(j.String() + "\n")
+			}
+		}
+	}
+	if buffer.String() == "" {
+		return "No Matches found.\n"
 	}
 	return buffer.String()
 }
