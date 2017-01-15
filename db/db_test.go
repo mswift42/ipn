@@ -99,3 +99,10 @@ func TestFindTitle(t *testing.T) {
 	findString = db.FindTitle("BROWN")
 	assert.Equal(findString, "12:  Mrs Brown's Boys  Christmas Specials 2012: 2. The Virgin Mammy\n23:  Father Brown  Series 5: 1. The Star of Jacob\n")
 }
+
+func TestListAvailableCategories(t *testing.T) {
+	assert := assert.New(t)
+	db, _ := LoadProgrammeDbFromJSON("testjson.json")
+	cats := db.ListAvailableCategories()
+	assert.Equal(cats, "mostpopular\nfilms\n")
+}
