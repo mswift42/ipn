@@ -84,6 +84,16 @@ func (pdb *programmeDB) findCategory(cat string) (*tv.Category, error) {
 	return nil, errors.New("Can not find Category with Name: " + cat)
 }
 
+// ListAvailableCategories returns a line seperated string of
+// all Categories saved in the Programme DB.
+func (pdb *programmeDB) ListAvailableCategories() string {
+	var buffer bytes.Buffer
+	for _, i := range pdb.Categories {
+		buffer.WriteString(i.Name + "\n")
+	}
+	return buffer.String()
+}
+
 // FindTitle returns a line seperated String of all Programmes
 // containing a given string in its Title. Case distinction is ignored.
 func (pdb *programmeDB) FindTitle(cat string) string {
