@@ -94,4 +94,8 @@ func TestFindTitle(t *testing.T) {
 	assert.Equal(findString, "40:  Adam Curtis  HyperNormalisation\n41:  Adam Curtis  Bitter Lake\n")
 	findString = db.FindTitle("EastEnders")
 	assert.Equal(findString, "0:  EastEnders  24/12/2016\n1:  EastEnders  23/12/2016\n7:  EastEnders  22/12/2016\n22:  EastEnders  20/12/2016\n")
+	findString = db.FindTitle("eastenders")
+	assert.Equal(findString, "0:  EastEnders  24/12/2016\n1:  EastEnders  23/12/2016\n7:  EastEnders  22/12/2016\n22:  EastEnders  20/12/2016\n")
+	findString = db.FindTitle("BROWN")
+	assert.Equal(findString, "12:  Mrs Brown's Boys  Christmas Specials 2012: 2. The Virgin Mammy\n23:  Father Brown  Series 5: 1. The Star of Jacob\n")
 }
