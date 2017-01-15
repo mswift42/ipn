@@ -59,14 +59,6 @@ func (pdb *programmeDB) index() {
 		}
 	}
 }
-func (pdb *programmeDB) findCategory(cat string) (*tv.Category, error) {
-	for _, i := range pdb.Categories {
-		if i.Name == cat {
-			return i, nil
-		}
-	}
-	return nil, errors.New("Can not find Category with Name: " + cat)
-}
 
 // ListCategory returns a String of all Programmes in an Iplayer
 // Category, with a line seperator appended after every Programme.
@@ -83,12 +75,22 @@ func (pdb *programmeDB) ListCategory(cat string) string {
 	return buffer.String()
 }
 
+func (pdb *programmeDB) findCategory(cat string) (*tv.Category, error) {
+	for _, i := range pdb.Categories {
+		if i.Name == cat {
+			return i, nil
+		}
+	}
+	return nil, errors.New("Can not find Category with Name: " + cat)
+}
+
 // TODO handle case mismatch.
 func (pdb *programmeDB) FindTitle(cat string) string {
 	var buffer bytes.Buffer
 	for _, i := range pdb.Categories {
 		for _, j := range i.Programmes {
-			if strings.Contains(j.String(), cat) {
+			if strings.Contains(strings.ToLower(j.String()),
+				strings.ToLower(cat)) {
 				buffer.WriteString(j.String() + "\n")
 			}
 		}
