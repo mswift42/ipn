@@ -62,26 +62,26 @@ func (pdb *programmeDB) index() {
 
 // ListCategory returns a String of all Programmes in an Iplayer
 // Category, with a line seperator appended after every Programme.
-func (pdb *programmeDB) ListCategory(cat string) string {
+func (pdb *programmeDB) ListCategory(category string) string {
 	var buffer bytes.Buffer
-	category, err := pdb.findCategory(cat)
+	cat, err := pdb.findCategory(category)
 	if err != nil {
 		return fmt.Sprintln(err)
 	}
-	for _, i := range category.Programmes {
+	for _, i := range cat.Programmes {
 		buffer.WriteString(i.String())
 		buffer.WriteString("\n")
 	}
 	return buffer.String()
 }
 
-func (pdb *programmeDB) findCategory(cat string) (*tv.Category, error) {
+func (pdb *programmeDB) findCategory(category string) (*tv.Category, error) {
 	for _, i := range pdb.Categories {
-		if i.Name == cat {
+		if i.Name == category {
 			return i, nil
 		}
 	}
-	return nil, errors.New("Can not find Category with Name: " + cat)
+	return nil, errors.New("Can not find Category with Name: " + category)
 }
 
 // ListAvailableCategories returns a line seperated string of
