@@ -61,7 +61,7 @@ func (pdb *programmeDB) index() {
 }
 
 // ListCategory returns a String of all Programmes in an Iplayer
-// Category, with a line seperator appended after every Programme.
+// Category, with a line separator appended after every Programme.
 func (pdb *programmeDB) ListCategory(category string) string {
 	var buffer bytes.Buffer
 	cat, err := pdb.findCategory(category)
@@ -84,7 +84,7 @@ func (pdb *programmeDB) findCategory(category string) (*tv.Category, error) {
 	return nil, errors.New("Can not find Category with Name: " + category)
 }
 
-// ListAvailableCategories returns a line seperated string of
+// ListAvailableCategories returns a line separated string of
 // all Categories saved in the Programme DB.
 func (pdb *programmeDB) ListAvailableCategories() string {
 	var buffer bytes.Buffer
@@ -94,14 +94,14 @@ func (pdb *programmeDB) ListAvailableCategories() string {
 	return buffer.String()
 }
 
-// FindTitle returns a line seperated String of all Programmes
+// FindTitle returns a line separated String of all Programmes
 // containing a given string in its Title. Case distinction is ignored.
-func (pdb *programmeDB) FindTitle(cat string) string {
+func (pdb *programmeDB) FindTitle(title string) string {
 	var buffer bytes.Buffer
 	for _, i := range pdb.Categories {
 		for _, j := range i.Programmes {
 			if strings.Contains(strings.ToLower(j.String()),
-				strings.ToLower(cat)) {
+				strings.ToLower(title)) {
 				buffer.WriteString(j.String() + "\n")
 			}
 		}
