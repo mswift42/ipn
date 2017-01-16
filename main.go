@@ -1,9 +1,9 @@
 package main
 
 import (
-	"fmt"
+	"os"
 
-	"github.com/mswift42/ipn/categories"
+	"github.com/mswift42/ipn/cli"
 )
 
 const (
@@ -11,18 +11,6 @@ const (
 )
 
 func main() {
-	prog, err := categories.AllCategories()
-	if err != nil {
-		fmt.Println("Oops, error in fetching all categories: ", err)
-	}
-	for _, i := range prog {
-		if i != nil {
-			fmt.Println("\n\n", i.Name, "\n\n")
-			for _, j := range i.Programmes {
-				if j != nil {
-					fmt.Println(j)
-				}
-			}
-		}
-	}
+	app := cli.InitCli()
+	app.Run(os.Args)
 }
