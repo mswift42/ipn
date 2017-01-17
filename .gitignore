@@ -27,3 +27,5 @@ _testmain.go
 /tv/coverage.out
 /tv/testjson.json
 *.json
+/db/trace.out
+/tv/trace.out
