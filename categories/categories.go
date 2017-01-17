@@ -23,14 +23,7 @@ func category(url tv.BeebURL, name string) *tv.Category {
 	return cat
 }
 
-func AllCategories() ([]*tv.Category, error) {
-	categories := map[string]tv.BeebURL{
-		"most-popular": mostpopular,
-		"films":        films,
-		"crime/drama":  crimedrama,
-		"comedy":       comedy,
-		"food":         food,
-	}
+func AllCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
 	cats := make([]*tv.Category, len(categories))
 	ch := make(chan *tv.Category)
 	go func() {
