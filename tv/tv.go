@@ -23,6 +23,13 @@ type IplayerDocument struct {
 	idoc *goquery.Document
 }
 
+type Pager interface {
+	NextPages() []string
+	SubPages() []string
+}
+
+// TODO add interface Pager with methods NextPages, SubPages.
+
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
