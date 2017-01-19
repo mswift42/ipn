@@ -23,11 +23,14 @@ type IplayerDocument struct {
 	idoc *goquery.Document
 }
 
+type TestIplayerDocument struct {
+	idoc *goquery.Document
+}
+
 type Pager interface {
 	NextPages() []string
 	SubPages() []string
 }
-
 
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
@@ -174,6 +177,18 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	go doc.programmes(progs)
 	programmes = append(programmes, <-progs...)
 	return programmes, nil
+}
+
+func nextPages(pager Pager) []string {
+	var results []string
+	results = append(results, pager.NextPages()...)
+	return results
+}
+
+func subPages(pager Pager) []string {
+	var results []string
+	results = append(results, pager.SubPages()...)
+	return results
 }
 
 func findTitle(s *goquery.Selection) string {
