@@ -165,7 +165,7 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	subpages := doc.SubPages()
 	if len(subpages) > 0 {
 		for _, i := range subpages {
-			doc, err := i.UrlDoc()
+			doc, err := BeebURL(i).UrlDoc()
 			if err != nil {
 				panic(err)
 			}
