@@ -20,7 +20,9 @@ type BeebURL string
 type TestHtmlURL string
 
 type IplayerDocument struct {
-	idoc *goquery.Document
+	idoc      *goquery.Document
+	nextpages []BeebURL
+	subpages  []BeebURL
 }
 
 type TestIplayerDocument struct {
@@ -178,6 +180,8 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	programmes = append(programmes, <-progs...)
 	return programmes, nil
 }
+
+func nP()
 
 func nextPages(pager Pager) []string {
 	var results []string
