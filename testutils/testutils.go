@@ -19,6 +19,19 @@ import (
 // 	return doc, nil
 // }
 
+type TestIplayerDocument struct {
+	tdoc *goquery.Document
+}
+
+func (td *TestIplayerDocument) NextPages() []string {
+
+}
+
+func (td *TestIplayerDocument) morePages(selection string) []string {
+	var results []string
+	sel := td.tdoc.Find(selection)
+}
+
 func LoadTestHtml(filename string) *goquery.Document {
 	file, err := ioutil.ReadFile(filename)
 	if err != nil {

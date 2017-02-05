@@ -35,7 +35,7 @@ func AllCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
 			nextpages := doc.NextPages()
 			if len(nextpages) > 0 {
 				for _, i := range nextpages {
-					ch <- category(i, name)
+					ch <- category(tv.BeebURL(i), name)
 				}
 			}
 			fmt.Println("Fetching Cat: ", name)
