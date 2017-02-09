@@ -53,8 +53,8 @@ func (ip *IplayerDocument) tvSelection(selector string) *goquery.Selection {
 // NextPages checks for a pagination div at the bottom of the
 // Programme listing page. If found, it returns a slice of urls
 // for the same category.
-func (ip *IplayerDocument) NextPages() []string {
-	return ip.morePages(".page > a")
+func (ip *IplayerDocument) NextPages() {
+	ip.nextpages = ip.morePages(".page > a")
 }
 
 // SubPages collects for every Programme pontentially available
@@ -62,11 +62,11 @@ func (ip *IplayerDocument) NextPages() []string {
 // (For example, the category comedy site, will only list the most recent
 // episode of a Programme, and then link to The Programme's site for more available
 // episodes.)
-func (ip *IplayerDocument) SubPages() []string {
-	return ip.morePages(".view-more-container")
+func (ip *IplayerDocument) SubPages() {
+	ip.subpages = ip.morePages(".view-more-container")
 }
 
-func (ip *IplayerDocument) morePages(selection string) []string {
+func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 	var bu []string
 	sel := ip.tvSelection(selection)
 	sel.Each(func(i int, s *goquery.Selection) {
