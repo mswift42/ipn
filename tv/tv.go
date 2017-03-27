@@ -46,7 +46,7 @@ func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
 	return NewIplayerDocument(doc), nil
 }
 
-func (ip *IplayerDocument) tvSelection(selector string) *goquery.Selection {
+func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
 }
 
@@ -68,11 +68,17 @@ func (ip *IplayerDocument) SubPages() {
 
 func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 	var bu []string
-	sel := ip.tvSelection(selection)
+	sel := ip.selection(selection)
 	sel.Each(func(i int, s *goquery.Selection) {
 		bu = append(bu, bbcprefix+s.AttrOr("href", ""))
 	})
 	return bu
+}
+
+func (ip *IplayerDocument) pages() []*Pager {
+	ip.NextPages()
+	ip.SubPages()
+
 }
 
 func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
@@ -180,8 +186,6 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	programmes = append(programmes, <-progs...)
 	return programmes, nil
 }
-
-func nP()
 
 func nextPages(pager Pager) []string {
 	var results []string
