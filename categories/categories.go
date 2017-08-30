@@ -32,9 +32,9 @@ func AllCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
 			if err != nil {
 				panic(err)
 			}
-			nextpages := doc.NextPages()
-			if len(nextpages) > 0 {
-				for _, i := range nextpages {
+			doc.CollectNextPages()
+			if len(doc.NextPages) > 0 {
+				for _, i := range doc.NextPages {
 					ch <- category(tv.BeebURL(i), name)
 				}
 			}
