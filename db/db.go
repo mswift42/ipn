@@ -18,7 +18,7 @@ type programmeDB struct {
 	Saved      time.Time      `json:"saved"`
 }
 
-func newProgrammeDB(cats []*tv.Category, saved time.Time) *programmeDB {
+func NewProgrammeDB(cats []*tv.Category, saved time.Time) *programmeDB {
 	return &programmeDB{Categories: cats, Saved: saved}
 }
 
@@ -53,9 +53,11 @@ func (pdb *programmeDB) Save(filename string) error {
 func (pdb *programmeDB) index() {
 	index := 0
 	for _, i := range pdb.Categories {
-		for _, j := range i.Programmes {
-			j.Index = index
-			index++
+		if i != nil {
+			for _, j := range i.Programmes {
+				j.Index = index
+				index++
+			}
 		}
 	}
 }
@@ -89,7 +91,10 @@ func (pdb *programmeDB) findCategory(category string) (*tv.Category, error) {
 func (pdb *programmeDB) ListAvailableCategories() string {
 	var buffer bytes.Buffer
 	for _, i := range pdb.Categories {
-		buffer.WriteString(i.Name + "\n")
+		fmt.Println(i)
+		if i != nil {
+			buffer.WriteString(i.Name + "\n")
+		}
 	}
 	return buffer.String()
 }
@@ -99,10 +104,12 @@ func (pdb *programmeDB) ListAvailableCategories() string {
 func (pdb *programmeDB) FindTitle(title string) string {
 	var buffer bytes.Buffer
 	for _, i := range pdb.Categories {
-		for _, j := range i.Programmes {
-			if strings.Contains(strings.ToLower(j.String()),
-				strings.ToLower(title)) {
-				buffer.WriteString(j.String() + "\n")
+		if i != nil {
+			for _, j := range i.Programmes {
+				if strings.Contains(strings.ToLower(j.String()),
+					strings.ToLower(title)) {
+					buffer.WriteString(j.String() + "\n")
+				}
 			}
 		}
 	}

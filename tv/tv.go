@@ -215,8 +215,12 @@ func findURL(s *goquery.Selection) string {
 func findThumbnail(s *goquery.Selection) string {
 	return s.Find(".rs-image > picture > source").AttrOr("srcset", "")
 }
-
+// TODO make sure findPID works with films a-z.
 func findPid(s *goquery.Selection) string {
+	pid := s.AttrOr("data-ip-id", "")
+	if pid != "" {
+		return pid
+	}
 	return s.Find(".list-item-inner > a").AttrOr("data-episode-id", "")
 }
 

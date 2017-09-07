@@ -132,7 +132,7 @@ func TestTVSelection(t *testing.T) {
 	doc, err := th.UrlDoc()
 	assert.Nil(err)
 	assert.NotNil(doc)
-	tvsel := doc.tvSelection(".page > a")
+	tvsel := doc.selection(".page > a")
 	assert.Equal(tvsel.AttrOr("href", ""),
 		"/iplayer/categories/films/all?sort=atoz&page=2")
 }
@@ -141,22 +141,22 @@ func TestNextPages(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL(filmspage1)
 	doc, _ := th.UrlDoc()
-	np := doc.NextPages()
-	assert.Equal(len(np), 2)
-	assert.Equal(string(np[0]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
-	assert.Equal(string(np[1]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=3")
+	doc.CollectNextPages()
+	assert.Equal(len(doc.NextPages), 2)
+	assert.Equal(string(doc.NextPages[0]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
+	assert.Equal(string(doc.NextPages[1]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=3")
 	th = TestHtmlURL(comedy)
 	doc, err := th.UrlDoc()
 	assert.Nil(err)
-	np = doc.NextPages()
-	assert.Equal(len(np), 4)
-	assert.Equal(string(np[0]),
+	doc.CollectNextPages()
+	assert.Equal(len(doc.NextPages), 4)
+	assert.Equal(string(doc.NextPages[0]),
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")
-	assert.Equal(string(np[1]),
+	assert.Equal(string(doc.NextPages[1]),
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=3")
-	assert.Equal(string(np[2]),
+	assert.Equal(string(doc.NextPages[2]),
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=4")
-	assert.Equal(string(np[3]),
+	assert.Equal(string(doc.NextPages[3]),
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=5")
 }
 
@@ -165,14 +165,16 @@ func TestSubPages(t *testing.T) {
 	th := TestHtmlURL(filmspage1)
 	doc, err := th.UrlDoc()
 	assert.Nil(err)
-	sp := doc.SubPages()
+	doc.CollectSubPages()
+	sp := doc.SubPages
 	assert.Equal(len(sp), 1)
 	assert.Equal(string(sp[0]),
 		bbcprefix+"/iplayer/episodes/p04bkttz")
 	th = TestHtmlURL(comedy)
 	doc, _ = th.UrlDoc()
-	sp = doc.SubPages()
-	assert.Equal(len(sp), 10)
+	doc.CollectSubPages()
+	sp  = doc.SubPages
+	assert.Equal(len(doc.SubPages), 10)
 	assert.Equal(string(sp[0]),
 		bbcprefix+"/iplayer/episodes/b07zyh6k")
 	assert.Equal(string(sp[1]),

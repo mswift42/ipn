@@ -6,6 +6,8 @@ import (
 
 	"github.com/mswift42/ipn/categories"
 	"github.com/mswift42/ipn/cli"
+	"github.com/mswift42/ipn/db"
+	"time"
 )
 
 const (
@@ -15,11 +17,20 @@ const (
 func main() {
 	app := cli.InitCli()
 	app.Run(os.Args)
-	cats, _ := categories.AllCategories()
+	cats, err := categories.LoadAllCategories()
+	fmt.Println(err)
 	for _, i := range cats {
-		fmt.Println(i.Name)
-		for _, j := range i.Programmes {
-			fmt.Println(j)
-		}
+		fmt.Println(i)
 	}
+	newdb := db.NewProgrammeDB(cats, time.Now() )
+	newdb.Save("testdb.json")
+	fmt.Println(newdb.ListAvailableCategories())
+	fmt.Println(newdb.FindTitle("foster"))
+	samedb, _ := db.LoadProgrammeDbFromJSON("testdb.json")
+	fmt.Println(samedb.FindTitle("strike"))
+
+
+
+
+
 }

@@ -5,19 +5,20 @@ import (
 	"io/ioutil"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/mswift42/ipn/tv"
 )
 
-// func (th TestHtmLURL) urlDoc() (*goquery.Document, error) {
-// 	file, err := ioutil.ReadFile(string(th))
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
-// 	if err != nil {
-// 		return nil, err
-// 	}
-// 	return doc, nil
-// }
+func (th tv.TestHtmLURL) urlDoc() (*goquery.Document, error) {
+	file, err := ioutil.ReadFile(string(th))
+	if err != nil {
+		return nil, err
+	}
+	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
+	if err != nil {
+		return nil, err
+	}
+	return doc, nil
+}
 
 type TestIplayerDocument struct {
 	tdoc *goquery.Document
