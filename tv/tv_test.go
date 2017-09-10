@@ -54,12 +54,12 @@ func TestProgrammes(t *testing.T) {
 		panic(err)
 	}
 	assert.Equal(len(programmes), 40)
-	assert.Equal(programmes[0].URL, "www.bbc.co.uk/iplayer/episode/b086yqrc/eastenders-24122016")
-	assert.Equal(programmes[0].Pid, "b086yqrc")
-	assert.Equal(programmes[39].Title, "Mr Stink")
-	assert.Equal(programmes[39].Synopsis, "An unhappy, daydreaming schoolgirl befriends a homeless man and his dog in the local park.")
-	assert.Equal(programmes[39].Thumbnail, "https://ichef.bbci.co.uk/images/ic/336x189/p01j0d94.jpg")
-	assert.Equal(programmes[1].Subtitle, "23/12/2016")
+	assert.Equal(programmes[0].URL, "www.bbc.co.uk/iplayer/episode/b0957wrf/strictly-come-dancing-series-15-1-launch")
+	assert.Equal(programmes[0].Pid, "b0957wrf")
+	assert.Equal(programmes[39].Title, "Hey Duggee")
+	assert.Equal(programmes[39].Synopsis, "The Squirrels dress up as brave knights in cardboard costumes.")
+	assert.Equal(programmes[39].Thumbnail, "https://ichef.bbci.co.uk/images/ic/336x189/p02typd6.jpg")
+	assert.Equal(programmes[1].Subtitle, "08/09/2017")
 	assert.Equal(programmes[1].Title, "EastEnders")
 }
 
@@ -75,7 +75,7 @@ func TestFindTitle(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(programmes[0].Title, "EastEnders")
+	assert.Equal(programmes[0].Title, "Strictly Come Dancing")
 	assert.Equal(filmsprog1[1].Title, "Adam Curtis")
 }
 
@@ -86,7 +86,7 @@ func TestFindSubtitle(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(popprogrammes[0].Subtitle, "24/12/2016")
+	assert.Equal(popprogrammes[0].Subtitle, "Series 15: 1. Launch")
 	film1th := TestHtmlURL(filmspage1)
 	film1prog, _ := Programmes(film1th)
 	assert.Equal(film1prog[0].Subtitle, "HyperNormalisation")
@@ -100,7 +100,7 @@ func TestFindThumbnail(t *testing.T) {
 	if err != nil {
 		panic(err)
 	}
-	assert.Equal(popprogrammes[0].Thumbnail, "https://ichef.bbci.co.uk/images/ic/336x189/p04l711h.jpg")
+	assert.Equal(popprogrammes[0].Thumbnail, "https://ichef.bbci.co.uk/images/ic/336x189/p05fb1zb.jpg")
 }
 
 func TestNewCategory(t *testing.T) {
@@ -112,7 +112,7 @@ func TestNewCategory(t *testing.T) {
 	}
 	cat := NewCategory("mostpopular", popprogrammes)
 	assert.Equal(cat.Name, "mostpopular")
-	assert.Equal(cat.Programmes[0].Title, "EastEnders")
+	assert.Equal(cat.Programmes[0].Title, "Strictly Come Dancing")
 }
 
 func TestProgrammeString(t *testing.T) {
@@ -123,7 +123,7 @@ func TestProgrammeString(t *testing.T) {
 		panic(err)
 	}
 	p0 := programmes[0]
-	assert.Equal(p0.String(), "0:  EastEnders  24/12/2016")
+	assert.Equal(p0.String(), "0:  Strictly Come Dancing  Series 15: 1. Launch")
 }
 
 func TestTVSelection(t *testing.T) {
