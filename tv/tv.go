@@ -21,7 +21,7 @@ type TestHtmlURL string
 
 type IplayerDocument struct {
 	idoc      *goquery.Document
-	NextPages []BeebURL
+	NextPage BeebURL
 	SubPages  []BeebURL
 }
 
@@ -35,7 +35,7 @@ type Pager interface {
 }
 
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
-	return &IplayerDocument{doc, []BeebURL{}, []BeebURL{}}
+	return &IplayerDocument{doc, BeebURL(""), []BeebURL{}}
 }
 
 func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
@@ -50,11 +50,15 @@ func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
 }
 
-// CollectNextPages checks for a pagination div at the bottom of the
+// CollectNextPage checks for a pagination div at the bottom of the
 // Programme listing page. If found, it returns a slice of urls
 // for the same category.
-func (ip *IplayerDocument) CollectNextPages() {
-	ip.NextPages = ip.morePages(".page > a")
+func (ip *IplayerDocument) CollectNextPage() {
+	ip.NextPage = BeebURL(ip.nextPage())
+}
+
+func (ip *IplayerDocument) nextPage() string {
+	return ip.selection(".page > a").AttrOr("href", "")
 }
 
 // CollectSubPages collects for every Programme pontentially available
@@ -76,10 +80,11 @@ func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 }
 
 func (ip *IplayerDocument) pages() []*Pager {
-	ip.CollectNextPages()
+	ip.CollectNextPage()
 	ip.CollectSubPages()
 	return ip.pages()
 }
+
 
 func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	var programmes []*Programme
@@ -167,11 +172,12 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
 	doc, err := s.UrlDoc()
 	if err != nil {
-		return nil, err
+		panic(err)
 	}
 	progs := make(chan []*Programme)
 	sp := make(chan []*Programme)
 	doc.CollectSubPages()
+	fmt.Println(doc.SubPages)
 	if len(doc.SubPages) > 0 {
 		for _, i := range doc.SubPages {
 			doc, err := BeebURL(i).UrlDoc()
