@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"fmt"
 )
 
 const mostpopular = "mostpopular.html"
@@ -72,6 +73,7 @@ func TestFindTitle(t *testing.T) {
 	}
 	th2 := TestHtmlURL(filmspage1)
 	filmsprog1, err := Programmes(th2)
+	fmt.Println(filmsprog1)
 	if err != nil {
 		panic(err)
 	}
@@ -141,14 +143,13 @@ func TestNextPages(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL(filmspage1)
 	doc, _ := th.UrlDoc()
-	doc.CollectNextPages()
-	assert.Equal(len(doc.NextPages), 2)
+	doc.CollectNextPage()
+	assert.Equal(len(doc.NextPages), 1)
 	assert.Equal(string(doc.NextPages[0]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
-	assert.Equal(string(doc.NextPages[1]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=3")
 	th = TestHtmlURL(comedy)
 	doc, err := th.UrlDoc()
 	assert.Nil(err)
-	doc.CollectNextPages()
+	doc.CollectNextPage()
 	assert.Equal(len(doc.NextPages), 4)
 	assert.Equal(string(doc.NextPages[0]),
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")

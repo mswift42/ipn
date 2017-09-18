@@ -21,7 +21,7 @@ type TestHtmlURL string
 
 type IplayerDocument struct {
 	idoc      *goquery.Document
-	NextPage BeebURL
+	NextPages []BeebURL
 	SubPages  []BeebURL
 }
 
@@ -35,7 +35,7 @@ type Pager interface {
 }
 
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
-	return &IplayerDocument{doc, BeebURL(""), []BeebURL{}}
+	return &IplayerDocument{doc, []BeebURL{}, []BeebURL{}}
 }
 
 func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
@@ -54,7 +54,7 @@ func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 // Programme listing page. If found, it returns a slice of urls
 // for the same category.
 func (ip *IplayerDocument) CollectNextPage() {
-	ip.NextPage = BeebURL(ip.nextPage())
+	ip.NextPages = ip.morePages(".page > a")
 }
 
 func (ip *IplayerDocument) nextPage() string {
