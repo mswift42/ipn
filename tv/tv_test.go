@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"github.com/mswift42/ipn/testutils"
 	"fmt"
 )
 
@@ -27,11 +28,11 @@ func TestBeebURLUrlDoc(t *testing.T) {
 
 func TestTestHtmlURLDoc(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL(mostpopular)
+	th := testutils.TestHtmlURL(mostpopular)
 	succ, err := th.UrlDoc()
 	assert.Nil(err)
 	assert.NotNil(succ)
-	th2 := TestHtmlURL("")
+	th2 := testutils.TestHtmlURL("")
 	fail, err := th2.UrlDoc()
 	assert.Nil(fail)
 	assert.NotNil(err)
@@ -49,7 +50,7 @@ func TestNewProgramme(t *testing.T) {
 
 func TestProgrammes(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL(mostpopular)
+	th := testutils.TestHtmlURL(mostpopular)
 	programmes, err := Programmes(th)
 	if err != nil {
 		panic(err)
@@ -66,13 +67,14 @@ func TestProgrammes(t *testing.T) {
 
 func TestFindTitle(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL(mostpopular)
+	th := testutils.TestHtmlURL(mostpopular)
 	programmes, err := Programmes(th)
 	if err != nil {
 		panic(err)
 	}
-	th2 := TestHtmlURL(filmspage1)
-	filmsprog1, err := Programmes(th2)
+	th2 := testutils.TestHtmlURL(filmspage1)
+	var s Searcher = testutils.TestHtmlURL{mostpopular}
+	filmsprog1, err := Programmes(searcher)
 	fmt.Println(filmsprog1)
 	if err != nil {
 		panic(err)

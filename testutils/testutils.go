@@ -5,11 +5,14 @@ import (
 	"io/ioutil"
 
 	"github.com/PuerkitoBio/goquery"
-	"github.com/mswift42/ipn/tv"
 )
+type TestHtmlURL struct {
+	url string
+}
 
-func (th tv.TestHtmLURL) urlDoc() (*goquery.Document, error) {
-	file, err := ioutil.ReadFile(string(th))
+
+func (th TestHtmlURL) UrlDoc() (*goquery.Document, error) {
+	file, err := ioutil.ReadFile(th.url)
 	if err != nil {
 		return nil, err
 	}
@@ -24,14 +27,7 @@ type TestIplayerDocument struct {
 	tdoc *goquery.Document
 }
 
-func (td *TestIplayerDocument) NextPages() []string {
 
-}
-
-func (td *TestIplayerDocument) morePages(selection string) []string {
-	var results []string
-	sel := td.tdoc.Find(selection)
-}
 
 func LoadTestHtml(filename string) *goquery.Document {
 	file, err := ioutil.ReadFile(filename)
