@@ -41,16 +41,16 @@ func allCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
 	go func() {
 		for name, url := range categories {
 			fmt.Println(name, url)
-			doc, err := url.UrlDoc()
-			if err != nil {
-				panic(err)
-			}
-			doc.CollectNextPage()
-			if len(doc.NextPages) > 0 {
-				for _, i := range doc.NextPages {
-					ch <- category(tv.BeebURL(i), name)
-				}
-			}
+			//doc, err := url.UrlDoc()
+			//if err != nil {
+			//	panic(err)
+			//}
+			//doc.CollectNextPage()
+			//if len(doc.NextPages) > 0 {
+			//	for _, i := range doc.NextPages {
+			//		ch <- category(tv.BeebURL(i), name)
+			//	}
+			//}
 			fmt.Println("Fetching Cat: ", name)
 			ch <- category(url, name)
 

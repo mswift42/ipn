@@ -1,11 +1,9 @@
 package tv
 
 import (
-	"bytes"
-	"fmt"
-	"io/ioutil"
 
 	"github.com/mswift42/goquery"
+	"fmt"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -89,8 +87,6 @@ func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 
 func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	var programmes []*Programme
-	var extrapages  := ip.extraPages()
-	if len(extrapages) == 0 {
 		ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 			title := findTitle(s)
 			subtitle := findSubtitle(s)
@@ -99,25 +95,23 @@ func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 			thumbnail := findThumbnail(s)
 			url := findURL(s)
 			np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-		programmes = append()
+		programmes = append(programmes, np)
 		})
-
-	}
 	c <- programmes
 }
 
-func (th TestHtmlURL) UrlDoc() (*IplayerDocument, error) {
-	file, err := ioutil.ReadFile(string(th))
-
-	if err != nil {
-		return nil, err
-	}
-	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
-	if err != nil {
-		return nil, err
-	}
-	return NewIplayerDocument(doc), nil
-}
+//func (th TestHtmlURL) UrlDoc() (*IplayerDocument, error) {
+//	file, err := ioutil.ReadFile(string(th))
+//
+//	if err != nil {
+//		return nil, err
+//	}
+//	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
+//	if err != nil {
+//		return nil, err
+//	}
+//	return NewIplayerDocument(doc), nil
+//}
 
 // Programme represents an Iplayer TV programme. It consists of
 // the programme's title, subtitle, a short programme description,
@@ -174,36 +168,22 @@ func Programmes(s Searcher) ([]*Programme, error) {
 		panic(err)
 	}
 	progs := make(chan []*Programme)
-	sp := make(chan []*Programme)
-	doc.CollectSubPages()
-	fmt.Println(doc.SubPages)
-	if len(doc.SubPages) > 0 {
-		for _, i := range doc.SubPages {
-			doc, err := BeebURL(i).UrlDoc()
-			if err != nil {
-				panic(err)
-			}
-			go doc.programmes(sp)
-			programmes = append(programmes, <-sp...)
-		}
-		close(sp)
-	}
 	go doc.programmes(progs)
 	programmes = append(programmes, <-progs...)
 	return programmes, nil
 }
 
-func nextPages(pager Pager) []string {
-	var results []string
-	results = append(results, pager.NextPages()...)
-	return results
-}
-
-func subPages(pager Pager) []string {
-	var results []string
-	results = append(results, pager.SubPages()...)
-	return results
-}
+////func nextPages(pager Pager) []string {
+////	var results []string
+////	results = append(results, pager.NextPages()...)
+////	return results
+////}
+//
+//func subPages(pager Pager) []string {
+//	var results []string
+//	results = append(results, pager.SubPages()...)
+//	return results
+//}
 
 func findTitle(s *goquery.Selection) string {
 	return s.Find(".secondary > .title").Text()
