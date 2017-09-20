@@ -79,8 +79,10 @@ func (pdb *programmeDB) ListCategory(category string) string {
 
 func (pdb *programmeDB) findCategory(category string) (*tv.Category, error) {
 	for _, i := range pdb.Categories {
-		if i.Name == category {
-			return i, nil
+		if i != nil {
+			if i.Name == category {
+				return i, nil
+			}
 		}
 	}
 	return nil, errors.New("Can not find Category with Name: " + category)

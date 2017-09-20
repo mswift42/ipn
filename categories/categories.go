@@ -40,11 +40,12 @@ func allCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
 	ch := make(chan *tv.Category)
 	go func() {
 		for name, url := range categories {
+			fmt.Println(name, url)
 			doc, err := url.UrlDoc()
 			if err != nil {
 				panic(err)
 			}
-			doc.CollectNextPages()
+			doc.CollectNextPage()
 			if len(doc.NextPages) > 0 {
 				for _, i := range doc.NextPages {
 					ch <- category(tv.BeebURL(i), name)
@@ -60,5 +61,4 @@ func allCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
 		cats = append(cats, c)
 	}
 	return cats, nil
-
 }
