@@ -25,7 +25,10 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
 
-type ProgrammeSelection goquery.Selection
+
+type ProgrammeSelection struct {
+	sel *goquery.Selection
+}
 
 func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
 	doc, err := goquery.NewDocument(string(b))
@@ -48,7 +51,7 @@ func (ip *IplayerDocument) newProgrammeSelection() *ProgrammeSelection {
 }
 
 func (ps ProgrammeSelection) hasExtraProgrammes() bool {
-	sel := ps.document.Find(".view-more-container").AttrOr("href", "")
+	sel := ps.sel.Find(".view-more-container").AttrOr("href", "")
 	return sel != ""
 }
 
