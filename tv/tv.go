@@ -25,7 +25,7 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
 
-type ProgrammeSelection *goquery.Selection
+type ProgrammeSelection goquery.Selection
 
 func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
 	doc, err := goquery.NewDocument(string(b))
@@ -43,8 +43,13 @@ func (ip *IplayerDocument) extraPages() []BeebURL {
 	return ip.morePages(".view-more-container")
 }
 
-func (ip *IplayerDocument) newProgrammeSelection() ProgrammeSelection {
-	return ip.idoc.Find(".list-item.programme")
+func (ip *IplayerDocument) newProgrammeSelection() *ProgrammeSelection {
+	return &ProgrammeSelection(ip.idoc.Find(".list-item.programme"))
+}
+
+func (ps ProgrammeSelection) hasExtraProgrammes() bool {
+	sel := ps.document.Find(".view-more-container").AttrOr("href", "")
+	return sel != ""
 }
 
 //// CollectNextPage checks for a pagination div at the bottom of the
