@@ -27,6 +27,8 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
 
+type ProgrammeSelection *goquery.Selection
+
 func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
 	doc, err := goquery.NewDocument(string(b))
 	if err != nil {
@@ -39,25 +41,34 @@ func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
 }
 
-// CollectNextPage checks for a pagination div at the bottom of the
-// Programme listing page. If found, it returns a slice of urls
-// for the same category.
-func (ip *IplayerDocument) CollectNextPage() {
-	ip.NextPages = ip.morePages(".page > a")
+func (ip *IplayerDocument) extraPages() []BeebURL {
+	return ip.morePages(".view-more-container")
 }
 
-func (ip *IplayerDocument) nextPage() string {
-	return ip.selection(".page > a").AttrOr("href", "")
+func (ip *IplayerDocument) newProgrammeSelection() ProgrammeSelection {
+	return ip.idoc.Find(".list-item.programme")
 }
+
+//// CollectNextPage checks for a pagination div at the bottom of the
+//// Programme listing page. If found, it returns a slice of urls
+//// for the same category.
+//func (ip *IplayerDocument) CollectNextPage() {
+//	ip.NextPages = ip.morePages(".page > a")
+//}
+//
+//func (ip *IplayerDocument) nextPage() string {
+//	return ip.selection(".page > a").AttrOr("href", "")
+//}
 
 // CollectSubPages collects for every Programme pontentially available
 // canonical programme urls.
 // (For example, the category comedy site, will only list the most recent
 // episode of a Programme, and then link to The Programme's site for more available
 // episodes.)
-func (ip *IplayerDocument) CollectSubPages() {
-	ip.SubPages = ip.morePages(".view-more-container")
-}
+//func (ip *IplayerDocument) CollectSubPages() {
+//	ip.SubPages = ip.morePages(".view-more-container")
+//}
+//
 
 func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 	var bu []BeebURL
@@ -68,31 +79,30 @@ func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 	return bu
 }
 
-func (ip *IplayerDocument) pages() []*Pager {
-	ip.CollectNextPage()
-	ip.CollectSubPages()
-	return ip.pages()
-}
+//
+//func (ip *IplayerDocument) pages() []*Pager {
+//	ip.CollectNextPage()
+//	ip.CollectSubPages()
+//	return ip.pages()
+//}
 
 
 func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	var programmes []*Programme
-	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-		title := findTitle(s)
-		subtitle := findSubtitle(s)
-		synopsis := findSynopsis(s)
-		pid := findPid(s)
-		thumbnail := findThumbnail(s)
-		url := findURL(s)
-		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-		ip.CollectSubPages()
-		if len(ip.SubPages) == 0 {
-			if np != nil {
-				programmes = append(programmes, np)
-			}
+	var extrapages  := ip.extraPages()
+	if len(extrapages) == 0 {
+		ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+			title := findTitle(s)
+			subtitle := findSubtitle(s)
+			synopsis := findSynopsis(s)
+			pid := findPid(s)
+			thumbnail := findThumbnail(s)
+			url := findURL(s)
+			np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
+		programmes = append()
+		})
 
-		}
-	})
+	}
 	c <- programmes
 }
 
