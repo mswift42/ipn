@@ -17,25 +17,14 @@ type Searcher interface {
 // BeebURL represents an Iplayer URL.
 type BeebURL string
 
-type TestHtmlURL string
 
 type IplayerDocument struct {
 	idoc      *goquery.Document
-	NextPages []BeebURL
-	SubPages  []BeebURL
 }
 
-type TestIplayerDocument struct {
-	idoc *goquery.Document
-}
-
-type Pager interface {
-	NextPages() []string
-	SubPages() []string
-}
 
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
-	return &IplayerDocument{doc, []BeebURL{}, []BeebURL{}}
+	return &IplayerDocument{doc}
 }
 
 func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
