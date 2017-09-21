@@ -15,6 +15,8 @@ const bbcprefix = "http://www.bbc.co.uk"
 // BeebURL represents an Iplayer URL.
 type BeebURL string
 
+//type TestHtmlURL string
+
 
 type IplayerDocument struct {
 	idoc      *goquery.Document
@@ -37,6 +39,20 @@ func (b BeebURL) loadDocument() (*IplayerDocument, error) {
 	return NewIplayerDocument(doc), nil
 }
 
+//func (th TestHtmlURL) loadDocument() (*IplayerDocument, error) {
+//	file, err := ioutil.ReadFile(string(th))
+//
+//	if err != nil {
+//		return nil, err
+//	}
+//	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
+//	if err != nil {
+//		return nil, err
+//	}
+//	return NewIplayerDocument(doc), nil
+//}
+
+
 func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
 }
@@ -45,9 +61,9 @@ func (ip *IplayerDocument) extraPages() []BeebURL {
 	return ip.morePages(".view-more-container")
 }
 
-func (ip *IplayerDocument) newProgrammeSelection() *ProgrammeSelection {
-	return &ProgrammeSelection(ip.idoc.Find(".list-item.programme"))
-}
+//func (ip *IplayerDocument) newProgrammeSelection() *ProgrammeSelection {
+//	return &ProgrammeSelection(ip.idoc.Find(".list-item.programme"))
+//}
 
 func (ps ProgrammeSelection) hasExtraProgrammes() bool {
 	sel := ps.sel.Find(".view-more-container").AttrOr("href", "")

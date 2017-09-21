@@ -3,9 +3,10 @@ package tv
 import (
 	"testing"
 
-	"github.com/stretchr/testify/assert"
-	"github.com/mswift42/ipn/testutils"
 	"fmt"
+
+	"github.com/mswift42/ipn/testutils"
+	"github.com/stretchr/testify/assert"
 )
 
 const mostpopular = "mostpopular.html"
@@ -17,11 +18,11 @@ const comedy = "comedy.html"
 func TestBeebURLUrlDoc(t *testing.T) {
 	assert := assert.New(t)
 	b := BeebURL("http://www.example.com/")
-	ex, err := b.UrlDoc()
+	ex, err := b.loadDocument()
 	assert.Nil(err)
 	assert.NotNil(ex)
 	b1 := BeebURL("")
-	ex1, err := b1.UrlDoc()
+	ex1, err := b1.loadDocument()
 	assert.NotNil(err)
 	assert.Nil(ex1)
 }
@@ -73,8 +74,7 @@ func TestFindTitle(t *testing.T) {
 		panic(err)
 	}
 	th2 := testutils.TestHtmlURL(filmspage1)
-	var s Searcher = testutils.TestHtmlURL{mostpopular}
-	filmsprog1, err := Programmes(searcher)
+	filmsprog1, err := Programmes(th2)
 	fmt.Println(filmsprog1)
 	if err != nil {
 		panic(err)
@@ -85,13 +85,13 @@ func TestFindTitle(t *testing.T) {
 
 func TestFindSubtitle(t *testing.T) {
 	assert := assert.New(t)
-	popth := TestHtmlURL(mostpopular)
+	popth := testutils.TestHtmlURL(mostpopular)
 	popprogrammes, err := Programmes(popth)
 	if err != nil {
 		panic(err)
 	}
 	assert.Equal(popprogrammes[0].Subtitle, "Series 15: 1. Launch")
-	film1th := TestHtmlURL(filmspage1)
+	film1th := testutils.TestHtmlURL(filmspage1)
 	film1prog, _ := Programmes(film1th)
 	assert.Equal(film1prog[0].Subtitle, "HyperNormalisation")
 	assert.Equal(film1prog[1].Subtitle, "Bitter Lake")
@@ -99,7 +99,7 @@ func TestFindSubtitle(t *testing.T) {
 
 func TestFindThumbnail(t *testing.T) {
 	assert := assert.New(t)
-	popth := TestHtmlURL(mostpopular)
+	popth, _ := testutils.TestHtmlURL(mostpopular)
 	popprogrammes, err := Programmes(popth)
 	if err != nil {
 		panic(err)
@@ -109,7 +109,7 @@ func TestFindThumbnail(t *testing.T) {
 
 func TestNewCategory(t *testing.T) {
 	assert := assert.New(t)
-	popth := TestHtmlURL(mostpopular)
+	popth := testutils.TestHtmlURL(mostpopular)
 	popprogrammes, err := Programmes(popth)
 	if err != nil {
 		panic(err)
@@ -121,7 +121,7 @@ func TestNewCategory(t *testing.T) {
 
 func TestProgrammeString(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL(mostpopular)
+	th := testutils.TestHtmlURL(mostpopular)
 	programmes, err := Programmes(th)
 	if err != nil {
 		panic(err)
@@ -132,7 +132,7 @@ func TestProgrammeString(t *testing.T) {
 
 func TestTVSelection(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL(filmspage1)
+	th := testutils.TestHtmlURL(filmspage1)
 	doc, err := th.UrlDoc()
 	assert.Nil(err)
 	assert.NotNil(doc)
@@ -176,7 +176,7 @@ func TestSubPages(t *testing.T) {
 	th = TestHtmlURL(comedy)
 	doc, _ = th.UrlDoc()
 	doc.CollectSubPages()
-	sp  = doc.SubPages
+	sp = doc.SubPages
 	assert.Equal(len(doc.SubPages), 10)
 	assert.Equal(string(sp[0]),
 		bbcprefix+"/iplayer/episodes/b07zyh6k")
