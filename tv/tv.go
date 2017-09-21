@@ -8,9 +8,9 @@ import (
 
 const bbcprefix = "http://www.bbc.co.uk"
 
-type Searcher interface {
-	UrlDoc() (*IplayerDocument, error)
-}
+//type Searcher interface {
+//	UrlDoc() (*IplayerDocument, error)
+//}
 
 // BeebURL represents an Iplayer URL.
 type BeebURL string
@@ -19,7 +19,6 @@ type BeebURL string
 type IplayerDocument struct {
 	idoc      *goquery.Document
 }
-
 
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
@@ -30,7 +29,7 @@ type ProgrammeSelection struct {
 	sel *goquery.Selection
 }
 
-func (b BeebURL) UrlDoc() (*IplayerDocument, error) {
+func (b BeebURL) loadDocument() (*IplayerDocument, error) {
 	doc, err := goquery.NewDocument(string(b))
 	if err != nil {
 		return nil, err
@@ -171,7 +170,7 @@ func NewCategory(name string, programmes []*Programme) *Category {
 // finding every Programme and finally returning them.
 func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
-	doc, err := s.UrlDoc()
+	doc, err := s.loadDocument()
 	if err != nil {
 		panic(err)
 	}
