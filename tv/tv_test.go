@@ -5,7 +5,6 @@ import (
 
 	"fmt"
 
-	"github.com/mswift42/ipn/testutils"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -27,14 +26,14 @@ func TestBeebURLUrlDoc(t *testing.T) {
 	assert.Nil(ex1)
 }
 
-func TestTestHtmlURLDoc(t *testing.T) {
+func TestTestHtmLLoadDocument(t *testing.T) {
 	assert := assert.New(t)
-	th := testutils.TestHtmlURL(mostpopular)
-	succ, err := th.UrlDoc()
+	th := TestHtmlURL{mostpopular}
+	succ, err := th.loadDocument()
 	assert.Nil(err)
 	assert.NotNil(succ)
-	th2 := testutils.TestHtmlURL("")
-	fail, err := th2.UrlDoc()
+	th2 := TestHtmlURL{""}
+	fail, err := th2.loadDocument()
 	assert.Nil(fail)
 	assert.NotNil(err)
 
@@ -51,7 +50,7 @@ func TestNewProgramme(t *testing.T) {
 
 func TestProgrammes(t *testing.T) {
 	assert := assert.New(t)
-	th := testutils.TestHtmlURL(mostpopular)
+	th := TestHtmlURL{mostpopular}
 	programmes, err := Programmes(th)
 	if err != nil {
 		panic(err)
@@ -68,12 +67,12 @@ func TestProgrammes(t *testing.T) {
 
 func TestFindTitle(t *testing.T) {
 	assert := assert.New(t)
-	th := testutils.TestHtmlURL(mostpopular)
+	th := TestHtmlURL(mostpopular)
 	programmes, err := Programmes(th)
 	if err != nil {
 		panic(err)
 	}
-	th2 := testutils.TestHtmlURL(filmspage1)
+	th2 := TestHtmlURL(filmspage1)
 	filmsprog1, err := Programmes(th2)
 	fmt.Println(filmsprog1)
 	if err != nil {
@@ -85,7 +84,7 @@ func TestFindTitle(t *testing.T) {
 
 func TestFindSubtitle(t *testing.T) {
 	assert := assert.New(t)
-	popth := testutils.TestHtmlURL(mostpopular)
+	popth := TestHtmlURL(mostpopular)
 	popprogrammes, err := Programmes(popth)
 	if err != nil {
 		panic(err)
@@ -130,21 +129,21 @@ func TestProgrammeString(t *testing.T) {
 	assert.Equal(p0.String(), "0:  Strictly Come Dancing  Series 15: 1. Launch")
 }
 
-func TestTVSelection(t *testing.T) {
-	assert := assert.New(t)
-	th := testutils.TestHtmlURL(filmspage1)
-	doc, err := th.UrlDoc()
-	assert.Nil(err)
-	assert.NotNil(doc)
-	tvsel := doc.selection(".page > a")
-	assert.Equal(tvsel.AttrOr("href", ""),
-		"/iplayer/categories/films/all?sort=atoz&page=2")
-}
+//func TestTVSelection(t *testing.T) {
+//	assert := assert.New(t)
+//	th := testutils.TestHtmlURL(filmspage1)
+//	doc, err := th.UrlDoc()
+//	assert.Nil(err)
+//	assert.NotNil(doc)
+//	tvsel := doc.selection(".page > a")
+//	assert.Equal(tvsel.AttrOr("href", ""),
+//		"/iplayer/categories/films/all?sort=atoz&page=2")
+//}
 
 func TestNextPages(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL(filmspage1)
-	doc, _ := th.UrlDoc()
+	th := testutils.TestHtmlURL(filmspage1)
+	doc, _ := th.l
 	doc.CollectNextPage()
 	assert.Equal(len(doc.NextPages), 1)
 	assert.Equal(string(doc.NextPages[0]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
