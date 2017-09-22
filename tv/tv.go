@@ -65,7 +65,10 @@ func (ip *IplayerDocument) extraPages() []BeebURL {
 //	return &programmesListItem(ip.idoc.Find(".list-item.programme"))
 //}
 
-func (ip *IplayerDocument) programmeListItem() *P
+func (ip *IplayerDocument) newProgrammesListItem() *programmesListItem {
+	sel := ip.idoc.Find(".list-item.programme")
+	return &programmesListItem{sel}
+}
 
 func (ps programmesListItem) hasExtraProgrammes() bool {
 	sel := ps.sel.Find(".view-more-container").AttrOr("href", "")
