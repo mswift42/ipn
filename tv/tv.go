@@ -27,7 +27,7 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 }
 
 
-type ProgrammeSelection struct {
+type programmesListItem struct {
 	sel *goquery.Selection
 }
 
@@ -61,11 +61,13 @@ func (ip *IplayerDocument) extraPages() []BeebURL {
 	return ip.morePages(".view-more-container")
 }
 
-//func (ip *IplayerDocument) newProgrammeSelection() *ProgrammeSelection {
-//	return &ProgrammeSelection(ip.idoc.Find(".list-item.programme"))
+//func (ip *IplayerDocument) newProgrammeSelection() *programmesListItem {
+//	return &programmesListItem(ip.idoc.Find(".list-item.programme"))
 //}
 
-func (ps ProgrammeSelection) hasExtraProgrammes() bool {
+func (ip *IplayerDocument) programmeListItem() *P
+
+func (ps programmesListItem) hasExtraProgrammes() bool {
 	sel := ps.sel.Find(".view-more-container").AttrOr("href", "")
 	return sel != ""
 }
