@@ -1,9 +1,9 @@
 package tv
 
 import (
+	"fmt"
 
 	"github.com/mswift42/goquery"
-	"fmt"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -17,15 +17,13 @@ type BeebURL string
 
 //type TestHtmlURL string
 
-
 type IplayerDocument struct {
-	idoc      *goquery.Document
+	idoc *goquery.Document
 }
 
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
-
 
 type programmesListItem struct {
 	sel *goquery.Selection
@@ -39,20 +37,6 @@ func (b BeebURL) loadDocument() (*IplayerDocument, error) {
 	return NewIplayerDocument(doc), nil
 }
 
-//func (th TestHtmlURL) loadDocument() (*IplayerDocument, error) {
-//	file, err := ioutil.ReadFile(string(th))
-//
-//	if err != nil {
-//		return nil, err
-//	}
-//	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
-//	if err != nil {
-//		return nil, err
-//	}
-//	return NewIplayerDocument(doc), nil
-//}
-
-
 func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
 }
@@ -60,10 +44,6 @@ func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 func (ip *IplayerDocument) extraPages() []BeebURL {
 	return ip.morePages(".view-more-container")
 }
-
-//func (ip *IplayerDocument) newProgrammeSelection() *programmesListItem {
-//	return &programmesListItem(ip.idoc.Find(".list-item.programme"))
-//}
 
 func (ip *IplayerDocument) newProgrammesListItem() *programmesListItem {
 	sel := ip.idoc.Find(".list-item.programme")
@@ -112,19 +92,18 @@ func (ip *IplayerDocument) morePages(selection string) []BeebURL {
 //	return ip.pages()
 //}
 
-
 func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	var programmes []*Programme
-		ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-			title := findTitle(s)
-			subtitle := findSubtitle(s)
-			synopsis := findSynopsis(s)
-			pid := findPid(s)
-			thumbnail := findThumbnail(s)
-			url := findURL(s)
-			np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
+	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		title := findTitle(s)
+		subtitle := findSubtitle(s)
+		synopsis := findSynopsis(s)
+		pid := findPid(s)
+		thumbnail := findThumbnail(s)
+		url := findURL(s)
+		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
 		programmes = append(programmes, np)
-		})
+	})
 	c <- programmes
 }
 
@@ -228,6 +207,7 @@ func findURL(s *goquery.Selection) string {
 func findThumbnail(s *goquery.Selection) string {
 	return s.Find(".rs-image > picture > source").AttrOr("srcset", "")
 }
+
 // TODO make sure findPID works with films a-z.
 func findPid(s *goquery.Selection) string {
 	pid := s.AttrOr("data-ip-id", "")
