@@ -8,17 +8,18 @@ import (
 
 const bbcprefix = "http://www.bbc.co.uk"
 
-//type Searcher interface {
-//	UrlDoc() (*IplayerDocument, error)
-//}
 
 // BeebURL represents an Iplayer URL.
 type BeebURL string
 
-//type TestHtmlURL string
 
 type IplayerDocument struct {
 	idoc *goquery.Document
+}
+
+type MainCategoryDocument struct {
+	IplayerDocument
+	NextPages []string
 }
 
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
@@ -62,9 +63,9 @@ func (ps programmesListItem) hasExtraProgrammes() bool {
 //	ip.NextPages = ip.morePages(".page > a")
 //}
 //
-//func (ip *IplayerDocument) nextPage() string {
-//	return ip.selection(".page > a").AttrOr("href", "")
-//}
+func (ip *IplayerDocument) nextPages() []string {
+	return ip.morePages(".page > a")
+}
 
 // CollectSubPages collects for every Programme pontentially available
 // canonical programme urls.
@@ -76,13 +77,13 @@ func (ps programmesListItem) hasExtraProgrammes() bool {
 //}
 //
 
-func (ip *IplayerDocument) morePages(selection string) []BeebURL {
-	var bu []BeebURL
+func (ip *IplayerDocument) morePages(selection string) []string {
+	var url []string
 	sel := ip.selection(selection)
 	sel.Each(func(i int, s *goquery.Selection) {
-		bu = append(bu, BeebURL(bbcprefix+s.AttrOr("href", "")))
+		url = append(url, bbcprefix+s.AttrOr("href", ""))
 	})
-	return bu
+	return url
 }
 
 //
