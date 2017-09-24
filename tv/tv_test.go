@@ -147,7 +147,7 @@ func TestNextPages(t *testing.T) {
 	np := doc.nextPages()
 	assert.Equal(len(np), 1)
 	assert.Equal(np[0], "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
-	 th = TestHtmlURL{comedy}
+	th = TestHtmlURL{comedy}
 	doc, err := th.loadDocument()
 	assert.Nil(err)
 	np = doc.nextPages()
@@ -160,6 +160,31 @@ func TestNextPages(t *testing.T) {
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=4")
 	assert.Equal(np[3],
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=5")
+}
+
+func TestMainCategoryDocument(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{comedy}
+	doc, err := th.loadDocument()
+	assert.Nil(err)
+	mcd := newMainCategoryDocument(doc)
+	assert.Equal(len(mcd.NextPages), 4)
+	assert.Equal(mcd.NextPages[0],
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")
+}
+
+func TestHasExtraProgrammes(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{filmspage1}
+	doc, err := th.loadDocument()
+	assert.Nil(err)
+	npl := doc.newProgrammesListItem()
+	assert.Equal(len(npl.sel.Nodes), 20)
+	first := programmesListItem{npl.sel.First()}
+	assert.Equal(first.hasExtraProgrammes(), true)
+	last := programmesListItem{npl.sel.Last()}
+	assert.Equal(last.hasExtraProgrammes(), false)
+
 }
 
 //func TestSubPages(t *testing.T) {

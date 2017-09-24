@@ -20,13 +20,13 @@ type MainCategoryDocument struct {
 	NextPages []string
 }
 
+func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
+	return &IplayerDocument{doc}
+}
+
 func newMainCategoryDocument(ip *IplayerDocument) *MainCategoryDocument {
 	nextpages := ip.nextPages()
 	return &MainCategoryDocument{ip, nextpages}
-}
-
-func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
-	return &IplayerDocument{doc}
 }
 
 type programmesListItem struct {
