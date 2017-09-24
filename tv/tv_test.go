@@ -129,38 +129,38 @@ func TestProgrammeString(t *testing.T) {
 	assert.Equal(p0.String(), "0:  Strictly Come Dancing  Series 15: 1. Launch")
 }
 
-//func TestTVSelection(t *testing.T) {
-//	assert := assert.New(t)
-//	th := testutils.TestHtmlURL(filmspage1)
-//	doc, err := th.UrlDoc()
-//	assert.Nil(err)
-//	assert.NotNil(doc)
-//	tvsel := doc.selection(".page > a")
-//	assert.Equal(tvsel.AttrOr("href", ""),
-//		"/iplayer/categories/films/all?sort=atoz&page=2")
-//}
+func TestTVSelection(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{filmspage1}
+	doc, err := th.loadDocument()
+	assert.Nil(err)
+	assert.NotNil(doc)
+	tvsel := doc.selection(".page > a")
+	assert.Equal(tvsel.AttrOr("href", ""),
+		"/iplayer/categories/films/all?sort=atoz&page=2")
+}
 
-//func TestNextPages(t *testing.T) {
-//	assert := assert.New(t)
-//	th := TestHtmlURL(filmspage1)
-//	doc, _ := th.l
-//	doc.CollectNextPage()
-//	assert.Equal(len(doc.NextPages), 1)
-//	assert.Equal(string(doc.NextPages[0]), "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
-//	th = TestHtmlURL(comedy)
-//	doc, err := th.UrlDoc()
-//	assert.Nil(err)
-//	doc.CollectNextPage()
-//	assert.Equal(len(doc.NextPages), 4)
-//	assert.Equal(string(doc.NextPages[0]),
-//		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")
-//	assert.Equal(string(doc.NextPages[1]),
-//		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=3")
-//	assert.Equal(string(doc.NextPages[2]),
-//		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=4")
-//	assert.Equal(string(doc.NextPages[3]),
-//		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=5")
-//}
+func TestNextPages(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{filmspage1}
+	doc, _ := th.loadDocument()
+	np := doc.nextPages()
+	assert.Equal(len(np), 1)
+	assert.Equal(np[0], "http://www.bbc.co.uk/iplayer/categories/films/all?sort=atoz&page=2")
+	 th = TestHtmlURL{comedy}
+	doc, err := th.loadDocument()
+	assert.Nil(err)
+	np = doc.nextPages()
+	assert.Equal(len(np), 4)
+	assert.Equal(np[0],
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")
+	assert.Equal(np[1],
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=3")
+	assert.Equal(np[2],
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=4")
+	assert.Equal(np[3],
+		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=5")
+}
 
 //func TestSubPages(t *testing.T) {
 //	assert := assert.New(t)

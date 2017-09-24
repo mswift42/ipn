@@ -8,18 +8,21 @@ import (
 
 const bbcprefix = "http://www.bbc.co.uk"
 
-
 // BeebURL represents an Iplayer URL.
 type BeebURL string
-
 
 type IplayerDocument struct {
 	idoc *goquery.Document
 }
 
 type MainCategoryDocument struct {
-	IplayerDocument
+	ip        *IplayerDocument
 	NextPages []string
+}
+
+func newMainCategoryDocument(ip *IplayerDocument) *MainCategoryDocument {
+	nextpages := ip.nextPages()
+	return &MainCategoryDocument{ip, nextpages}
 }
 
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
@@ -42,7 +45,7 @@ func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
 }
 
-func (ip *IplayerDocument) extraPages() []BeebURL {
+func (ip *IplayerDocument) extraPages() []string {
 	return ip.morePages(".view-more-container")
 }
 
