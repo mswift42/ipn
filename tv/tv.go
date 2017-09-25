@@ -15,6 +15,10 @@ type IplayerDocument struct {
 	idoc *goquery.Document
 }
 
+type iplayerSelection struct {
+	sel *goquery.Selection
+}
+
 type MainCategoryDocument struct {
 	ip        *IplayerDocument
 	NextPages []string
@@ -59,6 +63,11 @@ func (ps programmesListItem) hasExtraProgrammes() bool {
 	return sel != ""
 }
 
+func (isel iplayerSelection) hasExtraProgrammes() bool {
+	extra := isel.sel.Find(".view-more-container").AttrOr("href", "")
+	return extra != ""
+}
+
 //// CollectNextPage checks for a pagination div at the bottom of the
 //// Programme listing page. If found, it returns a slice of urls
 //// for the same category.
@@ -99,6 +108,7 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	var programmes []*Programme
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+
 		title := findTitle(s)
 		subtitle := findSubtitle(s)
 		synopsis := findSynopsis(s)
