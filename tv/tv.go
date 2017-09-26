@@ -57,6 +57,7 @@ func (isel iplayerSelection) hasExtraProgrammes() bool {
 	return extra != ""
 }
 
+
 //// CollectNextPage checks for a pagination div at the bottom of the
 //// Programme listing page. If found, it returns a slice of urls
 //// for the same category.
@@ -98,9 +99,9 @@ func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	var programmes []*Programme
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		isel := iplayerSelection{s}
-		fmt.Println(isel.hasExtraProgrammes())
+		//fmt.Println(isel.hasExtraProgrammes())
 		if isel.hasExtraProgrammes() {
-			fmt.Println(isel.sel.Find(".view-more-container").AttrOr("href", ""))
+			//fmt.Println(isel.sel.Find(".view-more-container").AttrOr("href", ""))
 		}
 		title := findTitle(s)
 		subtitle := findSubtitle(s)

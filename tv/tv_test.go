@@ -3,7 +3,6 @@ package tv
 import (
 	"testing"
 
-	"fmt"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -74,12 +73,11 @@ func TestFindTitle(t *testing.T) {
 	}
 	th2 := TestHtmlURL{filmspage1}
 	filmsprog1, err := Programmes(th2)
-	fmt.Println(filmsprog1)
 	if err != nil {
 		panic(err)
 	}
 	assert.Equal(programmes[0].Title, "Strictly Come Dancing")
-	assert.Equal(filmsprog1[1].Title, "Adam Curtis")
+	assert.Equal(filmsprog1[1].Title, "Broken")
 }
 
 func TestFindSubtitle(t *testing.T) {
@@ -93,7 +91,7 @@ func TestFindSubtitle(t *testing.T) {
 	film1th := TestHtmlURL{filmspage1}
 	film1prog, _ := Programmes(film1th)
 	assert.Equal(film1prog[0].Subtitle, "HyperNormalisation")
-	assert.Equal(film1prog[1].Subtitle, "Bitter Lake")
+	assert.Equal(film1prog[1].Subtitle, "")
 }
 
 func TestFindThumbnail(t *testing.T) {
@@ -178,12 +176,17 @@ func TestHasExtraProgrammes(t *testing.T) {
 	th := TestHtmlURL{filmspage1}
 	doc, err := th.loadDocument()
 	assert.Nil(err)
-	npl := doc.newProgrammesListItem()
-	assert.Equal(len(npl.sel.Nodes), 20)
-	first := programmesListItem{npl.sel.First()}
-	assert.Equal(first.hasExtraProgrammes(), true)
-	last := programmesListItem{npl.sel.Last()}
-	assert.Equal(last.hasExtraProgrammes(), false)
+	programmeselection := iplayerSelection{ doc.idoc.Find(".list-item.programme")}
+	assert.Equal(len(programmeselection.sel.Nodes), 20)
+
+	//npl := doc.newProgrammesListItem()
+	//assert.Equal(len(npl.sel.Nodes), 20)
+	//first := programmesListItem{npl.sel.First()}
+	//assert.Equal(first.hasExtraProgrammes(), true)
+	//last := programmesListItem{npl.sel.Last()}
+	//assert.Equal(last.hasExtraProgrammes(), false)
+	//second := programmesListItem{npl.sel.Eq(1)}
+	//assert.Equal(second.hasExtraProgrammes(), false)
 
 }
 
