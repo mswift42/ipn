@@ -33,9 +33,6 @@ func newMainCategoryDocument(ip *IplayerDocument) *MainCategoryDocument {
 	return &MainCategoryDocument{ip, nextpages}
 }
 
-type programmesListItem struct {
-	sel *goquery.Selection
-}
 
 func (b BeebURL) loadDocument() (*IplayerDocument, error) {
 	doc, err := goquery.NewDocument(string(b))
@@ -53,15 +50,7 @@ func (ip *IplayerDocument) extraPages() []string {
 	return ip.morePages(".view-more-container")
 }
 
-func (ip *IplayerDocument) newProgrammesListItem() *programmesListItem {
-	sel := ip.idoc.Find(".list-item.programme")
-	return &programmesListItem{sel}
-}
 
-func (ps programmesListItem) hasExtraProgrammes() bool {
-	sel := ps.sel.Find(".view-more-container").AttrOr("href", "")
-	return sel != ""
-}
 
 func (isel iplayerSelection) hasExtraProgrammes() bool {
 	extra := isel.sel.Find(".view-more-container").AttrOr("href", "")
@@ -108,7 +97,11 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 	var programmes []*Programme
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-
+		isel := iplayerSelection{s}
+		fmt.Println(isel.hasExtraProgrammes())
+		if isel.hasExtraProgrammes() {
+			fmt.Println(isel.sel.Find(".view-more-container").AttrOr("href", ""))
+		}
 		title := findTitle(s)
 		subtitle := findSubtitle(s)
 		synopsis := findSynopsis(s)
