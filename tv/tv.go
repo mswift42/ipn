@@ -33,7 +33,6 @@ func newMainCategoryDocument(ip *IplayerDocument) *MainCategoryDocument {
 	return &MainCategoryDocument{ip, nextpages}
 }
 
-
 func (b BeebURL) loadDocument() (*IplayerDocument, error) {
 	doc, err := goquery.NewDocument(string(b))
 	if err != nil {
@@ -50,13 +49,10 @@ func (ip *IplayerDocument) extraPages() []string {
 	return ip.morePages(".view-more-container")
 }
 
-
-
 func (isel iplayerSelection) hasExtraProgrammes() bool {
 	extra := isel.sel.Find(".view-more-container").AttrOr("href", "")
 	return extra != ""
 }
-
 
 //// CollectNextPage checks for a pagination div at the bottom of the
 //// Programme listing page. If found, it returns a slice of urls
@@ -95,13 +91,11 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 //	return ip.pages()
 //}
 
-func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
-	var programmes []*Programme
+func (ip *IplayerDocument) programmes(c chan<- *Programme, extraurlc chan<- string) {
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		isel := iplayerSelection{s}
-		//fmt.Println(isel.hasExtraProgrammes())
 		if isel.hasExtraProgrammes() {
-			//fmt.Println(isel.sel.Find(".view-more-container").AttrOr("href", ""))
+			extraurlc <- isel.sel.Find(".view-more-container").AttrOr("href", "")
 		}
 		title := findTitle(s)
 		subtitle := findSubtitle(s)
@@ -110,19 +104,10 @@ func (ip *IplayerDocument) programmes(c chan<- []*Programme) {
 		thumbnail := findThumbnail(s)
 		url := findURL(s)
 		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-		programmes = append(programmes, np)
+		c <- np
 	})
-	c <- programmes
 }
 
-//func (th TestHtmlURL) UrlDoc() (*IplayerDocument, error) {
-//	file, err := ioutil.ReadFile(string(th))
-//
-//	if err != nil {
-//		return nil, err
-//	}
-//	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
-//	if err != nil {
 //		return nil, err
 //	}
 //	return NewIplayerDocument(doc), nil
@@ -178,13 +163,21 @@ func NewCategory(name string, programmes []*Programme) *Category {
 // finding every Programme and finally returning them.
 func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
+	var extraurls []string
 	doc, err := s.loadDocument()
 	if err != nil {
 		panic(err)
 	}
-	progs := make(chan []*Programme)
-	go doc.programmes(progs)
-	programmes = append(programmes, <-progs...)
+	progs := make(chan *Programme)
+	urls := make(chan string)
+	go doc.programmes(progs, urls)
+	select {
+	case u := <-urls:
+		extraurls = append(extraurls, u)
+	case prog := <-progs:
+		programmes = append(programmes, prog)
+	}
+	fmt.Println(extraurls)
 	return programmes, nil
 }
 
