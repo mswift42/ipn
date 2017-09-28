@@ -19,6 +19,7 @@ func category(url tv.BeebURL, name string) *tv.Category {
 	if err != nil {
 		panic(err)
 	}
+	fmt.Println(prog)
 	cat := tv.NewCategory(name, prog)
 	return cat
 }
@@ -55,8 +56,10 @@ func allCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
 			ch <- category(url, name)
 
 		}
-		close(ch)
+
+		defer close(ch)
 	}()
+
 	for c := range ch {
 		cats = append(cats, c)
 	}
