@@ -91,11 +91,28 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 //	return ip.pages()
 //}
 
-func (ip *IplayerDocument) programmes(c chan<- *Programme, extraurlc chan<- string) {
+func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
+	var progs []*Programme
+	var extraurls []string
+	progc := make(chan []*Programme, len(mp.NextPages))
+	extraprogc := make(chan []string)
+	go func() {
+		for range mp.NextPages {
+			mp.ip.programmes(progc, extraprogc)
+			progs  = append(progs, <-progc...)
+			extraurls = append(extraurls, <-extraprogc...)
+		}
+	}()
+	return progs, extraurls
+}
+
+func (ip *IplayerDocument) programmes(c chan<- []*Programme, extraurlc chan<- []string) {
+	var progs []*Programme
+	var extraurls []string
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		isel := iplayerSelection{s}
 		if isel.hasExtraProgrammes() {
-			extraurlc <- isel.sel.Find(".view-more-container").AttrOr("href", "")
+			extraurls = append(extraurls, isel.sel.Find(".view-more-container").AttrOr("href", ""))
 		}
 		title := findTitle(s)
 		subtitle := findSubtitle(s)
@@ -104,14 +121,11 @@ func (ip *IplayerDocument) programmes(c chan<- *Programme, extraurlc chan<- stri
 		thumbnail := findThumbnail(s)
 		url := findURL(s)
 		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-		c <- np
+		progs = append(progs, np)
 	})
+	c <- progs
+	extraurlc <- extraurls
 }
-
-//		return nil, err
-//	}
-//	return NewIplayerDocument(doc), nil
-//}
 
 // Programme represents an Iplayer TV programme. It consists of
 // the programme's title, subtitle, a short programme description,
@@ -168,16 +182,16 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	if err != nil {
 		panic(err)
 	}
-	progs := make(chan *Programme)
-	urls := make(chan string)
+	progs := make(chan []*Programme)
+	urls := make(chan []string)
 	go doc.programmes(progs, urls)
 	select {
 	case u := <-urls:
-		extraurls = append(extraurls, u)
+		fmt.Println(u)
+		extraurls = append(extraurls, u...)
 	case prog := <-progs:
-		programmes = append(programmes, prog)
+		programmes = append(programmes, prog...)
 	}
-	fmt.Println(extraurls)
 	return programmes, nil
 }
 
