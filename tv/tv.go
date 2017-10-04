@@ -94,23 +94,16 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	var progs []*Programme
 	var extraurls []string
-	progc := make(chan []*Programme)
-	extraprogc := make(chan []string)
 	fmt.Println(mp.NextPages)
-	go func(pc chan []*Programme, uc chan []string) {
-		mp.ip.programmes(pc, uc)
-		for i := range pc {
-			progs = append(progs, i...)
-		}
-		for i := range uc {
-			extraurls = append(extraurls, i...)
-		}
-		for range mp.NextPages {
-			mp.ip.programmes(pc, uc)
-			progs  = append(progs, <-pc...)
-			extraurls = append(extraurls, <-uc...)
-		}
-	}(progc, extraprogc)
+	for _, i := range mp.NextPages {
+		go func(url string) {
+			bu := BeebURL(url)
+			nd, _ := bu.loadDocument()
+			pr, eu := nd.programmes()
+			progs = append(progs, pr...)
+			extraurls = append(extraurls, eu...)
+		}(i)
+	}
 	return progs, extraurls
 }
 
