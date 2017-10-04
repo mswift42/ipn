@@ -94,19 +94,28 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	var progs []*Programme
 	var extraurls []string
-	progc := make(chan []*Programme, len(mp.NextPages))
+	progc := make(chan []*Programme)
 	extraprogc := make(chan []string)
-	go func() {
-		for range mp.NextPages {
-			mp.ip.programmes(progc, extraprogc)
-			progs  = append(progs, <-progc...)
-			extraurls = append(extraurls, <-extraprogc...)
+	fmt.Println(mp.NextPages)
+	go func(pc chan []*Programme, uc chan []string) {
+		mp.ip.programmes(pc, uc)
+		for i := range pc {
+			progs = append(progs, i...)
 		}
-	}()
+		for i := range uc {
+			extraurls = append(extraurls, i...)
+		}
+		for range mp.NextPages {
+			mp.ip.programmes(pc, uc)
+			progs  = append(progs, <-pc...)
+			extraurls = append(extraurls, <-uc...)
+		}
+	}(progc, extraprogc)
 	return progs, extraurls
 }
 
-func (ip *IplayerDocument) programmes(c chan<- []*Programme, extraurlc chan<- []string) {
+
+func (ip *IplayerDocument) programmes() ([]*Programme, []string) {
 	var progs []*Programme
 	var extraurls []string
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
@@ -123,9 +132,10 @@ func (ip *IplayerDocument) programmes(c chan<- []*Programme, extraurlc chan<- []
 		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
 		progs = append(progs, np)
 	})
-	c <- progs
-	extraurlc <- extraurls
+	return progs, extraurls
 }
+
+
 
 // Programme represents an Iplayer TV programme. It consists of
 // the programme's title, subtitle, a short programme description,
