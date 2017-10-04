@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mswift42/goquery"
+	"log"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -114,7 +115,7 @@ func (ip *IplayerDocument) programmes() ([]*Programme, []string) {
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		isel := iplayerSelection{s}
 		if isel.hasExtraProgrammes() {
-			extraurls = append(extraurls, isel.sel.Find(".view-more-container").AttrOr("href", ""))
+			extraurls = append(extraurls, "http://www.bbc.co.uk" +isel.sel.Find(".view-more-container").AttrOr("href", ""))
 		}
 		title := findTitle(s)
 		subtitle := findSubtitle(s)
@@ -180,21 +181,24 @@ func NewCategory(name string, programmes []*Programme) *Category {
 // finding every Programme and finally returning them.
 func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
-	var extraurls []string
 	doc, err := s.loadDocument()
 	if err != nil {
 		panic(err)
 	}
-	progs := make(chan []*Programme)
-	urls := make(chan []string)
-	go doc.programmes(progs, urls)
-	select {
-	case u := <-urls:
-		fmt.Println(u)
-		extraurls = append(extraurls, u...)
-	case prog := <-progs:
-		programmes = append(programmes, prog...)
+	progs, urls := doc.programmes()
+	programmes = append(programmes, progs...)
+	for _, i := range urls {
+		go func(url string) {
+			bu := BeebURL(url)
+			doc, err := bu.loadDocument()
+			if err != nil {
+				log.Fatal(err)
+			}
+			pr, _ := doc.programmes()
+			programmes = append(programmes, pr...)
+		}(i)
 	}
+
 	return programmes, nil
 }
 
