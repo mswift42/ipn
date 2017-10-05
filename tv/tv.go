@@ -3,8 +3,9 @@ package tv
 import (
 	"fmt"
 
-	"github.com/mswift42/goquery"
 	"log"
+
+	"github.com/mswift42/goquery"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -96,6 +97,11 @@ func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	var progs []*Programme
 	var extraurls []string
 	fmt.Println(mp.NextPages)
+	go func() {
+		pr, eu := mp.idoc.programmes()
+		progs = append(progs, pr...)
+		extraurls = append(extraurls, eu...)
+	}()
 	for _, i := range mp.NextPages {
 		go func(url string) {
 			bu := BeebURL(url)
@@ -108,14 +114,13 @@ func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	return progs, extraurls
 }
 
-
 func (ip *IplayerDocument) programmes() ([]*Programme, []string) {
 	var progs []*Programme
 	var extraurls []string
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		isel := iplayerSelection{s}
 		if isel.hasExtraProgrammes() {
-			extraurls = append(extraurls, "http://www.bbc.co.uk" +isel.sel.Find(".view-more-container").AttrOr("href", ""))
+			extraurls = append(extraurls, "http://www.bbc.co.uk"+isel.sel.Find(".view-more-container").AttrOr("href", ""))
 		}
 		title := findTitle(s)
 		subtitle := findSubtitle(s)
@@ -128,8 +133,6 @@ func (ip *IplayerDocument) programmes() ([]*Programme, []string) {
 	})
 	return progs, extraurls
 }
-
-
 
 // Programme represents an Iplayer TV programme. It consists of
 // the programme's title, subtitle, a short programme description,
