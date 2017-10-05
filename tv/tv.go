@@ -97,11 +97,11 @@ func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	var progs []*Programme
 	var extraurls []string
 	fmt.Println(mp.NextPages)
-	go func() {
-		pr, eu := mp.idoc.programmes()
+	go func(ip *IplayerDocument) {
+		pr, eu := ip.programmes()
 		progs = append(progs, pr...)
 		extraurls = append(extraurls, eu...)
-	}()
+	}(mp.ip)
 	for _, i := range mp.NextPages {
 		go func(url string) {
 			bu := BeebURL(url)
@@ -111,6 +111,8 @@ func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 			extraurls = append(extraurls, eu...)
 		}(i)
 	}
+	fmt.Println(progs)
+	fmt.Println(extraurls)
 	return progs, extraurls
 }
 
