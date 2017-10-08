@@ -6,6 +6,7 @@ import (
 	"log"
 
 	"github.com/mswift42/goquery"
+	"sync"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -30,12 +31,12 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
 
-func newMainCategoryDocument(ip *IplayerDocument) *MainCategoryDocument {
+func NewMainCategoryDocument(ip *IplayerDocument) *MainCategoryDocument {
 	nextpages := ip.nextPages()
 	return &MainCategoryDocument{ip, nextpages}
 }
 
-func (b BeebURL) loadDocument() (*IplayerDocument, error) {
+func (b BeebURL) LoadDocument() (*IplayerDocument, error) {
 	doc, err := goquery.NewDocument(string(b))
 	if err != nil {
 		return nil, err
@@ -93,22 +94,24 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 //	return ip.pages()
 //}
 
+var mutex sync.Mutex
+
 func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	var progs []*Programme
 	var extraurls []string
 	fmt.Println(mp.NextPages)
-	go func(ip *IplayerDocument) {
-		pr, eu := ip.programmes()
+		pr, eu := mp.ip.programmes()
 		progs = append(progs, pr...)
 		extraurls = append(extraurls, eu...)
-	}(mp.ip)
 	for _, i := range mp.NextPages {
 		go func(url string) {
 			bu := BeebURL(url)
-			nd, _ := bu.loadDocument()
+			nd, _ := bu.LoadDocument()
 			pr, eu := nd.programmes()
+			mutex.Lock()
 			progs = append(progs, pr...)
 			extraurls = append(extraurls, eu...)
+			defer mutex.Unlock()
 		}(i)
 	}
 	fmt.Println(progs)
@@ -191,16 +194,19 @@ func Programmes(s Searcher) ([]*Programme, error) {
 		panic(err)
 	}
 	progs, urls := doc.programmes()
+	var mutex = &sync.Mutex{}
 	programmes = append(programmes, progs...)
 	for _, i := range urls {
 		go func(url string) {
 			bu := BeebURL(url)
-			doc, err := bu.loadDocument()
+			doc, err := bu.LoadDocument()
 			if err != nil {
 				log.Fatal(err)
 			}
 			pr, _ := doc.programmes()
+			mutex.Lock()
 			programmes = append(programmes, pr...)
+			mutex.Unlock()
 		}(i)
 	}
 

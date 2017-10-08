@@ -11,7 +11,7 @@ type TestHtmlURL struct {
 	url string
 }
 
-func (th TestHtmlURL) loadDocument() (*IplayerDocument, error) {
+func (th TestHtmlURL) loadDocument() (*IplayerDocument,  error) {
 	file, err := ioutil.ReadFile(th.url)
 	if err != nil {
 		return nil, err
@@ -20,5 +20,8 @@ func (th TestHtmlURL) loadDocument() (*IplayerDocument, error) {
 	if err != nil {
 		return nil, err
 	}
-	return NewIplayerDocument(doc), nil
+	newidoc := NewIplayerDocument(doc)
+	return newidoc,  nil
 }
+
+

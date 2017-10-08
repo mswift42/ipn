@@ -16,11 +16,11 @@ const comedy = "comedy.html"
 func TestBeebURLUrlDoc(t *testing.T) {
 	assert := assert.New(t)
 	b := BeebURL("http://www.example.com/")
-	ex, err := b.loadDocument()
+	ex, err := b.LoadDocument()
 	assert.Nil(err)
 	assert.NotNil(ex)
 	b1 := BeebURL("")
-	ex1, err := b1.loadDocument()
+	ex1, err := b1.LoadDocument()
 	assert.NotNil(err)
 	assert.Nil(ex1)
 }
@@ -165,7 +165,7 @@ func TestMainCategoryDocument(t *testing.T) {
 	th := TestHtmlURL{comedy}
 	doc, err := th.loadDocument()
 	assert.Nil(err)
-	mcd := newMainCategoryDocument(doc)
+	mcd := NewMainCategoryDocument(doc)
 	assert.Equal(len(mcd.NextPages), 4)
 	assert.Equal(mcd.NextPages[0],
 		bbcprefix+"/iplayer/categories/comedy/all?sort=atoz&page=2")
@@ -188,6 +188,23 @@ func TestHasExtraProgrammes(t *testing.T) {
 	//second := programmesListItem{npl.sel.Eq(1)}
 	//assert.Equal(second.hasExtraProgrammes(), false)
 
+}
+
+func TestMainCategoryDocument_Programmes(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{filmspage1}
+	doc, err := th.loadDocument()
+	assert.Nil(err)
+	nmcd := NewMainCategoryDocument(doc)
+	assert.NotNil(nmcd)
+	progs, urls := nmcd.Programmes()
+	assert.NotNil(progs)
+	assert.NotNil(urls)
+	//progs, urls := nmcd.Programmes()
+	//assert.Equal(progs[0].Title, "")
+	//if len(urls) > 0 {
+	//	assert.Equal(urls[0], "")
+	//}
 }
 
 //func TestSubPages(t *testing.T) {
