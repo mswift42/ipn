@@ -15,12 +15,19 @@ const (
 )
 
 func category(url tv.BeebURL, name string) *tv.Category {
-	prog, err := tv.Programmes(url)
+	//prog, err := tv.Programmes(url)
+	//if err != nil {
+	//	panic(err)
+	//}
+	doc, err := url.LoadDocument()
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(prog)
-	cat := tv.NewCategory(name, prog)
+	nmd := tv.NewMainCategoryDocument(doc)
+	progs, urls  := nmd.Programmes()
+	fmt.Println(urls)
+	fmt.Println(progs)
+	cat := tv.NewCategory(name, progs)
 	return cat
 }
 
@@ -39,26 +46,26 @@ func LoadAllCategories() ([]*tv.Category, error) {
 func allCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
 	cats := make([]*tv.Category, len(categories))
 	ch := make(chan *tv.Category)
-	go func() {
 		for name, url := range categories {
-			fmt.Println(name, url)
-			//doc, err := url.UrlDoc()
-			//if err != nil {
-			//	panic(err)
-			//}
-			//doc.CollectNextPage()
-			//if len(doc.NextPages) > 0 {
-			//	for _, i := range doc.NextPages {
-			//		ch <- category(tv.BeebURL(i), name)
-			//	}
-			//}
-			fmt.Println("Fetching Cat: ", name)
-			ch <- category(url, name)
+			go func(name string, url tv.BeebURL) {
+				fmt.Println(name, url)
+				//doc, err := url.UrlDoc()
+				//if err != nil {
+				//	panic(err)
+				//}
+				//doc.CollectNextPage()
+				//if len(doc.NextPages) > 0 {
+				//	for _, i := range doc.NextPages {
+				//		ch <- category(tv.BeebURL(i), name)
+				//	}
+				//}
+				fmt.Println("Fetching Cat: ", name)
+				ch <- category(url, name)
 
+			}(name, url)
 		}
 
 		defer close(ch)
-	}()
 
 	for c := range ch {
 		cats = append(cats, c)
