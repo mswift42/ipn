@@ -119,7 +119,7 @@ func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	return progs, extraurls
 }
 
-func (ip *IplayerDocument) programmes() ([]*Programme, []string) {
+func (ip *IplayerDocument) programmes(progch chan<- []*Programme, urlch chan<- []string) {
 	var progs []*Programme
 	var extraurls []string
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
@@ -136,7 +136,8 @@ func (ip *IplayerDocument) programmes() ([]*Programme, []string) {
 		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
 		progs = append(progs, np)
 	})
-	return progs, extraurls
+	progch <- progs
+	urlch <- extraurls
 }
 
 // Programme represents an Iplayer TV programme. It consists of
