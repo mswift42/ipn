@@ -3,10 +3,10 @@ package tv
 import (
 	"fmt"
 
-	"log"
 
 	"github.com/mswift42/goquery"
 	"sync"
+	"log"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -21,6 +21,7 @@ type IplayerDocument struct {
 type iplayerSelection struct {
 	sel *goquery.Selection
 }
+
 
 type MainCategoryDocument struct {
 	ip        *IplayerDocument
@@ -99,22 +100,23 @@ var mutex sync.Mutex
 func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	var progs []*Programme
 	var extraurls []string
+	progch := make(chan []*Programme)
+	urlch := make(chan []string)
 	fmt.Println(mp.NextPages)
-		pr, eu := mp.ip.programmes()
-		progs = append(progs, pr...)
-		extraurls = append(extraurls, eu...)
+		go mp.ip.programmes(progch, urlch)
 	for _, i := range mp.NextPages {
 		go func(url string) {
 			bu := BeebURL(url)
 			nd, _ := bu.LoadDocument()
-			pr, eu := nd.programmes()
-			mutex.Lock()
-			progs = append(progs, pr...)
-			extraurls = append(extraurls, eu...)
-			defer mutex.Unlock()
+			go nd.programmes(progch, urlch)
 		}(i)
 	}
-	fmt.Println(progs)
+	for p := range progch {
+		progs = append(progs, p...)
+	}
+	for u := range urlch {
+		extraurls = append(extraurls, u...)
+	}
 	fmt.Println(extraurls)
 	return progs, extraurls
 }
@@ -133,7 +135,7 @@ func (ip *IplayerDocument) programmes(progch chan<- []*Programme, urlch chan<- [
 		pid := findPid(s)
 		thumbnail := findThumbnail(s)
 		url := findURL(s)
-		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
+		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)kk
 		progs = append(progs, np)
 	})
 	progch <- progs
@@ -194,9 +196,16 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	if err != nil {
 		panic(err)
 	}
-	progs, urls := doc.programmes()
-	var mutex = &sync.Mutex{}
-	programmes = append(programmes, progs...)
+	var urls []string
+	progch := make(chan []*Programme)
+	extraurls := make(chan []string)
+	go doc.programmes(progch, extraurls)
+	for p := range progch {
+		programmes = append(programmes, p...)
+	}
+	for u := range extraurls {
+		urls = append(urls, u...)
+	}
 	for _, i := range urls {
 		go func(url string) {
 			bu := BeebURL(url)
@@ -204,13 +213,12 @@ func Programmes(s Searcher) ([]*Programme, error) {
 			if err != nil {
 				log.Fatal(err)
 			}
-			pr, _ := doc.programmes()
-			mutex.Lock()
-			programmes = append(programmes, pr...)
-			mutex.Unlock()
+			go doc.programmes(progch, extraurls)
+			for p := range progch {
+				programmes = append(programmes, p...)
+			}
 		}(i)
 	}
-
 	return programmes, nil
 }
 
@@ -225,6 +233,18 @@ func Programmes(s Searcher) ([]*Programme, error) {
 //	results = append(results, pager.SubPages()...)
 //	return results
 //}
+
+func findProgramme(index int, sel *goquery.Selection) *Programme {
+	title := findTitle(s)
+	subtitle := findSubtitle(s)
+	synopsis := findSynopsis(s)
+	pid := findPid(s)
+	thumbnail := findThumbnail(s)
+	url := findURL(s)
+	np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
+
+	return np
+}
 
 func findTitle(s *goquery.Selection) string {
 	return s.Find(".secondary > .title").Text()
