@@ -234,7 +234,12 @@ func Programmes(s Searcher) ([]*Programme, error) {
 //	return results
 //}
 
-func findProgramme(index int, sel *goquery.Selection) *Programme {
+func findProgramme(index int, s *goquery.Selection) (*Programme, BeebURL) {
+	var bu BeebURL
+	isel := iplayerSelection{s }
+	if isel.hasExtraProgrammes() {
+		bu = BeebURL("http://www.bbc.co.uk"+isel.sel.Find(".view-more-container").AttrOr("href", ""))
+	}
 	title := findTitle(s)
 	subtitle := findSubtitle(s)
 	synopsis := findSynopsis(s)
@@ -243,7 +248,7 @@ func findProgramme(index int, sel *goquery.Selection) *Programme {
 	url := findURL(s)
 	np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
 
-	return np
+	return np, bu
 }
 
 func findTitle(s *goquery.Selection) string {
