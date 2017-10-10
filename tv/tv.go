@@ -125,18 +125,11 @@ func (ip *IplayerDocument) programmes(progch chan<- []*Programme, urlch chan<- [
 	var progs []*Programme
 	var extraurls []string
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-		isel := iplayerSelection{s}
-		if isel.hasExtraProgrammes() {
-			extraurls = append(extraurls, "http://www.bbc.co.uk"+isel.sel.Find(".view-more-container").AttrOr("href", ""))
+		prog, eu := findProgramme(i, s)
+		progs = append(progs, prog)
+		if eu != "" {
+			extraurls = append(extraurls, eu)
 		}
-		title := findTitle(s)
-		subtitle := findSubtitle(s)
-		synopsis := findSynopsis(s)
-		pid := findPid(s)
-		thumbnail := findThumbnail(s)
-		url := findURL(s)
-		np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)kk
-		progs = append(progs, np)
 	})
 	progch <- progs
 	urlch <- extraurls
