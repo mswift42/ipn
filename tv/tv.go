@@ -3,10 +3,9 @@ package tv
 import (
 	"fmt"
 
+	"sync"
 
 	"github.com/mswift42/goquery"
-	"sync"
-	"log"
 )
 
 const bbcprefix = "http://www.bbc.co.uk"
@@ -22,7 +21,6 @@ type iplayerSelection struct {
 	sel *goquery.Selection
 }
 
-
 type MainCategoryDocument struct {
 	ip        *IplayerDocument
 	NextPages []string
@@ -32,9 +30,13 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
 
-func NewMainCategoryDocument(ip *IplayerDocument) *MainCategoryDocument {
-	nextpages := ip.nextPages()
-	return &MainCategoryDocument{ip, nextpages}
+func NewMainCategoryDocument(bu BeebURL) (*MainCategoryDocument, error) {
+	doc, err := bu.LoadDocument()
+	if err != nil {
+		return nil, err
+	}
+	np := doc.nextPages()
+	return &MainCategoryDocument{doc, np}, nil
 }
 
 func (b BeebURL) LoadDocument() (*IplayerDocument, error) {
@@ -103,14 +105,14 @@ func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	progch := make(chan []*Programme)
 	urlch := make(chan []string)
 	fmt.Println(mp.NextPages)
-		go mp.ip.programmes(progch, urlch)
-	for _, i := range mp.NextPages {
-		go func(url string) {
-			bu := BeebURL(url)
-			nd, _ := bu.LoadDocument()
-			go nd.programmes(progch, urlch)
-		}(i)
-	}
+	go mp.ip.programmes(progch, urlch)
+	//for _, i := range mp.NextPages {
+	//	go func(url string) {
+	//		bu := BeebURL(url)
+	//		nd, _ := bu.LoadDocument()
+	//		go nd.programmes(progch, urlch)
+	//	}(i)
+	//}
 	for p := range progch {
 		progs = append(progs, p...)
 	}
@@ -121,14 +123,16 @@ func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	return progs, extraurls
 }
 
-func (ip *IplayerDocument) programmes(progch chan<- []*Programme, urlch chan<- []string) {
+func (ip *IplayerDocument) programmes(progch chan []*Programme, urlch chan<- []string) {
 	var progs []*Programme
 	var extraurls []string
 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
 		prog, eu := findProgramme(i, s)
 		progs = append(progs, prog)
+		fmt.Println(progs)
 		if eu != "" {
-			extraurls = append(extraurls, eu)
+			extraurls = append(extraurls, string(eu))
+			fmt.Println(extraurls)
 		}
 	})
 	progch <- progs
@@ -192,26 +196,28 @@ func Programmes(s Searcher) ([]*Programme, error) {
 	var urls []string
 	progch := make(chan []*Programme)
 	extraurls := make(chan []string)
-	go doc.programmes(progch, extraurls)
+	doc.programmes(progch, extraurls)
 	for p := range progch {
 		programmes = append(programmes, p...)
 	}
+	fmt.Println(programmes)
 	for u := range extraurls {
 		urls = append(urls, u...)
 	}
-	for _, i := range urls {
-		go func(url string) {
-			bu := BeebURL(url)
-			doc, err := bu.LoadDocument()
-			if err != nil {
-				log.Fatal(err)
-			}
-			go doc.programmes(progch, extraurls)
-			for p := range progch {
-				programmes = append(programmes, p...)
-			}
-		}(i)
-	}
+	fmt.Println(extraurls)
+	//for _, i := range urls {
+	//	go func(url string) {
+	//		bu := BeebURL(url)
+	//		doc, err := bu.LoadDocument()
+	//		if err != nil {
+	//			log.Fatal(err)
+	//		}
+	//		doc.programmes(progch, extraurls)
+	//		for p := range progch {
+	//			programmes = append(programmes, p...)
+	//		}
+	//	}(i)
+	//}
 	return programmes, nil
 }
 
@@ -229,9 +235,9 @@ func Programmes(s Searcher) ([]*Programme, error) {
 
 func findProgramme(index int, s *goquery.Selection) (*Programme, BeebURL) {
 	var bu BeebURL
-	isel := iplayerSelection{s }
+	isel := iplayerSelection{s}
 	if isel.hasExtraProgrammes() {
-		bu = BeebURL("http://www.bbc.co.uk"+isel.sel.Find(".view-more-container").AttrOr("href", ""))
+		bu = BeebURL("http://www.bbc.co.uk" + isel.sel.Find(".view-more-container").AttrOr("href", ""))
 	}
 	title := findTitle(s)
 	subtitle := findSubtitle(s)
