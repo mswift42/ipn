@@ -17,6 +17,11 @@ type IplayerDocument struct {
 	idoc *goquery.Document
 }
 
+type IplayerDocumentResult struct {
+	idoc *goquery.Document
+	Error error
+}
+
 type iplayerSelection struct {
 	sel *goquery.Selection
 }

@@ -2,5 +2,5 @@ package tv
 
 
 type Searcher interface {
-	loadDocument() (*IplayerDocument, error)
+	loadDocument(chan<- *IplayerDocumentResult)
 }
