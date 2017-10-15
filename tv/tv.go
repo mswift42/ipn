@@ -44,13 +44,22 @@ func NewMainCategoryDocument(bu BeebURL) (*MainCategoryDocument, error) {
 	return &MainCategoryDocument{doc, np}, nil
 }
 
-func (b BeebURL) LoadDocument() (*IplayerDocument, error) {
-	doc, err := goquery.NewDocument(string(b))
+func (bu BeebURL) loadDocument(c chan<- *IplayerDocumentResult) {
+	doc, err := goquery.NewDocument(string(bu))
 	if err != nil {
-		return nil, err
+		c <- &IplayerDocumentResult{nil, err}
 	}
-	return NewIplayerDocument(doc), nil
+	c <- &IplayerDocumentResult{ doc, nil }
+	close(c)
 }
+
+//func (b BeebURL) LoadDocument() (*IplayerDocument, error) {
+//	doc, err := goquery.NewDocument(string(b))
+//	if err != nil {
+//		return nil, err
+//	}
+//	return NewIplayerDocument(doc), nil
+//}
 
 func (ip *IplayerDocument) selection(selector string) *goquery.Selection {
 	return ip.idoc.Find(selector)
