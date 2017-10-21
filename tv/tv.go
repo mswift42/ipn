@@ -25,6 +25,13 @@ type IplayerDocumentResult struct {
 type iplayerSelection struct {
 	sel *goquery.Selection
 }
+// iplayerSelectionResult has either an iplayerSelection for
+// an iplayer programme, or, if it has a link to a "more Programmes available"
+// site, said link.
+type iplayerSelectionResult struct {
+	isel *iplayerSelection
+	progpage string
+}
 
 type MainCategoryDocument struct {
 	ip        *IplayerDocument
@@ -36,12 +43,13 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 }
 
 func NewMainCategoryDocument(bu BeebURL) (*MainCategoryDocument, error) {
-	doc, err := bu.LoadDocument()
-	if err != nil {
-		return nil, err
+	c := make(chan *IplayerDocumentResult)
+	doc := <-c
+	if doc.Error != nil {
+		return nil, doc.Error
 	}
-	np := doc.nextPages()
-	return &MainCategoryDocument{doc, np}, nil
+	idoc := IplayerDocument{doc.idoc}
+	return &MainCategoryDocument{&idoc, idoc.nextPages()}, nil
 }
 
 func (bu BeebURL) loadDocument(c chan<- *IplayerDocumentResult) {
@@ -203,10 +211,9 @@ func NewCategory(name string, programmes []*Programme) *Category {
 // finding every Programme and finally returning them.
 func Programmes(s Searcher) ([]*Programme, error) {
 	var programmes []*Programme
-	doc, err := s.loadDocument()
-	if err != nil {
-		panic(err)
-	}
+	c := make(chan *IplayerDocumentResult)
+	go s.loadDocument(c)
+	doc := <-c
 	var urls []string
 	progch := make(chan []*Programme)
 	extraurls := make(chan []string)
