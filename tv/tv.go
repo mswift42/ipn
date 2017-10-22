@@ -64,6 +64,24 @@ func (mcd *MainCategoryDocument) collectDocument(in chan BeebURL, out chan *Ipla
 	}
 }
 
+func (mcd *MainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
+	var results []*IplayerDocumentResult
+	buc := make(chan BeebURL)
+	idrc := make(chan *IplayerDocumentResult)
+	go mcd.collectDocument(buc, idrc)
+	for _, i := range mcd.NextPages {
+		go func(url string) {
+			bu := BeebURL("http://bbc.co.uk" + url)
+			buc <- bu
+		}(i)
+	}
+	defer close(buc)
+	for range mcd.NextPages {
+		results = append(results, <-idrc)
+	}
+	return results
+}
+
 func (bu BeebURL) loadDocument(c chan<- *IplayerDocumentResult) {
 	doc, err := goquery.NewDocument(string(bu))
 	if err != nil {
