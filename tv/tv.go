@@ -18,18 +18,19 @@ type IplayerDocument struct {
 }
 
 type IplayerDocumentResult struct {
-	idoc *goquery.Document
+	idoc  *goquery.Document
 	Error error
 }
 
 type iplayerSelection struct {
 	sel *goquery.Selection
 }
+
 // iplayerSelectionResult has either an iplayerSelection for
 // an iplayer programme, or, if it has a link to a "more Programmes available"
 // site, said link.
 type iplayerSelectionResult struct {
-	isel *iplayerSelection
+	isel     *iplayerSelection
 	progpage string
 }
 
@@ -52,12 +53,23 @@ func NewMainCategoryDocument(bu BeebURL) (*MainCategoryDocument, error) {
 	return &MainCategoryDocument{&idoc, idoc.nextPages()}, nil
 }
 
+func (mcd *MainCategoryDocument) collectDocument(in chan BeebURL, out chan *IplayerDocumentResult) {
+	for u := range in {
+		doc, err := goquery.NewDocument(string(u))
+		if err != nil {
+			out <- &IplayerDocumentResult{nil, err}
+		} else {
+			out <- &IplayerDocumentResult{doc, nil}
+		}
+	}
+}
+
 func (bu BeebURL) loadDocument(c chan<- *IplayerDocumentResult) {
 	doc, err := goquery.NewDocument(string(bu))
 	if err != nil {
 		c <- &IplayerDocumentResult{nil, err}
 	}
-	c <- &IplayerDocumentResult{ doc, nil }
+	c <- &IplayerDocumentResult{doc, nil}
 	close(c)
 }
 
