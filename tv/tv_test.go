@@ -43,6 +43,15 @@ func TestTestHtmLLoadDocument(t *testing.T) {
 
 }
 
+func TestNewMainCategoryDocument(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{mostpopular}
+	mcd, err := newMainCategoryDocument(th)
+	assert.Nil(err)
+	assert.Equal(len(mcd.NextPages), 0)
+	assert.NotNil(mcd)
+}
+
  func TestNewProgramme(t *testing.T) {
  	programme := newProgramme("title1", "subtitle1", "synopsys1",
  		"a00", "http://thumbnail.url", "http://programme.url")
