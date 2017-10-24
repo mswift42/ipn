@@ -43,14 +43,14 @@ func TestTestHtmLLoadDocument(t *testing.T) {
 
 }
 
-// func TestNewProgramme(t *testing.T) {
-// 	programme := newProgramme("title1", "subtitle1", "synopsys1",
-// 		"a00", "http://thumbnail.url", "http://programme.url")
-// 	assert := assert.New(t)
-// 	assert.Equal(programme.Title, "title1")
-// 	assert.Equal(programme.URL, "http://programme.url")
+ func TestNewProgramme(t *testing.T) {
+ 	programme := newProgramme("title1", "subtitle1", "synopsys1",
+ 		"a00", "http://thumbnail.url", "http://programme.url")
+ 	assert := assert.New(t)
+ 	assert.Equal(programme.Title, "title1")
+ 	assert.Equal(programme.URL, "http://programme.url")
 
-// }
+ }
 
 // func TestProgrammes(t *testing.T) {
 // 	assert := assert.New(t)
