@@ -11,17 +11,15 @@ type TestHtmlURL struct {
 	url string
 }
 
-func (th TestHtmlURL) loadDocument() (*IplayerDocument,  error) {
+func (th TestHtmlURL) loadDocument(c chan<- *IplayerDocumentResult) {
 	file, err := ioutil.ReadFile(th.url)
 	if err != nil {
-		return nil, err
+		c <- &IplayerDocumentResult{nil, err}
 	}
 	doc, err := goquery.NewDocumentFromReader(bytes.NewReader(file))
 	if err != nil {
-		return nil, err
+		c <- &IplayerDocumentResult{nil, err}
 	}
-	newidoc := NewIplayerDocument(doc)
-	return newidoc,  nil
+	c <- &IplayerDocumentResult{doc, nil}
+	close(c)
 }
-
-
