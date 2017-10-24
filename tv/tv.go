@@ -43,14 +43,18 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
 
-func NewMainCategoryDocument(bu BeebURL) (*MainCategoryDocument, error) {
-	c := make(chan *IplayerDocumentResult)
-	doc := <-c
-	if doc.Error != nil {
-		return nil, doc.Error
-	}
-	idoc := IplayerDocument{doc.idoc}
-	return &MainCategoryDocument{&idoc, idoc.nextPages()}, nil
+// func NewMainCategoryDocument(bu BeebURL) (*MainCategoryDocument, error) {
+// 	c := make(chan *IplayerDocumentResult)
+// 	doc := <-c
+// 	if doc.Error != nil {
+// 		return nil, doc.Error
+// 	}
+// 	idoc := IplayerDocument{doc.idoc}
+// 	return &MainCategoryDocument{&idoc, idoc.nextPages()}, nil
+// }
+
+func newMainCategoryDocument(ipd *IplayerDocument, np []string) *MainCategoryDocument {
+	return &MainCategoryDocument{ipd, np}
 }
 
 func (mcd *MainCategoryDocument) collectDocument(in chan BeebURL, out chan *IplayerDocumentResult) {
