@@ -27,18 +27,21 @@ func TestBeebURLUrlDoc(t *testing.T) {
 	assert.Nil(idr2.idoc)
 }
 
-// func TestTestHtmLLoadDocument(t *testing.T) {
-// 	assert := assert.New(t)
-// 	th := TestHtmlURL{mostpopular}
-// 	succ, err := th.loadDocument()
-// 	assert.Nil(err)
-// 	assert.NotNil(succ)
-// 	th2 := TestHtmlURL{""}
-// 	fail, err := th2.loadDocument()
-// 	assert.Nil(fail)
-// 	assert.NotNil(err)
+func TestTestHtmLLoadDocument(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{mostpopular}
+	c := make(chan *IplayerDocumentResult)
+	go th.loadDocument(c)
+	idr := <-c
+	assert.Nil(idr.Error)
+	assert.NotNil(idr.idoc)
+	th2 := TestHtmlURL{""}
+	go th2.loadDocument(c)
+	idr2 := <-c
+	assert.Nil(idr2.idoc)
+	assert.NotNil(idr2.Error)
 
-// }
+}
 
 // func TestNewProgramme(t *testing.T) {
 // 	programme := newProgramme("title1", "subtitle1", "synopsys1",

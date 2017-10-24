@@ -21,5 +21,4 @@ func (th TestHtmlURL) loadDocument(c chan<- *IplayerDocumentResult) {
 		c <- &IplayerDocumentResult{nil, err}
 	}
 	c <- &IplayerDocumentResult{doc, nil}
-	close(c)
 }
