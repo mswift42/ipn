@@ -92,7 +92,6 @@ func (bu BeebURL) loadDocument(c chan<- *IplayerDocumentResult) {
 		c <- &IplayerDocumentResult{nil, err}
 	}
 	c <- &IplayerDocumentResult{doc, nil}
-	close(c)
 }
 
 //func (b BeebURL) LoadDocument() (*IplayerDocument, error) {
@@ -243,38 +242,38 @@ func NewCategory(name string, programmes []*Programme) *Category {
 
 // Programmes iterates over an goquery.Document,
 // finding every Programme and finally returning them.
-func Programmes(s Searcher) ([]*Programme, error) {
-	var programmes []*Programme
-	c := make(chan *IplayerDocumentResult)
-	go s.loadDocument(c)
-	doc := <-c
-	var urls []string
-	progch := make(chan []*Programme)
-	extraurls := make(chan []string)
-	doc.programmes(progch, extraurls)
-	for p := range progch {
-		programmes = append(programmes, p...)
-	}
-	fmt.Println(programmes)
-	for u := range extraurls {
-		urls = append(urls, u...)
-	}
-	fmt.Println(extraurls)
-	//for _, i := range urls {
-	//	go func(url string) {
-	//		bu := BeebURL(url)
-	//		doc, err := bu.LoadDocument()
-	//		if err != nil {
-	//			log.Fatal(err)
-	//		}
-	//		doc.programmes(progch, extraurls)
-	//		for p := range progch {
-	//			programmes = append(programmes, p...)
-	//		}
-	//	}(i)
-	//}
-	return programmes, nil
-}
+// func Programmes(s Searcher) ([]*Programme, error) {
+// 	var programmes []*Programme
+// 	c := make(chan *IplayerDocumentResult)
+// 	go s.loadDocument(c)
+// 	doc := <-c
+// 	var urls []string
+// 	progch := make(chan []*Programme)
+// 	extraurls := make(chan []string)
+// 	doc.programmes(progch, extraurls)
+// 	for p := range progch {
+// 		programmes = append(programmes, p...)
+// 	}
+// 	fmt.Println(programmes)
+// 	for u := range extraurls {
+// 		urls = append(urls, u...)
+// 	}
+// 	fmt.Println(extraurls)
+// 	//for _, i := range urls {
+// 	//	go func(url string) {
+// 	//		bu := BeebURL(url)
+// 	//		doc, err := bu.LoadDocument()
+// 	//		if err != nil {
+// 	//			log.Fatal(err)
+// 	//		}
+// 	//		doc.programmes(progch, extraurls)
+// 	//		for p := range progch {
+// 	//			programmes = append(programmes, p...)
+// 	//		}
+// 	//	}(i)
+// 	//}
+// 	return programmes, nil
+// }
 
 ////func nextPages(pager Pager) []string {
 ////	var results []string
