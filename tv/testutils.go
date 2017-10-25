@@ -11,6 +11,37 @@ type TestHtmlURL struct {
 	url string
 }
 
+type TestMainCategoryDocument struct {
+	ip        *IplayerDocument
+	NextPages []string
+}
+
+// func (t TestMainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
+// 	var results []*IplayerDocumentResult
+// 	sc := make(chan Searcher)
+// 	idrc := make(chan *IplayerDocumentResult)
+// 	return results
+
+// }
+
+func (t *TestMainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
+	var results []*IplayerDocumentResult
+	sc := make(chan Searcher)
+	idrc := make(chan *IplayerDocumentResult)
+	mcd := &MainCategoryDocument{t.ip, t.NextPages}
+	go mcd.collectDocument(sc, idrc)
+	for _, i := range t.NextPages {
+		go func(url string) {
+			th := TestHtmlURL{url}
+			sc <- th
+		}(i)
+	}
+	for range t.NextPages {
+		results = append(results, <-idrc)
+	}
+	return results
+}
+
 func (th TestHtmlURL) loadDocument(c chan<- *IplayerDocumentResult) {
 	file, err := ioutil.ReadFile(th.url)
 	if err != nil {
