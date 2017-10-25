@@ -9,7 +9,8 @@ import (
 const mostpopular = "mostpopular.html"
 const filmspage1 = "filmspage1.html"
 const filmspage2 = "filmspage2.html"
-const crime = "../drama-crime/crime.html"
+const crm = "../drama-crime/crime.html"
+const crime = "drama_and_crime.html"
 const comedy = "comedy.html"
 
 func TestBeebURLUrlDoc(t *testing.T) {
@@ -43,6 +44,20 @@ func TestTestHtmLLoadDocument(t *testing.T) {
 
 }
 
+func TestCollectDocument(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{crime}
+	mcd, err := newMainCategoryDocument(th)
+	assert.Nil(err)
+	tmcd := TestMainCategoryDocument{mcd.ip, mcd.NextPages}
+	results := tmcd.collectDocuments()
+	assert.NotNil(results)
+	assert.Equal(len(tmcd.NextPages), 2)
+	for _, i := range results {
+		assert.Nil(i.Error)
+	}
+}
+
 func TestNewMainCategoryDocument(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL{mostpopular}
@@ -52,14 +67,14 @@ func TestNewMainCategoryDocument(t *testing.T) {
 	assert.NotNil(mcd)
 }
 
- func TestNewProgramme(t *testing.T) {
- 	programme := newProgramme("title1", "subtitle1", "synopsys1",
- 		"a00", "http://thumbnail.url", "http://programme.url")
- 	assert := assert.New(t)
- 	assert.Equal(programme.Title, "title1")
- 	assert.Equal(programme.URL, "http://programme.url")
+func TestNewProgramme(t *testing.T) {
+	programme := newProgramme("title1", "subtitle1", "synopsys1",
+		"a00", "http://thumbnail.url", "http://programme.url")
+	assert := assert.New(t)
+	assert.Equal(programme.Title, "title1")
+	assert.Equal(programme.URL, "http://programme.url")
 
- }
+}
 
 // func TestProgrammes(t *testing.T) {
 // 	assert := assert.New(t)
