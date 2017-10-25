@@ -3,6 +3,7 @@ package tv
 import (
 	"bytes"
 	"io/ioutil"
+	"strings"
 
 	"github.com/mswift42/goquery"
 )
@@ -32,7 +33,7 @@ func (t *TestMainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
 	go mcd.collectDocument(sc, idrc)
 	for _, i := range t.NextPages {
 		go func(url string) {
-			th := TestHtmlURL{url}
+			th := TestHtmlURL{strings.Replace(url, bbcprefix, "", -1)}
 			sc <- th
 		}(i)
 	}
