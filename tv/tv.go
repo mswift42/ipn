@@ -53,7 +53,6 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 // 	return &MainCategoryDocument{&idoc, idoc.nextPages()}, nil
 // }
 
-
 func newMainCategoryDocument(s Searcher) (*MainCategoryDocument, error) {
 	c := make(chan *IplayerDocumentResult)
 	go s.loadDocument(c)

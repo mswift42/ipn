@@ -44,7 +44,7 @@ func TestTestHtmLLoadDocument(t *testing.T) {
 
 }
 
-func TestCollectDocument(t *testing.T) {
+func TestCollectDocuments(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL{crime}
 	mcd, err := newMainCategoryDocument(th)
@@ -55,6 +55,7 @@ func TestCollectDocument(t *testing.T) {
 	assert.Equal(len(tmcd.NextPages), 2)
 	for _, i := range results {
 		assert.Nil(i.Error)
+		assert.NotNil(i.idoc)
 	}
 }
 
