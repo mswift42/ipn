@@ -175,45 +175,45 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 //	return ip.pages()
 //}
 
-func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
-	var progs []*Programme
-	var extraurls []string
-	progch := make(chan []*Programme)
-	urlch := make(chan []string)
-	fmt.Println(mp.NextPages)
-	go mp.ip.programmes(progch, urlch)
-	//for _, i := range mp.NextPages {
-	//	go func(url string) {
-	//		bu := BeebURL(url)
-	//		nd, _ := bu.LoadDocument()
-	//		go nd.programmes(progch, urlch)
-	//	}(i)
-	//}
-	for p := range progch {
-		progs = append(progs, p...)
-	}
-	for u := range urlch {
-		extraurls = append(extraurls, u...)
-	}
-	fmt.Println(extraurls)
-	return progs, extraurls
-}
+// func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
+// 	var progs []*Programme
+// 	var extraurls []string
+// 	progch := make(chan []*Programme)
+// 	urlch := make(chan []string)
+// 	fmt.Println(mp.NextPages)
+// 	go mp.ip.programmes(progch, urlch)
+// 	//for _, i := range mp.NextPages {
+// 	//	go func(url string) {
+// 	//		bu := BeebURL(url)
+// 	//		nd, _ := bu.LoadDocument()
+// 	//		go nd.programmes(progch, urlch)
+// 	//	}(i)
+// 	//}
+// 	for p := range progch {
+// 		progs = append(progs, p...)
+// 	}
+// 	for u := range urlch {
+// 		extraurls = append(extraurls, u...)
+// 	}
+// 	fmt.Println(extraurls)
+// 	return progs, extraurls
+// }
 
-func (ip *IplayerDocument) programmes(progch chan []*Programme, urlch chan<- []string) {
-	var progs []*Programme
-	var extraurls []string
-	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
-		prog, eu := findProgramme(i, s)
-		progs = append(progs, prog)
-		fmt.Println(progs)
-		if eu != "" {
-			extraurls = append(extraurls, string(eu))
-			fmt.Println(extraurls)
-		}
-	})
-	progch <- progs
-	urlch <- extraurls
-}
+// func (ip *IplayerDocument) programmes(progch chan []*Programme, urlch chan<- []string) {
+// 	var progs []*Programme
+// 	var extraurls []string
+// 	ip.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+// 		prog, eu := findProgramme(i, s)
+// 		progs = append(progs, prog)
+// 		fmt.Println(progs)
+// 		if eu != "" {
+// 			extraurls = append(extraurls, string(eu))
+// 			fmt.Println(extraurls)
+// 		}
+// 	})
+// 	progch <- progs
+// 	urlch <- extraurls
+// }
 
 // Programme represents an Iplayer TV programme. It consists of
 // the programme's title, subtitle, a short programme description,

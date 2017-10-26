@@ -69,6 +69,29 @@ func TestNewMainCategoryDocument(t *testing.T) {
 	assert.NotNil(mcd)
 }
 
+func TestSelectionResults(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{mostpopular}
+	ic := make(chan *IplayerDocumentResult)
+	go th.loadDocument(ic)
+	doc := <-ic
+	assert.Nil(doc.Error)
+	assert.NotNil(doc.idoc)
+	reschan := make(chan []*iplayerSelectionResult)
+	idoc := &IplayerDocument{doc.idoc}
+	go idoc.selectionResults(reschan)
+	popres := <-reschan
+	assert.Equal(len(popres), 40)
+	for _, i := range popres {
+		if i.progpage == "" {
+			assert.NotNil(i.prog)
+		}
+	}
+	assert.Equal(popres[0].prog.Title, "Strictly Come Dancing")
+	assert.Equal(popres[0].progpage, "")
+
+}
+
 func TestNewProgramme(t *testing.T) {
 	programme := newProgramme("title1", "subtitle1", "synopsys1",
 		"a00", "http://thumbnail.url", "http://programme.url")
