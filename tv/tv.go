@@ -19,6 +19,7 @@ type IplayerDocumentResult struct {
 	idoc  *goquery.Document
 	Error error
 }
+
 // iplayerSelection is an iplayer web page
 // list-item section of one Programme.
 type iplayerSelection struct {
@@ -29,7 +30,7 @@ type iplayerSelection struct {
 // an iplayer programme, or, if it has a link to a "more Programmes available"
 // site, said link.
 type iplayerSelectionResult struct {
-	isel     *iplayerSelection
+	prog     *Programme
 	progpage string
 }
 
@@ -100,6 +101,20 @@ func (bu BeebURL) loadDocument(c chan<- *IplayerDocumentResult) {
 		c <- &IplayerDocumentResult{nil, err}
 	}
 	c <- &IplayerDocumentResult{doc, nil}
+}
+
+func (ip *IplayerDocument) selectionResults(c chan<- []*iplayerSelectionResult) {
+	var res []*iplayerSelectionResult
+	ip.idoc.Find(".list-item").Each(func(i int, selection *goquery.Selection) {
+		expage := findProgrammeSite(selection)
+		if expage != "" {
+			res = append(res, &iplayerSelectionResult{nil, expage})
+		} else {
+			res = append(res,
+				&iplayerSelectionResult{findProgramme(selection), ""})
+		}
+	})
+	c <- res
 }
 
 //func (b BeebURL) LoadDocument() (*IplayerDocument, error) {
@@ -293,12 +308,7 @@ func NewCategory(name string, programmes []*Programme) *Category {
 //	return results
 //}
 
-func findProgramme(index int, s *goquery.Selection) (*Programme, BeebURL) {
-	var bu BeebURL
-	isel := iplayerSelection{s}
-	if isel.hasExtraProgrammes() {
-		bu = BeebURL("http://www.bbc.co.uk" + isel.sel.Find(".view-more-container").AttrOr("href", ""))
-	}
+func findProgramme(s *goquery.Selection) *Programme {
 	title := findTitle(s)
 	subtitle := findSubtitle(s)
 	synopsis := findSynopsis(s)
@@ -306,10 +316,11 @@ func findProgramme(index int, s *goquery.Selection) (*Programme, BeebURL) {
 	thumbnail := findThumbnail(s)
 	url := findURL(s)
 	np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
-
-	return np, bu
+	return np
 }
 
+// findProgrammeSite returns the link the iplayer programme's page
+// if a class view-more-container is present.
 func findProgrammeSite(s *goquery.Selection) string {
 	return s.Find(".view-more-container").AttrOr("href", "")
 }
