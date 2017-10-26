@@ -57,6 +57,7 @@ func TestCollectDocuments(t *testing.T) {
 		assert.Nil(i.Error)
 		assert.NotNil(i.idoc)
 	}
+	assert.Equal(len(results), 2)
 }
 
 func TestNewMainCategoryDocument(t *testing.T) {

@@ -19,7 +19,8 @@ type IplayerDocumentResult struct {
 	idoc  *goquery.Document
 	Error error
 }
-
+// iplayerSelection is an iplayer web page
+// list-item section of one Programme.
 type iplayerSelection struct {
 	sel *goquery.Selection
 }
@@ -307,6 +308,10 @@ func findProgramme(index int, s *goquery.Selection) (*Programme, BeebURL) {
 	np := newProgramme(title, subtitle, synopsis, pid, thumbnail, url)
 
 	return np, bu
+}
+
+func findProgrammeSite(s *goquery.Selection) string {
+	return s.Find(".view-more-container").AttrOr("href", "")
 }
 
 func findTitle(s *goquery.Selection) string {
