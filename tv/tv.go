@@ -3,8 +3,6 @@ package tv
 import (
 	"fmt"
 
-	"sync"
-
 	"github.com/mswift42/goquery"
 )
 
@@ -160,8 +158,6 @@ func (ip *IplayerDocument) morePages(selection string) []string {
 //	ip.CollectSubPages()
 //	return ip.pages()
 //}
-
-var mutex sync.Mutex
 
 func (mp *MainCategoryDocument) Programmes() ([]*Programme, []string) {
 	var progs []*Programme
