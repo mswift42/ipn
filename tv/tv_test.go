@@ -89,6 +89,24 @@ func TestSelectionResults(t *testing.T) {
 	}
 	assert.Equal(popres[0].prog.Title, "Strictly Come Dancing")
 	assert.Equal(popres[0].progpage, "")
+	th2 := TestHtmlURL{crime}
+	go th2.loadDocument(ic)
+	crimedoc := <-ic
+	assert.Nil(doc.Error)
+	assert.NotNil(doc.idoc)
+	crimeidoc := &IplayerDocument{crimedoc.idoc}
+	go crimeidoc.selectionResults(reschan)
+	crimeres := <-reschan
+	assert.Equal(crimeres[0].progpage, "")
+	assert.Equal(crimeres[0].prog.Title, "A Nightingale Sang in Berkeley Square")
+	for _, i := range crimeres {
+		if i.progpage == "" {
+			assert.NotNil(i.prog)
+		}
+		if i.prog == Nil {
+			assert.NotEqual(i.progpage, "")
+		}
+	}
 
 }
 
