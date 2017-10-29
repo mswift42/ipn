@@ -103,7 +103,7 @@ func TestSelectionResults(t *testing.T) {
 		if i.progpage == "" {
 			assert.NotNil(i.prog)
 		}
-		if i.prog == Nil {
+		if i.prog == nil {
 			assert.NotEqual(i.progpage, "")
 		}
 	}

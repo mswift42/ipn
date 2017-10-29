@@ -64,7 +64,7 @@ func newMainCategoryDocument(s Searcher) (*MainCategoryDocument, error) {
 	return &MainCategoryDocument{&doc, doc.nextPages()}, nil
 }
 
-func (mcd *MainCategoryDocument) collectDocument(in chan Searcher, out chan *IplayerDocumentResult) {
+func collectDocument(in chan Searcher, out chan *IplayerDocumentResult) {
 	c := make(chan *IplayerDocumentResult)
 	for u := range in {
 		go u.loadDocument(c)
@@ -81,7 +81,7 @@ func (mcd *MainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
 	var results []*IplayerDocumentResult
 	sc := make(chan Searcher)
 	idrc := make(chan *IplayerDocumentResult)
-	go mcd.collectDocument(sc, idrc)
+	go cd.collectDocument(sc, idrc)
 	for _, i := range mcd.NextPages {
 		go func(url string) {
 			bu := BeebURL("http://bbc.co.uk" + url)
@@ -94,6 +94,9 @@ func (mcd *MainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
 	}
 	return results
 }
+
+// TODO add method that iterates over selecetionResults and
+// collects all progpage documents.
 
 func (bu BeebURL) loadDocument(c chan<- *IplayerDocumentResult) {
 	doc, err := goquery.NewDocument(string(bu))
