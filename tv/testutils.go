@@ -29,8 +29,7 @@ func (t *TestMainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
 	var results []*IplayerDocumentResult
 	sc := make(chan Searcher)
 	idrc := make(chan *IplayerDocumentResult)
-	mcd := &MainCategoryDocument{t.ip, t.NextPages}
-	go mcd.collectDocument(sc, idrc)
+	go collectDocument(sc, idrc)
 	for _, i := range t.NextPages {
 		go func(url string) {
 			th := TestHtmlURL{strings.Replace(url, bbcprefix, "", -1)}

@@ -39,6 +39,20 @@ type MainCategoryDocument struct {
 	NextPages []string
 }
 
+type page struct {
+	result []*iplayerSelectionResult
+}
+
+func (pr *page) programPageUrls() []Searcher {
+	var urls []Searcher
+	for _, i := range pr.result {
+		if i.progpage != "" {
+			urls = append(urls, BeebURL(bbcprefix+i.progpage))
+		}
+	}
+	return urls
+}
+
 func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 	return &IplayerDocument{doc}
 }
@@ -81,7 +95,7 @@ func (mcd *MainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
 	var results []*IplayerDocumentResult
 	sc := make(chan Searcher)
 	idrc := make(chan *IplayerDocumentResult)
-	go cd.collectDocument(sc, idrc)
+	go collectDocument(sc, idrc)
 	for _, i := range mcd.NextPages {
 		go func(url string) {
 			bu := BeebURL("http://bbc.co.uk" + url)
