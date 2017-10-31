@@ -78,6 +78,27 @@ func newMainCategoryDocument(s Searcher) (*MainCategoryDocument, error) {
 	return &MainCategoryDocument{&doc, doc.nextPages()}, nil
 }
 
+func collectProgramPages(ires []*iplayerSelectionResult) []*IplayerDocumentResult {
+	var docres []*IplayerDocumentResult
+	pg := &page{ires}
+	morepages := pg.programPageUrls()
+	scan := make(chan Searcher, 20)
+	idrchan := make(chan *IplayerDocumentResult)
+	go collectDocument(scan, idrchan)
+	for _, i := range morepages {
+		fmt.Println(i)
+		go func(s Searcher) {
+			fmt.Println(s)
+			scan <- s
+		}(i)
+	}
+
+	for  range morepages {
+		docres = append(docres, <-idrchan)
+
+	}
+	return docres
+}
 func collectDocument(in chan Searcher, out chan *IplayerDocumentResult) {
 	c := make(chan *IplayerDocumentResult)
 	for u := range in {
