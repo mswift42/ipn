@@ -39,6 +39,16 @@ type MainCategoryDocument struct {
 	NextPages []string
 }
 
+var seen = make(map[Searcher]bool)
+
+func seenLink(s Searcher) bool {
+	if seen[s] == false {
+		seen[s] = true
+		return false
+	}
+	return true
+}
+
 type page struct {
 	result []*iplayerSelectionResult
 }
@@ -67,6 +77,12 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 // 	return &MainCategoryDocument{&idoc, idoc.nextPages()}, nil
 // }
 
+func (mcd *MainCategoryDocument) programmes() []*Programme {
+	var progs []*Programme
+	docs := mcd.collectDocuments()
+	return progs
+}
+
 func newMainCategoryDocument(s Searcher) (*MainCategoryDocument, error) {
 	c := make(chan *IplayerDocumentResult)
 	go s.loadDocument(c)
@@ -93,7 +109,7 @@ func collectProgramPages(ires []*iplayerSelectionResult) []*IplayerDocumentResul
 		}(i)
 	}
 
-	for  range morepages {
+	for range morepages {
 		docres = append(docres, <-idrchan)
 
 	}
