@@ -2,6 +2,7 @@ package tv
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/mswift42/goquery"
 )
@@ -77,11 +78,11 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 // 	return &MainCategoryDocument{&idoc, idoc.nextPages()}, nil
 // }
 
-func (mcd *MainCategoryDocument) programmes() []*Programme {
-	var progs []*Programme
-	docs := mcd.collectDocuments()
-	return progs
-}
+// func (mcd *MainCategoryDocument) programmes() []*Programme {
+// 	var progs []*Programme
+// 	docs := mcd.collectDocuments()
+// 	return progs
+// }
 
 func newMainCategoryDocument(s Searcher) (*MainCategoryDocument, error) {
 	c := make(chan *IplayerDocumentResult)
@@ -102,7 +103,6 @@ func collectProgramPages(ires []*iplayerSelectionResult) []*IplayerDocumentResul
 	idrchan := make(chan *IplayerDocumentResult)
 	go collectDocument(scan, idrchan)
 	for _, i := range morepages {
-		fmt.Println(i)
 		go func(s Searcher) {
 			fmt.Println(s)
 			scan <- s
@@ -126,6 +126,15 @@ func collectDocument(in chan Searcher, out chan *IplayerDocumentResult) {
 			out <- &IplayerDocumentResult{idr.idoc, nil}
 		}
 	}
+}
+
+func (ipd *IplayerDocument) programmes(c chan<- []*Programme, wg *sync.WaitGroup) {
+	var results []*Programme
+	ipd.idoc.Find(".list-item").Each(func(i int, s *goquery.Selection) {
+		wg.Add(1)
+		results = append(results, findProgramme(s))
+	})
+	c <- results
 }
 
 func (mcd *MainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
