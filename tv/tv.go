@@ -101,21 +101,23 @@ func collectProgramPages(ires []*iplayerSelectionResult) []*IplayerDocumentResul
 	morepages := pg.programPageUrls()
 	scan := make(chan Searcher, 20)
 	idrchan := make(chan *IplayerDocumentResult)
-	go collectDocument(scan, idrchan)
+	wg := &sync.WaitGroup{}
+	go collectDocument(scan, idrchan, wg)
 	for _, i := range morepages {
 		go func(s Searcher) {
 			fmt.Println(s)
 			scan <- s
 		}(i)
 	}
-
-	for range morepages {
-		docres = append(docres, <-idrchan)
-
-	}
+	go func() {
+		for range morepages {
+			docres = append(docres, <-idrchan)
+		}
+	}()
+	wg.Wait()
 	return docres
 }
-func collectDocument(in chan Searcher, out chan *IplayerDocumentResult) {
+func collectDocument(in chan Searcher, out chan *IplayerDocumentResult, wg *sync.WaitGroup) {
 	c := make(chan *IplayerDocumentResult)
 	for u := range in {
 		go u.loadDocument(c)
@@ -123,6 +125,7 @@ func collectDocument(in chan Searcher, out chan *IplayerDocumentResult) {
 		if idr.Error != nil {
 			out <- &IplayerDocumentResult{nil, idr.Error}
 		} else {
+			wg.Done()
 			out <- &IplayerDocumentResult{idr.idoc, nil}
 		}
 	}
@@ -166,9 +169,9 @@ func (bu BeebURL) loadDocument(c chan<- *IplayerDocumentResult) {
 	c <- &IplayerDocumentResult{doc, nil}
 }
 
-func (ip *IplayerDocument) selectionResults(c chan<- []*iplayerSelectionResult) {
+func (ipd *IplayerDocument) selectionResults(c chan<- []*iplayerSelectionResult) {
 	var res []*iplayerSelectionResult
-	ip.idoc.Find(".list-item").Each(func(i int, selection *goquery.Selection) {
+	ipd.idoc.Find(".list-item").Each(func(i int, selection *goquery.Selection) {
 		expage := findProgrammeSite(selection)
 		if expage != "" {
 			res = append(res, &iplayerSelectionResult{nil, expage})
@@ -202,7 +205,7 @@ func (isel iplayerSelection) hasExtraProgrammes() bool {
 }
 
 //// CollectNextPage checks for a pagination div at the bottom of the
-//// Programme listing page. If found, it returns a slice of urls
+//// Programme listing page. If found, git@github.com:mswift42/rtc.gitit returns a slice of urls
 //// for the same category.
 //func (ip *IplayerDocument) CollectNextPage() {
 //	ip.NextPages = ip.morePages(".page > a")
