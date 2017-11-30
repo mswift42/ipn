@@ -101,19 +101,18 @@ func collectProgramPages(ires []*iplayerSelectionResult) []*IplayerDocumentResul
 	morepages := pg.programPageUrls()
 	scan := make(chan Searcher, 20)
 	idrchan := make(chan *IplayerDocumentResult)
+	jobs := 0
 	go collectDocument(scan, idrchan)
 	for _, i := range morepages {
-		go func(s Searcher) {
-			fmt.Println(s)
-			scan <- s
-		}(i)
-	}
-	go func() {
-		for range morepages {
-			docres = append(docres, <-idrchan)
+		if !seenLink(i) {
+			jobs++
+			scan <- i
 		}
-	}()
-	wg.Wait()
+	}
+	for i := 0; i < jobs; i++ {
+		docres = append(docres, <-idrchan)
+	}
+	close(idrchan)
 	return docres
 }
 func collectDocument(in chan Searcher, out chan *IplayerDocumentResult) {
