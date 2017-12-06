@@ -155,6 +155,35 @@ func (mcd *MainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
 	return results
 }
 
+func (mcd *MainCategoryDocument) programmes() []*Programme {
+	var progs []*Programme
+	var selres []*iplayerSelectionResult
+	selreschan := make(chan []*iplayerSelectionResult)
+	progchan := make(chan []*Programme)
+	wg := &sync.WaitGroup{}
+	go mcd.ip.selectionResults(selreschan)
+	selres = append(selres, <-selreschan...)
+	docs := mcd.collectDocuments()
+	for _, i := range docs {
+		idoc := &IplayerDocument{i.idoc}
+		go idoc.selectionResults(selreschan)
+	}
+	for range docs {
+		selres = append(selres, <-selreschan...)
+	}
+	idr := collectProgramPages(selres)
+	for _, i := range idr {
+		doc := &IplayerDocument{i.idoc}
+		go doc.programmes(progchan, wg)
+	}
+	for _, i := range selres {
+		if i.prog != nil {
+			progs = append(progs, i.prog)
+		}
+	}
+	return progs
+}
+
 // TODO add method that iterates over selecetionResults and
 // collects all progpage documents.
 
