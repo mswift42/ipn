@@ -41,12 +41,16 @@ type MainCategoryDocument struct {
 }
 
 var seen = make(map[Searcher]bool)
+var mutex = &sync.Mutex{}
 
 func seenLink(s Searcher) bool {
+	mutex.Lock()
 	if seen[s] == false {
 		seen[s] = true
+		mutex.Unlock()
 		return false
 	}
+	mutex.Unlock()
 	return true
 }
 
