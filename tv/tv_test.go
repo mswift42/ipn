@@ -60,6 +60,16 @@ func TestCollectDocuments(t *testing.T) {
 	assert.Equal(len(results), 2)
 }
 
+func TestCollectProgramPages(t *testing.T) {
+	assert := assert.New(t)
+	th := TestHtmlURL{crime}
+	mcd, err := newMainCategoryDocument(th)
+	assert.Nil(err)
+	tmcd := TestMainCategoryDocument{mcd.ip, mcd.NextPages}
+	results := tmcd.collectDocuments()
+	assert.NotNil(results)
+}
+
 func TestNewMainCategoryDocument(t *testing.T) {
 	assert := assert.New(t)
 	th := TestHtmlURL{mostpopular}
