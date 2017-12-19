@@ -1,4 +1,4 @@
-package categories
+package tv
 
 import (
 	"fmt"
@@ -19,12 +19,12 @@ func category(url tv.BeebURL, name string) *tv.Category {
 	//if err != nil {
 	//	panic(err)
 	//}
-	doc, err := url.LoadDocument()
+	doc, err := url.loadDocument()
 	if err != nil {
 		panic(err)
 	}
-	nmd := tv.NewMainCategoryDocument(doc)
-	progs, urls  := nmd.Programmes()
+	nmd := tv.newMainCategoryDocument(doc)
+	progs, urls  := nmd.programmes()
 	fmt.Println(urls)
 	fmt.Println(progs)
 	cat := tv.NewCategory(name, progs)

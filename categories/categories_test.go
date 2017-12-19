@@ -1,9 +1,8 @@
-package categories
+package tv
 
 import (
 	"testing"
 
-	"github.com/mswift42/ipn/tv"
 	"github.com/stretchr/testify/assert"
 )
 
