@@ -3,6 +3,7 @@ package tv
 import (
 	"fmt"
 
+	"log"
 )
 
 const (
@@ -13,14 +14,12 @@ const (
 	food        = "http://www.bbc.co.uk/iplayer/categories/food/all?sort=atoz"
 )
 
-func category(url BeebURL, name string) *tv.Category {
-	doc, err := url.loadDocument()
+func category(url BeebURL, name string) *Category {
+	nmd, err := newMainCategoryDocument(url)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
-	nmd := newMainCategoryDocument(doc)
-	progs, urls  := nmd.programmes()
-	fmt.Println(urls)
+	progs := nmd.programmes()
 	fmt.Println(progs)
 	cat := NewCategory(name, progs)
 	return cat
