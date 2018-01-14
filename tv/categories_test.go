@@ -6,7 +6,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const filmspage1 = "../tv/filmspage1.html"
 
 func TestHasNextPage(t *testing.T) {
 	assert := assert.New(t)
@@ -17,5 +16,5 @@ func TestHasNextPage(t *testing.T) {
 	assert.Nil(idr.Error)
 	assert.NotNil(idr.idoc)
 	s := idr.idoc.Find(".page > a").AttrOr("href", "")
-	assert.Equal(s, "hallo")
+	assert.Equal(s, "/iplayer/categories/films/all?sort=atoz&page=2")
 }

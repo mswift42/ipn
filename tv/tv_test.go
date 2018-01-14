@@ -6,12 +6,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-const mostpopular = "mostpopular.html"
+const mostpopularpage = "mostpopular.html"
 const filmspage1 = "filmspage1.html"
 const filmspage2 = "filmspage2.html"
 const crm = "../drama-crime/crime.html"
 const crime = "drama_and_crime.html"
-const comedy = "comedy.html"
+const comedypage = "comedy.html"
 
 func TestBeebURLUrlDoc(t *testing.T) {
 	assert := assert.New(t)
@@ -30,7 +30,7 @@ func TestBeebURLUrlDoc(t *testing.T) {
 
 func TestTestHtmLLoadDocument(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL{mostpopular}
+	th := TestHtmlURL{mostpopularpage}
 	c := make(chan *IplayerDocumentResult)
 	go th.loadDocument(c)
 	idr := <-c
@@ -72,7 +72,7 @@ func TestCollectProgramPages(t *testing.T) {
 
 func TestNewMainCategoryDocument(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL{mostpopular}
+	th := TestHtmlURL{mostpopularpage}
 	mcd, err := newMainCategoryDocument(th)
 	assert.Nil(err)
 	assert.Equal(len(mcd.NextPages), 0)
@@ -81,7 +81,7 @@ func TestNewMainCategoryDocument(t *testing.T) {
 
 func TestSelectionResults(t *testing.T) {
 	assert := assert.New(t)
-	th := TestHtmlURL{mostpopular}
+	th := TestHtmlURL{mostpopularpage}
 	ic := make(chan *IplayerDocumentResult)
 	go th.loadDocument(ic)
 	doc := <-ic
