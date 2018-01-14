@@ -37,7 +37,7 @@ func LoadAllCategories() ([]*Category, error) {
 	return cats, nil
 }
 
-func allCategories(categories map[string]tv.BeebURL) ([]*tv.Category, error) {
+func allCategories(categories map[string]BeebURL) ([]*Category, error) {
 	cats := make([]*Category, len(categories))
 	ch := make(chan *Category)
 		for name, url := range categories {
