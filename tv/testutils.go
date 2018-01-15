@@ -17,7 +17,7 @@ type TestMainCategoryDocument struct {
 	NextPages []string
 }
 
-// func (t TestMainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
+// func (t TestMainCategoryDocument) collectNextPages() []*IplayerDocumentResult {
 // 	var results []*IplayerDocumentResult
 // 	sc := make(chan Searcher)
 // 	idrc := make(chan *IplayerDocumentResult)
@@ -25,7 +25,7 @@ type TestMainCategoryDocument struct {
 
 // }
 
-func (t *TestMainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
+func (t *TestMainCategoryDocument) collectNextPages() []*IplayerDocumentResult {
 	var results []*IplayerDocumentResult
 	sc := make(chan Searcher)
 	idrc := make(chan *IplayerDocumentResult)

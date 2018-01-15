@@ -84,7 +84,7 @@ func NewIplayerDocument(doc *goquery.Document) *IplayerDocument {
 
 // func (mcd *MainCategoryDocument) programmes() []*Programme {
 // 	var progs []*Programme
-// 	docs := mcd.collectDocuments()
+// 	docs := mcd.collectNextPages()
 // 	return progs
 // }
 
@@ -141,7 +141,7 @@ func (ipd *IplayerDocument) programmes(c chan<- []*Programme, wg *sync.WaitGroup
 	c <- results
 }
 
-func (mcd *MainCategoryDocument) collectDocuments() []*IplayerDocumentResult {
+func (mcd *MainCategoryDocument) collectNextPages() []*IplayerDocumentResult {
 	var results []*IplayerDocumentResult
 	sc := make(chan Searcher)
 	idrc := make(chan *IplayerDocumentResult)
@@ -167,7 +167,7 @@ func (mcd *MainCategoryDocument) programmes() []*Programme {
 	wg := &sync.WaitGroup{}
 	go mcd.ip.selectionResults(selreschan)
 	selres = append(selres, <-selreschan...)
-	docs := mcd.collectDocuments()
+	docs := mcd.collectNextPages()
 	for _, i := range docs {
 		idoc := &IplayerDocument{i.idoc}
 		go idoc.selectionResults(selreschan)

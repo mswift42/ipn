@@ -51,7 +51,7 @@ func TestCollectDocuments(t *testing.T) {
 	mcd, err := newMainCategoryDocument(th)
 	assert.Nil(err)
 	tmcd := TestMainCategoryDocument{mcd.ip, mcd.NextPages}
-	results := tmcd.collectDocuments()
+	results := tmcd.collectNextPages()
 	assert.NotNil(results)
 	assert.Equal(len(tmcd.NextPages), 2)
 	for _, i := range results {
@@ -63,7 +63,7 @@ func TestCollectDocuments(t *testing.T) {
 	mcd2, err := newMainCategoryDocument(th2)
 	assert.Nil(err)
 	tmcd2 := TestMainCategoryDocument{mcd2.ip, mcd2.NextPages}
-	results = tmcd2.collectDocuments()
+	results = tmcd2.collectNextPages()
 	assert.NotNil(results)
 	assert.Equal(len(results), 1)
 
@@ -75,7 +75,7 @@ func TestCollectProgramPages(t *testing.T) {
 	mcd, err := newMainCategoryDocument(th)
 	assert.Nil(err)
 	tmcd := TestMainCategoryDocument{mcd.ip, mcd.NextPages}
-	results := tmcd.collectDocuments()
+	results := tmcd.collectNextPages()
 	assert.NotNil(results)
 }
 
