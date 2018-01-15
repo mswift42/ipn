@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
+	"fmt"
 )
 
 const mostpopularpage = "mostpopular.html"
@@ -12,6 +13,7 @@ const filmspage2 = "filmspage2.html"
 const crm = "../drama-crime/crime.html"
 const crime = "drama_and_crime.html"
 const comedypage = "comedy.html"
+const foodpage = "food1.html"
 
 func TestBeebURLUrlDoc(t *testing.T) {
 	assert := assert.New(t)
@@ -58,6 +60,17 @@ func TestCollectDocuments(t *testing.T) {
 		assert.NotNil(i.idoc)
 	}
 	assert.Equal(len(results), 2)
+	th2 := TestHtmlURL{foodpage }
+	mcd2, err := newMainCategoryDocument(th2)
+	assert.Nil(err)
+	tmcd2 := TestMainCategoryDocument{mcd2.ip, mcd2.NextPages}
+	fmt.Println(tmcd2.NextPages)
+	results = tmcd2.collectDocuments()
+	fmt.Println(results)
+	assert.NotNil(results)
+	assert.Equal(len(results), 19)
+
+
 }
 
 func TestCollectProgramPages(t *testing.T) {
