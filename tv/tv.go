@@ -159,6 +159,25 @@ func (mcd *MainCategoryDocument) collectNextPages() []*IplayerDocumentResult {
 	return results
 }
 
+func (mcd *MainCategoryDocument) collectViewMorePages() []*IplayerDocumentResult {
+	var results []*IplayerDocumentResult
+	iselc := make(chan []*iplayerSelectionResult)
+	go mcd.ip.selectionResults(iselc)
+	fp := <-iselc
+	fpr := collectProgramPages(fp)
+	results = append(results, fpr...)
+	nextpages := mcd.collectNextPages()
+	for _, i := range nextpages {
+		idoc := IplayerDocument{i.idoc}
+		go idoc.selectionResults(iselc)
+	}
+	for range nextpages {
+		page := <-iselc
+		results = append(results, collectProgramPages(page)...)
+	}
+	return results
+}
+
 func (mcd *MainCategoryDocument) programmes() []*Programme {
 	var progs []*Programme
 	var selres []*iplayerSelectionResult
