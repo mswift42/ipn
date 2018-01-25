@@ -40,6 +40,11 @@ type MainCategoryDocument struct {
 	NextPages []string
 }
 
+type mainCategory struct {
+	name string
+	docs []*IplayerDocument
+}
+
 var seen = make(map[Searcher]bool)
 var mutex = &sync.Mutex{}
 
