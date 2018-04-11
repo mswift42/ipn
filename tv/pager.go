@@ -1,6 +1,6 @@
 package tv
 
-type Pager interface {
+type NextPager interface {
 	collectNextPages() []*IplayerDocumentResult
 	collectViewMorePages() []*IplayerDocumentResult
 }
