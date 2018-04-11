@@ -1,6 +1,7 @@
 package tv
 
 type NextPager interface {
-	collectNextPages() []*IplayerDocumentResult
-	collectViewMorePages() []*IplayerDocumentResult
+	mainDoc() *IplayerDocument
+	collectNextPages() []*Searcher
+	collectProgramPages() []*Searcher
 }
